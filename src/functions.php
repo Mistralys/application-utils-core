@@ -90,6 +90,19 @@ function parseInterval(DateInterval $interval) : ConvertHelper_DateInterval
 }
 
 /**
+ * Like the native PHP function <code>parse_url</code>,
+ * but with a friendly API and some enhancements and fixes
+ * for a few things that the native function handles poorly.
+ *
+ * @param string $url The URL to parse.
+ * @return URLInfo
+ */
+function parseURL(string $url) : URLInfo
+{
+    return new URLInfo($url);
+}
+
+/**
  * Initializes the utilities: this is called automatically
  * because this file is included in the files list in the
  * composer.json, guaranteeing it is always loaded.

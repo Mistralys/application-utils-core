@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\Interfaces\OptionableInterface;
+use AppUtils\Traits\OptionableTrait;
+
 /**
  * Text comparison tool: can be used to calculate how
  * close two texts are from each other, using the
@@ -25,9 +28,9 @@ namespace AppUtils;
  *
  * @see ConvertHelper::matchString()
  */
-class ConvertHelper_TextComparer implements Interface_Optionable
+class ConvertHelper_TextComparer implements OptionableInterface
 {
-    use Traits_Optionable;
+    use OptionableTrait;
 
     public const OPTION_MAX_LEVENSHTEIN_DISTANCE = 'maxLevenshtein';
     public const OPTION_PRECISION = 'precision';

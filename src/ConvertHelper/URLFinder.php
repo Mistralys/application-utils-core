@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\Interfaces\OptionableInterface;
+use AppUtils\Traits\OptionableTrait;
 use AppUtils\URLInfo\URISchemes;
 
 /**
@@ -22,11 +24,11 @@ use AppUtils\URLInfo\URISchemes;
  * 
  * @see ConvertHelper::createURLFinder()
  */
-class ConvertHelper_URLFinder implements Interface_Optionable
+class ConvertHelper_URLFinder implements OptionableInterface
 {
     public const ERROR_INVALID_DETECTOR_CLASS = 87901;
 
-    use Traits_Optionable;
+    use OptionableTrait;
     
     /**
      * @var array<string,URLInfo>

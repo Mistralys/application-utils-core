@@ -9,18 +9,24 @@
  * @see Interface_Optionable
  */
 
-namespace AppUtils;
+namespace AppUtils\Traits;
 
-use AppUtils\Traits\OptionableTrait;
+use AppUtils\Interfaces\OptionableInterface;
 
 /**
+ * Trait for adding options to a class: allows setting
+ * and getting options of all types.
+ *
+ * NOTE: To add this to a class, it must use the trait,
+ * but also implement the interface.
+ *
  * @package Application Utils
  * @subpackage Traits
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
- * @deprecated Use {@see OptionableTrait} instead.
+ * @see OptionableInterface
  */
-trait Traits_Optionable
+trait OptionableTrait
 {
     /**
      * @var array<string,mixed>|NULL
