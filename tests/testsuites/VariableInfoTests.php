@@ -220,7 +220,7 @@ final class VariableInfoTests extends TestCase
         }
     }
     
-    public function test_serialize()
+    public function test_serialize() : void
     {
         $tests = array(
             array(
