@@ -1,17 +1,22 @@
 <?php
 
-        class 
+use AppUtilsTestClasses\TestStubInterface1;
+use AppUtilsTestClasses\TestStubInterface2;
+use AppUtilsTestClasses\TestStubInterface3;
+use AppUtilsTestClasses\TestStubClass;
+
+class
   SingleClassMultipleFreespacing 
   
-    extends FooClass 
+    extends TestStubClass
 
  implements 
 
 
-Foo1Interface, 
-        Foo3Interface    , 
+TestStubInterface1,
+        TestStubInterface3    ,
         
-    Foo2Interface
+    TestStubInterface2
 
 
 

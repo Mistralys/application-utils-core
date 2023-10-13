@@ -1,0 +1,13 @@
+parameters:
+    bootstrapFiles:
+        - ./constants.php
+    paths:
+        - ../../src
+        - ../
+    ignoreErrors:
+        -
+            message: '#of function call_user_func_array expects callable\(\)#'
+            path: ../../src/functions.php
+        -
+            message: '#RGBAColor does not accept int#'
+            path: ../testsuites/RGBAColorTests/ColorArrayAccessTest.php

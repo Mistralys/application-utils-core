@@ -120,6 +120,10 @@ class DateParseResult implements Interface_Stringable
         $this->timeZone = $this->timeZoneOffset->getDateTimeZone();
     }
 
+    /**
+     * @param array<int,string> $values
+     * @return array<int,string|null>
+     */
     private function emptyToNull(array $values) : array
     {
         $result = array();

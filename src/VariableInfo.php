@@ -290,6 +290,11 @@ class VariableInfo implements Interface_Optionable
         return $this->createRenderer('HTML')->render();
     }
 
+    /**
+     * @param callable|array{0:string,1:string} $callback
+     * @return string
+     * @throws BaseException
+     */
     public static function callback2string($callback) : string
     {
         return (new StringRendererCallable(parseVariable($callback)))->render();

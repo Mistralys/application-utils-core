@@ -1,6 +1,11 @@
 <?php
 
-class SingleClassMultiple extends FooClass implements Foo1Interface, Foo2Interface, Foo3Interface
+use AppUtilsTestClasses\TestStubInterface1;
+use AppUtilsTestClasses\TestStubInterface2;
+use AppUtilsTestClasses\TestStubInterface3;
+use AppUtilsTestClasses\TestStubClass;
+
+class SingleClassMultiple extends TestStubClass implements TestStubInterface1, TestStubInterface2, TestStubInterface3
 {
     
 }

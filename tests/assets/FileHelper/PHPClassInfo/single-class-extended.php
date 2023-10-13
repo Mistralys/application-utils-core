@@ -1,6 +1,8 @@
 <?php
 
-class SingleClassExtended extends FooClass
+use AppUtilsTestClasses\TestStubClass;
+
+class SingleClassExtended extends TestStubClass
 {
     
 }
