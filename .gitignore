@@ -8,3 +8,4 @@ composer.phar
 .phpunit.result.cache
 /localization/storage.json
 /localization/vendor/
+/tests/phpstan/result.txt
