@@ -1,5 +1,7 @@
 ## v1.0.0 - Initial release
-- Split from the main AppUtils code base.
+- Core: Split into its own project from the main AppUtils code base.
+- UnitTests: Modernized and namespaced throughout.
+- Traits: Added better named versions of the older traits and interfaces.
 
 ### Deprecation changes
 
@@ -7,3 +9,5 @@
   `StringableInterface` interface.
 - The `Interface_Optionable` has been superseded by the
   `OptionableInterface` interface.
+- The `Interface_Classable` has been superseded by the
+  `ClassableInterface` interface.
