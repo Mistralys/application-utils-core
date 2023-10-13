@@ -2,16 +2,27 @@
 /**
  * @package Application Utils
  * @subpackage Traits
- * @see Traits_Classable
- * @see Interface_Classable
+ * @see \AppUtils\Traits\ClassableTrait
+ * @see \AppUtils\Interfaces\ClassableInterface
  */
 
-namespace AppUtils;
+namespace AppUtils\Traits;
+
+use AppUtils\Interfaces\ClassableInterface;
 
 /**
- * @deprecated Use {@see ClassableTrait} instead.
+ * Trait for handling HTML classes.
+ *
+ * NOTE: To add this to a class, it must use the trait,
+ * but also implement the interface.
+ *
+ * @package Application Utils
+ * @subpackage Traits
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ *
+ * @see ClassableInterface
  */
-trait Traits_Classable
+trait ClassableTrait
 {
    /**
     * @var string[]
