@@ -6,3 +6,5 @@ composer.phar
 # composer.lock
 /tests/config.php
 .phpunit.result.cache
+/localization/storage.json
+/localization/vendor/
