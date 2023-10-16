@@ -1,3 +1,6 @@
+## v1.1.1 - URLInfo fix
+- URLInfo: Fixed missing CSS when calling `getHighlightCSS()`.
+
 ## v1.0.0 - Initial release
 - Core: Split into its own project from the main AppUtils code base.
 - UnitTests: Modernized and namespaced throughout.
