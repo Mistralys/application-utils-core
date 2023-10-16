@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace AppUtils;
 
 use AppUtils\HTMLTag\GlobalOptions;
+use AppUtils\Interfaces\ClassableInterface;
+use AppUtils\Interfaces\StringableInterface;
 
 /**
  * Helper class for generating individual HTML tags,
@@ -23,7 +25,7 @@ use AppUtils\HTMLTag\GlobalOptions;
  *
  * @link https://github.com/Mistralys/application-utils/wiki/HTMLTag
  */
-class HTMLTag implements Interface_Stringable, Interface_Classable
+class HTMLTag implements StringableInterface, ClassableInterface
 {
     public const SELF_CLOSE_STYLE_SLASH = 'slash';
     public const SELF_CLOSE_STYLE_NONE = 'none';
@@ -189,7 +191,7 @@ class HTMLTag implements Interface_Stringable, Interface_Classable
     }
 
     /**
-     * @param string|number|Interface_Stringable|NULL $content
+     * @param string|number|StringableInterface|NULL $content
      * @return $this
      */
     public function setContent($content) : self

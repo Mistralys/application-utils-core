@@ -13,10 +13,7 @@ namespace AppUtils\FileHelper;
 
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
-use AppUtils\Interface_Stringable;
-use AppUtils\Interfaces\RenderableInterface;
 use DateTime;
-use DirectoryIterator;
 use SplFileInfo;
 
 /**

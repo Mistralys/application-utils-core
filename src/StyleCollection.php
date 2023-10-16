@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\Interfaces\StringableInterface;
 use AppUtils\StyleCollection\StyleOptions;
 use AppUtils\StyleCollection\StylesRenderer;
 
@@ -23,7 +24,7 @@ use AppUtils\StyleCollection\StylesRenderer;
  * @subpackage HTML
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class StyleCollection implements Interface_Stringable
+class StyleCollection implements StringableInterface
 {
     /**
      * @var array<string,string>
@@ -31,7 +32,7 @@ class StyleCollection implements Interface_Stringable
     private $styles = array();
 
     /**
-     * @param array<string,string|number|NumberInfo|Interface_Stringable|NULL> $styles
+     * @param array<string,string|number|NumberInfo|StringableInterface|NULL> $styles
      */
     public function __construct(array $styles=array())
     {
@@ -41,7 +42,7 @@ class StyleCollection implements Interface_Stringable
     }
 
     /**
-     * @param array<string,string|number|NumberInfo|Interface_Stringable|NULL> $styles
+     * @param array<string,string|number|NumberInfo|StringableInterface|NULL> $styles
      * @return StyleCollection
      */
     public static function create(array $styles=array()) : StyleCollection
@@ -84,7 +85,7 @@ class StyleCollection implements Interface_Stringable
      * NOTE: Uses {@see StyleCollection::styleAuto()} to add
      * the individual styles.
      *
-     * @param array<string,string|number|NumberInfo|Interface_Stringable|NULL> $styles
+     * @param array<string,string|number|NumberInfo|StringableInterface|NULL> $styles
      * @return $this
      */
     public function setStyles(array $styles) : StyleCollection
@@ -126,7 +127,7 @@ class StyleCollection implements Interface_Stringable
      * Adds a style, automatically detecting the value type.
      *
      * @param string $name
-     * @param string|number|NumberInfo|Interface_Stringable|NULL $value
+     * @param string|number|NumberInfo|StringableInterface|NULL $value
      * @param bool $important
      * @return $this
      */

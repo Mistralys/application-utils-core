@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\Interfaces\StringableInterface;
 use AppUtils\RGBAColor\ArrayConverter;
 use AppUtils\RGBAColor\ColorChannel;
 use AppUtils\RGBAColor\ColorChannel\BrightnessChannel;
@@ -20,7 +21,6 @@ use AppUtils\RGBAColor\ColorException;
 use AppUtils\RGBAColor\ColorFactory;
 use AppUtils\RGBAColor\FormatsConverter;
 use ArrayAccess;
-use ReturnTypeWillChange;
 
 /**
  * Container for RGB color information, with optional alpha channel.
@@ -39,7 +39,7 @@ use ReturnTypeWillChange;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @implements ArrayAccess<string,ColorChannel>
  */
-class RGBAColor implements ArrayAccess, Interface_Stringable
+class RGBAColor implements ArrayAccess, StringableInterface
 {
     public const ERROR_INVALID_COLOR_COMPONENT = 93402;
     public const ERROR_INVALID_PERCENTAGE_VALUE = 93503;

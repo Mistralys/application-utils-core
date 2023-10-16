@@ -13,7 +13,7 @@ namespace AppUtils\FileHelper;
 
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
-use AppUtils\Interface_Stringable;
+use AppUtils\Interfaces\StringableInterface;
 use SplFileInfo;
 
 /**
@@ -23,7 +23,7 @@ use SplFileInfo;
  * @subpackage FileHelper
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-interface PathInfoInterface extends Interface_Stringable
+interface PathInfoInterface extends StringableInterface
 {
     public function getName() : string;
     public function getExtension(bool $lowercase=true) : string;

@@ -2,6 +2,7 @@
 
 namespace AppUtils;
 
+use AppUtils\Interfaces\StringableInterface;
 use DateInterval;
 use Throwable;
 
@@ -50,7 +51,7 @@ function restoreThrowable(array $serialized) : ThrowableInfo
  * do the translation.
  *
  * @param string $text
- * @param string|int|float|Interface_Stringable ...$placeholderValues
+ * @param string|int|float|StringableInterface ...$placeholderValues
  * @return string
  */
 function t(string $text, ...$placeholderValues) : string

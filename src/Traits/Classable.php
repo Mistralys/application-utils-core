@@ -2,8 +2,7 @@
 /**
  * @package Application Utils
  * @subpackage Traits
- * @see Traits_Classable
- * @see Interface_Classable
+ * @see \AppUtils\Traits\ClassableTrait
  */
 
 namespace AppUtils;

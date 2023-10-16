@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace AppUtils\AttributeCollection;
 
-use AppUtils\Interface_Stringable;
+use AppUtils\Interfaces\StringableInterface;
 use AppUtils\StringBuilder_Interface;
 
 /**
@@ -51,7 +51,7 @@ class Filtering
     }
 
     /**
-     * @param string|number|bool|Interface_Stringable|StringBuilder_Interface|NULL $value
+     * @param string|number|bool|StringableInterface|StringBuilder_Interface|NULL $value
      * @return string
      */
     public static function value2string($value) : string

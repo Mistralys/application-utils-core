@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace AppUtils\Traits;
 
 use AppUtils\AttributeCollection;
-use AppUtils\Interface_Stringable;
 use AppUtils\Interfaces\AttributableInterface;
+use AppUtils\Interfaces\StringableInterface;
 use AppUtils\StringBuilder_Interface;
 
 /**
@@ -37,7 +37,7 @@ trait AttributableTrait
 
     /**
      * @param string $name
-     * @param string|number|bool|Interface_Stringable|StringBuilder_Interface|NULL $value
+     * @param string|number|bool|StringableInterface|StringBuilder_Interface|NULL $value
      * @return $this
      */
     public function attr(string $name, $value) : self
@@ -59,7 +59,7 @@ trait AttributableTrait
 
     /**
      * @param string $name
-     * @param string|number|bool|Interface_Stringable|StringBuilder_Interface|NULL $value
+     * @param string|number|bool|StringableInterface|StringBuilder_Interface|NULL $value
      * @return $this
      */
     public function attrQuotes(string $name, $value) : self

@@ -13,7 +13,10 @@ namespace AppUtils;
 
 use AppUtils\AttributeCollection\AttributesRenderer;
 use AppUtils\AttributeCollection\Filtering;
+use AppUtils\Interfaces\ClassableInterface;
+use AppUtils\Interfaces\StringableInterface;
 use AppUtils\Interfaces\StylableInterface;
+use AppUtils\Traits\ClassableTrait;
 use AppUtils\Traits\StylableTrait;
 
 /**
@@ -27,11 +30,11 @@ use AppUtils\Traits\StylableTrait;
  */
 class AttributeCollection
     implements
-    Interface_Stringable,
-    Interface_Classable,
+    StringableInterface,
+    ClassableInterface,
     StylableInterface
 {
-    use Traits_Classable;
+    use ClassableTrait;
     use StylableTrait;
 
     /**
@@ -57,7 +60,7 @@ class AttributeCollection
     private array $empty = array();
 
     /**
-     * @param array<string,string|number|bool|NULL|Interface_Stringable|StringBuilder_Interface> $attributes
+     * @param array<string,string|number|bool|NULL|StringableInterface|StringBuilder_Interface> $attributes
      */
     private function __construct(array $attributes)
     {
@@ -72,7 +75,7 @@ class AttributeCollection
     }
 
     /**
-     * @param array<string,string|number|bool|NULL|Interface_Stringable|StringBuilder_Interface|NULL> $attributes
+     * @param array<string,string|number|bool|NULL|StringableInterface|StringBuilder_Interface|NULL> $attributes
      * @return $this
      */
     public function setAttributes(array $attributes) : AttributeCollection
@@ -91,7 +94,7 @@ class AttributeCollection
     }
 
     /**
-     * @param array<string,string|number|bool|NULL|Interface_Stringable|StringBuilder_Interface> $attributes
+     * @param array<string,string|number|bool|NULL|StringableInterface|StringBuilder_Interface> $attributes
      * @return AttributeCollection
      */
     public static function create(array $attributes=array()) : AttributeCollection
@@ -111,7 +114,7 @@ class AttributeCollection
 
     /**
      * @param string $name
-     * @param string|number|bool|Interface_Stringable|StringBuilder_Interface|NULL $value
+     * @param string|number|bool|StringableInterface|StringBuilder_Interface|NULL $value
      * @return $this
      */
     public function attr(string $name, $value) : AttributeCollection
@@ -152,7 +155,7 @@ class AttributeCollection
      * Adds an attribute, and escapes double quotes in the value.
      *
      * @param string $name
-     * @param string|number|bool|Interface_Stringable|StringBuilder_Interface|NULL $value $value
+     * @param string|number|bool|StringableInterface|StringBuilder_Interface|NULL $value $value
      * @return $this
      */
     public function attrQuotes(string $name, $value) : AttributeCollection

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\Interfaces\StringableInterface;
 use AppUtils\Microtime\DateFormatChars;
 use AppUtils\Microtime\DateParseResult;
 use AppUtils\Microtime\TimeZones\NamedTimeZoneInfo;
@@ -28,7 +29,7 @@ use Exception;
  * @subpackage Microtime
  * @see https://www.php.net/manual/en/datetime.format.php
  */
-class Microtime extends DateTime implements Interface_Stringable
+class Microtime extends DateTime implements StringableInterface
 {
     public const ERROR_FAILED_CREATING_DATE_OBJECT = 88601;
     public const ERROR_FAILED_CONVERTING_STRING = 88602;

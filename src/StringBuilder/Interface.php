@@ -9,6 +9,8 @@
 
 namespace AppUtils;
 
+use AppUtils\Interfaces\StringableInterface;
+
 /**
  * Interface for the StringBuilder class.
  *
@@ -18,7 +20,7 @@ namespace AppUtils;
  * 
  * @see StringBuilder
  */
-interface StringBuilder_Interface extends Interface_Stringable
+interface StringBuilder_Interface extends StringableInterface
 {
     /**
      * Renders the string builder to a string.

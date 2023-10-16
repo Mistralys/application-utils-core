@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace AppUtils\Microtime;
 
-use AppUtils\Interface_Stringable;
+use AppUtils\Interfaces\StringableInterface;
 use AppUtils\Microtime\TimeZones\NamedTimeZoneInfo;
 use AppUtils\Microtime\TimeZones\OffsetParser;
 use AppUtils\Microtime\TimeZones\TimeZoneInfo;
@@ -31,7 +31,7 @@ use DateTimeZone;
  * @subpackage Microtime
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class DateParseResult implements Interface_Stringable
+class DateParseResult implements StringableInterface
 {
     private string $dateTime;
     private DateTimeZone $timeZone;

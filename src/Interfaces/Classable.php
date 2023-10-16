@@ -1,10 +1,8 @@
 <?php
 /**
- * File containing the {@see AppUtils\Interface_Classable} interface.
- *
  * @package Application Utils
  * @subpackage Traits
- * @see Interface_Classable
+ * @see \AppUtils\Interfaces\ClassableInterface
  */
 
 declare(strict_types=1);

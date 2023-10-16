@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace AppUtils\Interfaces;
 
-use AppUtils\Interface_Stringable;
 use AppUtils\NumberInfo;
 use AppUtils\StyleCollection;
 use AppUtils\Traits\StylableTrait;
@@ -41,7 +40,7 @@ interface StylableInterface
 
     /**
      * @param string $name
-     * @param string|number|NumberInfo|Interface_Stringable|NULL $value
+     * @param string|number|NumberInfo|StringableInterface|NULL $value
      * @param bool $important
      * @return $this
      */

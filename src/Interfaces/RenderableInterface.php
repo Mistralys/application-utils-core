@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace AppUtils\Interfaces;
 
-use AppUtils\Interface_Stringable;
 use AppUtils\Traits\RenderableTrait;
 
 /**
@@ -21,7 +20,7 @@ use AppUtils\Traits\RenderableTrait;
  *
  * @see RenderableTrait
  */
-interface RenderableInterface extends Interface_Stringable
+interface RenderableInterface extends StringableInterface
 {
     public function render() : string;
 

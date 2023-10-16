@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace AppUtils\Microtime\TimeZones;
 
-use AppUtils\Interface_Stringable;
+use AppUtils\Interfaces\StringableInterface;
 use AppUtils\Microtime_Exception;
 use DateTimeZone;
 
@@ -57,7 +57,7 @@ use DateTimeZone;
  *
  * @see OffsetParser
  */
-class TimeZoneInfo implements Interface_Stringable
+class TimeZoneInfo implements StringableInterface
 {
     private string $name;
     private int $value;

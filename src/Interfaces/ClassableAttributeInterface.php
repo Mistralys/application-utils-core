@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace AppUtils\Interfaces;
 
 use AppUtils\AttributeCollection;
-use AppUtils\Interface_Classable;
 use AppUtils\Traits\ClassableAttributeTrait;
 
 /**
@@ -26,7 +25,7 @@ use AppUtils\Traits\ClassableAttributeTrait;
  *
  * @see ClassableAttributeTrait
  */
-interface ClassableAttributeInterface extends Interface_Classable
+interface ClassableAttributeInterface extends ClassableInterface
 {
     public function getAttributes() : AttributeCollection;
 }

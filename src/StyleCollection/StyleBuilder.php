@@ -4,22 +4,18 @@ declare(strict_types=1);
 
 namespace AppUtils\StyleCollection;
 
-use AppUtils\Interface_Stringable;
+use AppUtils\Interfaces\StringableInterface;
 use AppUtils\StyleCollection;
 use AppUtils\StyleCollection\StyleBuilder\Flavors\Background;
-use AppUtils\StyleCollection\StyleBuilder\Flavors\Background\BackgroundColor;
 use AppUtils\StyleCollection\StyleBuilder\Flavors\Color;
 use AppUtils\StyleCollection\StyleBuilder\Flavors\Display;
 use AppUtils\StyleCollection\StyleBuilder\Flavors\Font;
 use AppUtils\StyleCollection\StyleBuilder\Flavors\Height;
 use AppUtils\StyleCollection\StyleBuilder\Flavors\Width;
 
-class StyleBuilder implements Interface_Stringable
+class StyleBuilder implements StringableInterface
 {
-    /**
-     * @var StyleCollection
-     */
-    private $collection;
+    private StyleCollection $collection;
 
     private function __construct(?StyleCollection $collection=null)
     {
