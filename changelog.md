@@ -1,4 +1,4 @@
-## v1.1.1 - URLInfo fix
+## v1.0.1 - URLInfo fix
 - URLInfo: Fixed missing CSS when calling `getHighlightCSS()`.
 
 ## v1.0.0 - Initial release
