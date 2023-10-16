@@ -681,6 +681,13 @@ final class URLInfoTest extends BaseTestCase
         $this->assertStringContainsString('excluded-param', $highlighted, 'Should contain the class for excluded parameters.');
     }
 
+    public function test_highlightGetStyl4es() : void
+    {
+        $css = URLInfo::getHighlightCSS();
+
+        $this->assertStringContainsString('.link-scheme.scheme-https', $css);
+    }
+
     /**
      * Ensure that checking whether a URL contains excluded parameters works as intended.
      */
