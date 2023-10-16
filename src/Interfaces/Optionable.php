@@ -1,10 +1,8 @@
 <?php
 /**
- * File containing the {@see AppUtils\Interface_Optionable} interface.
- *
  * @package Application Utils
  * @subpackage Traits
- * @see Interface_Optionable
+ * @see \AppUtils\Interfaces\OptionableInterface
  */
 
 declare(strict_types=1);

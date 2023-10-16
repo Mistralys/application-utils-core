@@ -1,12 +1,8 @@
 <?php
 /**
- * File containing the {@see AppUtils\Traits_Optionable} trait,
- * and the matching interface.
- *
  * @package Application Utils
  * @subpackage Traits
- * @see Traits_Optionable
- * @see Interface_Optionable
+ * @see \AppUtils\Traits\OptionableTrait
  */
 
 namespace AppUtils;

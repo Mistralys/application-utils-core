@@ -1,15 +1,15 @@
 <?php
 /**
- * File containing the {@see AppUtils\Interface_Optionable} interface.
- *
  * @package Application Utils
  * @subpackage Traits
- * @see Interface_Optionable
+ * @see \AppUtils\Interfaces\OptionableInterface
  */
 
 declare(strict_types=1);
 
 namespace AppUtils\Interfaces;
+
+use AppUtils\Traits\OptionableTrait;
 
 /**
  * Interface for classes that use the optionable trait.
@@ -21,7 +21,7 @@ namespace AppUtils\Interfaces;
  * @subpackage Traits
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
- * @see Traits_Optionable
+ * @see OptionableTrait
  */
 interface OptionableInterface
 {

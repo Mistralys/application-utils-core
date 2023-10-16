@@ -13,8 +13,8 @@ namespace AppUtils\FileHelper;
 
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
-use AppUtils\Interface_Optionable;
-use AppUtils\Traits_Optionable;
+use AppUtils\Interfaces\OptionableInterface;
+use AppUtils\Traits\OptionableTrait;
 use DirectoryIterator;
 use SplFileInfo;
 
@@ -28,9 +28,9 @@ use SplFileInfo;
  * @subpackage FileHelper
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class FileFinder implements Interface_Optionable
+class FileFinder implements OptionableInterface
 {
-    use Traits_Optionable;
+    use OptionableTrait;
 
     public const ERROR_PATH_DOES_NOT_EXIST = 44101;
     

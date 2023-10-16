@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace AppUtils\StyleCollection;
 
-use AppUtils\Interface_Optionable;
+use AppUtils\Interfaces\OptionableInterface;
 use AppUtils\StyleCollection;
-use AppUtils\Traits_Optionable;
+use AppUtils\Traits\OptionableTrait;
 
-class StyleOptions implements Interface_Optionable
+class StyleOptions implements OptionableInterface
 {
-    use Traits_Optionable;
+    use OptionableTrait;
 
     public const OPTION_INDENT_LEVEL = 'indent';
     public const OPTION_NEWLINES = 'newlines';

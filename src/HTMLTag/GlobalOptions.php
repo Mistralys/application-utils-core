@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace AppUtils\HTMLTag;
 
 use AppUtils\HTMLTag;
-use AppUtils\Interface_Optionable;
-use AppUtils\Traits_Optionable;
+use AppUtils\Interfaces\OptionableInterface;
+use AppUtils\Traits\OptionableTrait;
 
 /**
  * Utility for setting global options for the tag builder
@@ -31,9 +31,9 @@ use AppUtils\Traits_Optionable;
  *
  * @see HTMLTag::getGlobalOptions()
  */
-class GlobalOptions implements Interface_Optionable
+class GlobalOptions implements OptionableInterface
 {
-    use Traits_Optionable;
+    use OptionableTrait;
 
     public const OPTION_SELF_CLOSE_STYLE = 'selfCloseStyle';
 

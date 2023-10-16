@@ -11,22 +11,24 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\Interfaces\OptionableInterface;
+use AppUtils\Traits\OptionableTrait;
 use AppUtils\VariableInfo\Renderer\BaseStringRenderer;
 use AppUtils\VariableInfo\Renderer\String\StringRendererCallable;
 use AppUtils\VariableInfo\VariableRenderer;
 
 /**
  * Class used to retrieve information on variable types
- * in an object oriented way, with way to convert these 
- * to human readable formats.
+ * in an object-oriented way, with way to convert these
+ * to human-readable formats.
  *
  * @package Application Utils
  * @subpackage VariableInfo
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class VariableInfo implements Interface_Optionable
+class VariableInfo implements OptionableInterface
 {
-    use Traits_Optionable;
+    use OptionableTrait;
     
     public const TYPE_DOUBLE = 'double';
     public const TYPE_INTEGER = 'integer';

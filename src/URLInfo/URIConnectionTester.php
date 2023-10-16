@@ -9,10 +9,9 @@ declare(strict_types=1);
 
 namespace AppUtils\URLInfo;
 
-use AppUtils\BaseException;
-use AppUtils\Interface_Optionable;
+use AppUtils\Interfaces\OptionableInterface;
 use AppUtils\RequestHelper;
-use AppUtils\Traits_Optionable;
+use AppUtils\Traits\OptionableTrait;
 use AppUtils\URLInfo;
 use CurlHandle;
 
@@ -23,9 +22,9 @@ use CurlHandle;
  * @subpackage URLInfo
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class URIConnectionTester implements Interface_Optionable
+class URIConnectionTester implements OptionableInterface
 {
-    use Traits_Optionable;
+    use OptionableTrait;
     
     private URLInfo $url;
     

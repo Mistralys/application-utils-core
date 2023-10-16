@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\Interfaces\OptionableInterface;
+use AppUtils\Traits\OptionableTrait;
+
 /**
  * Wordwrap class that is used to wordwrap texts.
  * 
@@ -18,9 +21,9 @@ namespace AppUtils;
  * @subpackage ConvertHelper
  * @see https://stackoverflow.com/a/4988494/2298192
  */
-class ConvertHelper_WordWrapper implements Interface_Optionable
+class ConvertHelper_WordWrapper implements OptionableInterface
 {
-    use Traits_Optionable;
+    use OptionableTrait;
     
     public function __construct()
     {

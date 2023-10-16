@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace AppUtils\FileHelper;
 
 use AppUtils\FileHelper;
-use AppUtils\Interface_Optionable;
-use AppUtils\Traits_Optionable;
+use AppUtils\Interfaces\OptionableInterface;
+use AppUtils\Traits\OptionableTrait;
 use DirectoryIterator;
 use SplFileInfo;
 
-class FolderFinder implements Interface_Optionable
+class FolderFinder implements OptionableInterface
 {
-    use Traits_Optionable;
+    use OptionableTrait;
 
     public const OPTION_RECURSIVE = 'recursive';
     public const OPTION_ABSOLUTE_PATH = 'absolute-path';

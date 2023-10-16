@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\Interfaces\OptionableInterface;
 use AppUtils\ThrowableInfo\ThrowableCall;
 use AppUtils\ThrowableInfo\ThrowableMessageRenderer;
 use AppUtils\ThrowableInfo\ThrowableSerializer;
 use AppUtils\ThrowableInfo\ThrowableStringConverter;
+use AppUtils\Traits\OptionableTrait;
 use Exception;
 use Throwable;
 
-class ThrowableInfo implements Interface_Optionable
+class ThrowableInfo implements OptionableInterface
 {
-    use Traits_Optionable;
+    use OptionableTrait;
     
     public const ERROR_NO_PREVIOUS_EXCEPTION = 43301;
     public const ERROR_INVALID_SERIALIZED_DATA_TYPE = 43302;
