@@ -1,3 +1,6 @@
+## v1.0.2 - Throwable deprecation
+- ThrowableInfo: Restored the `ConvertHelper_ThrowableInfo` class for easier deprecation.
+
 ## v1.0.1 - URLInfo fix
 - URLInfo: Fixed missing CSS when calling `getHighlightCSS()`.
 
@@ -8,9 +11,11 @@
 
 ### Deprecation changes
 
-- The `Interface_Stringable` has been superseded by the
-  `StringableInterface` interface.
-- The `Interface_Optionable` has been superseded by the
-  `OptionableInterface` interface.
-- The `Interface_Classable` has been superseded by the
-  `ClassableInterface` interface.
+- The `Interface_Stringable` has been renamed to `StringableInterface`.
+- The `Interface_Optionable` has been renamed to `OptionableInterface`.
+- The `Interface_Classable` has been renamed to `ClassableInterface`.
+- The `ConvertHelper_ThrowableInfo` class has been renamed to `ThrowableInfo`.
+
+For all of these interfaces and traits, the old versions are still 
+available to help with the migration. They will be removed in a future
+release.
