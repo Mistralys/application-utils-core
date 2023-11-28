@@ -9,9 +9,13 @@ declare(strict_types=1);
 
 namespace AppUtils\Microtime\TimeZones;
 
+use AppUtils\ConvertHelper;
 use AppUtils\Interfaces\StringableInterface;
 use AppUtils\Microtime_Exception;
+use DateTime;
+use DateTimeInterface;
 use DateTimeZone;
+use Exception;
 
 /**
  * Utility class used to store information on a
@@ -312,7 +316,7 @@ class TimeZoneInfo implements StringableInterface
     }
 
     /**
-     * @return array{name:string,value:int,hours:int,minutes:int,seconds:int,sign:string,negative:bool}
+     * @return array{name:string,value:int,hours:int,minutes:int,seconds:int,sign:string,negative:bool,offset:string,isDST:bool}
      */
     public function toArray() : array
     {
@@ -324,7 +328,28 @@ class TimeZoneInfo implements StringableInterface
             'seconds' => $this->getTotalSeconds(),
             'sign' => $this->getOffsetSign(),
             'negative' => $this->isNegative(),
-            'offset' => $this->toOffsetString()
+            'offset' => $this->toOffsetString(),
+            'isDST' => $this->isDST()
         );
+    }
+
+    /**
+     * Whether the offset is currently in daylight saving time,
+     * or the specified date, if given.
+     *
+     * @param DateTime|null $date If not given a date, will use the current date and time.
+     * @return bool
+     * @throws Exception
+     */
+    public function isDST(?DateTime $date=null) : bool
+    {
+        if($date === null) {
+            $date = new DateTime();
+        }
+
+        // Using a precise date format, but which does not
+        // include the time zone - otherwise this will fail.
+        return (new DateTime($date->format('Y-m-d H:i:s.u'), $this->getDateTimeZone()))
+            ->format('I') === '1';
     }
 }
