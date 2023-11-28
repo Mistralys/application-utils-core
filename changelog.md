@@ -1,4 +1,4 @@
-## v1.0.3 - MimeType enhancements
+## v1.0.2 - MimeType enhancements
 - FileInfo: Added `getMimeType()`.
 - FileInfo: Added `sendToBrowser()`.
 - MimeTypes: Extensions are now case-insensitive, and work with or without dot.
@@ -9,8 +9,6 @@
 - MimeTypes: Added constants for often used file mime types in `MimeTypesEnum`.
 - MimeTypes: Added a dedicated test case file.
 - Microtime: Added `isDST()` in time zones to account for daylight savings time. 
-
-## v1.0.2 - Throwable deprecation
 - ThrowableInfo: Restored the `ConvertHelper_ThrowableInfo` class for easier deprecation.
 
 ## v1.0.1 - URLInfo fix
