@@ -7,6 +7,7 @@ namespace AppUtilsTests\Microtime;
 use AppUtils\Microtime\TimeZones\NamedTimeZoneInfo;
 use AppUtils\Microtime\TimeZones\OffsetParser;
 use AppUtils\Microtime\TimeZones\TimeZoneInfo;
+use DateTime;
 use DateTimeZone;
 use AppUtilsTestClasses\BaseTestCase;
 
@@ -117,14 +118,37 @@ final class TimeZoneOffsetTests extends BaseTestCase
         $this->assertInstanceOf(NamedTimeZoneInfo::class, $offset);
     }
 
+    public function test_isDST() : void
+    {
+        $offset = TimeZoneInfo::create('Europe/Paris');
+
+        $dateSummer = new DateTime('2023-07-14');
+        $dateWinter = new DateTime('2023-01-14');
+
+        $this->assertTrue($offset->isDST($dateSummer));
+        $this->assertFalse($offset->isDST($dateWinter));
+    }
+
     public function test_createFromName() : void
     {
         $offset = TimeZoneInfo::createFromName('Europe/Paris');
 
         $this->assertSame('Europe/Paris', $offset->getName());
         $this->assertSame('Europe/Paris', $offset->getAnyName());
-        $this->assertSame('+02:00', $offset->toOffsetString());
-        $this->assertSame(7200, $offset->getOffsetValue());
+    }
+
+    public function test_offsetsByName() : void
+    {
+        $offset = TimeZoneInfo::createFromName('Europe/Paris');
+
+        // Switch depending on the current time of year.
+        if($offset->isDST()) {
+            $this->assertSame('+02:00', $offset->toOffsetString());
+            $this->assertSame(7200, $offset->getOffsetValue());
+        } else {
+            $this->assertSame('+01:00', $offset->toOffsetString());
+            $this->assertSame(3600, $offset->getOffsetValue());
+        }
     }
 
     public function test_createFromNameCaseInsensitive() : void
