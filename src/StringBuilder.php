@@ -40,17 +40,18 @@ class StringBuilder implements StringBuilder_Interface
    /**
     * @var string
     */
-    protected $separator = ' ';
+    protected string $separator = ' ';
 
    /**
     * @var string[]
     */
-    protected $strings = array();
+    protected array $strings = array();
 
    /**
     * @var string
     */
-    protected $noSeparator = '§!§';
+    protected string $noSeparator = '§!§';
+    protected bool $separatorEnabled = true;
     
     public function __construct()
     {
@@ -72,12 +73,20 @@ class StringBuilder implements StringBuilder_Interface
     public function add($string) : StringBuilder
     {
         $string = (string)$string;
-        
-        if(!empty($string)) 
+
+        if(!empty($string))
         {
+            if(!$this->separatorEnabled) {
+                $string = $this->noSeparator.$string;
+                $this->separatorEnabled = true;
+            }
+
             $this->strings[] = $string;
         }
-        
+
+        // Reset the classes list after each addition.
+        $this->classes = array();
+
         return $this;
     }
     
@@ -89,20 +98,13 @@ class StringBuilder implements StringBuilder_Interface
     */
     public function nospace($string) : StringBuilder
     {
-        $flattened = (string)$string;
-
-        if($flattened !== "")
-        {
-            $this->add($this->noSeparator.$flattened);
-        }
-
-        return $this;
+        return $this->useNoSpace()->add($string);
     }
     
    /**
     * Adds raw HTML code. Does not add an automatic space.
     * 
-    * @param string|number|StringableInterface $html
+    * @param string|number|StringableInterface|NULL $html
     * @return $this
     */
     public function html($html) : StringBuilder
@@ -113,7 +115,7 @@ class StringBuilder implements StringBuilder_Interface
    /**
     * Adds an unordered list with the specified items.
     * 
-    * @param array<int,string|number|StringableInterface> $items
+    * @param array<int,string|number|StringableInterface|NULL> $items
     * @return $this
     */
     public function ul(array $items) : StringBuilder
@@ -124,7 +126,7 @@ class StringBuilder implements StringBuilder_Interface
    /**
     * Adds an ordered list with the specified items.
     * 
-    * @param array<int,string|number|StringableInterface> $items
+    * @param array<int,string|number|StringableInterface|NULL> $items
     * @return $this
     */
     public function ol(array $items) : StringBuilder
@@ -136,7 +138,7 @@ class StringBuilder implements StringBuilder_Interface
     * Creates a list tag with the items list.
     * 
     * @param string $type The list type, `ol` or `ul`.
-    * @param array<int,string|number|StringableInterface> $items
+    * @param array<int,string|number|StringableInterface|NULL> $items
     * @return $this
     */
     protected function list(string $type, array $items) : StringBuilder
@@ -252,10 +254,7 @@ class StringBuilder implements StringBuilder_Interface
     */
     public function bold($string) : StringBuilder
     {
-        return $this->sf(
-            '<b>%s</b>',
-            (string)$string
-        );
+        return $this->tag('b', $string);
     }
     
    /**
@@ -337,13 +336,19 @@ class StringBuilder implements StringBuilder_Interface
    /**
     * Adds two linebreaks.
     *
-    * @param StringBuilder_Interface|string|NULL $content
+    * @param StringBuilder_Interface|string|number|NULL $content
     * @return $this
     */
     public function para($content=null) : StringBuilder
     {
-        if($content !== null) {
-            return $this->html('<p>')->nospace($content)->html('</p>');
+        if($content !== null)
+        {
+            $content = (string)$content;
+            if($content === '') {
+                return $this;
+            }
+
+            return $this->html(sprintf('<p%s>', $this->compileClasses()))->nospace($content)->html('</p>');
         }
 
         return $this->nl()->nl();
@@ -399,21 +404,18 @@ class StringBuilder implements StringBuilder_Interface
     */
     public function code($string) : StringBuilder
     {
-        return $this->sf(
-            '<code>%s</code>',
-            (string)$string
-        );
+        return $this->tag('code', $string);
     }
     
    /**
     * Wraps the string in a `pre` tag.
     * 
-    * @param string|number|StringableInterface $string
+    * @param string|number|StringableInterface|NULL $string
     * @return $this
     */
     public function pre($string) : StringBuilder
     {
-        return $this->sf('<pre>%s</pre>', (string)$string);
+        return $this->tag('pre', $string);
     }
     
    /**
@@ -425,16 +427,16 @@ class StringBuilder implements StringBuilder_Interface
     */
     public function spanned($string, $classes) : StringBuilder
     {
-        if(!is_array($classes)) 
+        if(is_array($classes))
         {
-            $classes = array((string)$classes);
+            $this->useClasses($classes);
+        }
+        else
+        {
+            $this->useClass($classes);
         }
         
-        return $this->sf(
-            '<span class="%s">%s</span>',
-            implode(' ', $classes),
-            (string)$string
-        );
+        return $this->tag('span', $string);
     }
 
     /**
@@ -574,6 +576,69 @@ class StringBuilder implements StringBuilder_Interface
         }
 
         return $this->add($this->renderContent($ifFalse));
+    }
+
+    /**
+     * @var string[]
+     */
+    private array $classes = array();
+
+    public function useClasses(array $classes) : StringBuilder
+    {
+        $this->classes = $classes;
+        return $this;
+    }
+
+    public function useClass(string $class) : StringBuilder
+    {
+        return $this->useClasses(array($class));
+    }
+
+    private function compileClasses() : string
+    {
+        if(empty($this->classes))
+        {
+            return '';
+        }
+
+        sort($this->classes);
+
+        return ' class="'.implode(' ', $this->classes).'"';
+    }
+
+    /**
+     * @param string|int|float|StringableInterface|NULL $string
+     * @return $this
+     */
+    public function italic($string) : StringBuilder
+    {
+        return $this->tag(
+            'i',
+            $string
+        );
+    }
+
+    public function tag(string $name, $content) : StringBuilder
+    {
+        $content = (string)$content;
+
+        if(empty($content))
+        {
+            return $this;
+        }
+
+        return $this->sf(
+            '<%1$s%2$s>%3$s</%1$s>',
+            $name,
+            $this->compileClasses(),
+            $content
+        );
+    }
+
+    public function useNoSpace() : StringBuilder
+    {
+        $this->separatorEnabled = false;
+        return $this;
     }
 
     public function render() : string
