@@ -1,3 +1,9 @@
+## v1.0.3 - StringBuilder enhancements
+- StringBuilder: Added `useClass()` and `useClasses()`.
+- StringBuilder: Added `italic()`.
+- StringBuilder: Added `useNoSpace()`.
+- StringBuilder: All HTML tags now support classes via `useClass()`.
+
 ## v1.0.2 - MimeType enhancements
 - FileInfo: Added `getMimeType()`.
 - FileInfo: Added `sendToBrowser()`.
