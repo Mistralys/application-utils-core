@@ -8,6 +8,7 @@
 - MimeTypes: Added `resetToDefaults()`.
 - MimeTypes: Added constants for often used file mime types in `MimeTypesEnum`.
 - MimeTypes: Added a dedicated test case file.
+- Microtime: Added `isDST()` in time zones to account for daylight savings time. 
 
 ## v1.0.2 - Throwable deprecation
 - ThrowableInfo: Restored the `ConvertHelper_ThrowableInfo` class for easier deprecation.
