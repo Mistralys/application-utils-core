@@ -224,7 +224,7 @@ final class PHPClassInfoTest extends TestCase
             return;
         }
 
-        $this->assetsFolder = realpath(TESTS_ROOT.'/assets/FileHelper/PHPClassInfo');
+        $this->assetsFolder = realpath(__DIR__.'/../../assets/FileHelper/PHPClassInfo');
 
         if($this->assetsFolder === false) {
             throw new InvalidArgumentException(

@@ -9,7 +9,6 @@
 
 declare(strict_types=1);
 
-const TESTS_ROOT = __DIR__;
 const APP_UTILS_TESTSUITE = 'true';
 
 $autoloader = __DIR__ . '/../vendor/autoload.php';

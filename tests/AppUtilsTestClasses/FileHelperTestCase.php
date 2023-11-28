@@ -95,7 +95,7 @@ class FileHelperTestCase extends BaseTestCase
             return;
         }
 
-        $targetPath = TESTS_ROOT . '/assets/FileHelper';
+        $targetPath = __DIR__ . '/../assets/FileHelper';
         $path = realpath($targetPath);
 
         if($path !== false)

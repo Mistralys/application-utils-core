@@ -8,5 +8,4 @@
 
 declare(strict_types=1);
 
-const TESTS_ROOT = '';
 const TESTS_WEBSERVER_URL = '';
