@@ -26,8 +26,11 @@ final class MicrotimeTests extends BaseTestCase
         $this->assertSame(0, $time->getMicroseconds());
     }
 
-    public function test_emptyTimezoneMustUseUTC() : void
+    public function test_emptyTimezoneMustUseSystemDefault() : void
     {
+        $this->assertTrue(date_default_timezone_set('UTC'));
+        $this->assertSame('UTC', date_default_timezone_get());
+
         $time = new Microtime('2023-10-01T11:45:00.666666777');
 
         $this->assertEquals('2023-10-01 11:45:00.666666', $time->getISODate());
