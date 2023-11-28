@@ -15,6 +15,8 @@ class BaseTestCase extends TestCase
         parent::setUp();
 
         $this->assetsRootFolder = __DIR__.'/../assets';
+
+        date_default_timezone_set('Europe/Paris');
     }
 
     protected function skipWebserverURL() : void
