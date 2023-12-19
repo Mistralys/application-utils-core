@@ -86,4 +86,15 @@ class FolderInfoTest extends FileHelperTestCase
         $this->assertSame('SubFolderA', $subFolders[0]->getName());
         $this->assertSame('SubFolderB', $subFolders[1]->getName());
     }
+
+    public function test_getSubFile() : void
+    {
+        $info = FolderInfo::factory(__DIR__.'/../../assets/FileHelper/PathInfo/FolderWithFiles');
+
+        $this->assertTrue($info->exists());
+
+        $subFile = $info->getSubFile('fileA.txt');
+
+        $this->assertTrue($subFile->exists());
+    }
 }
