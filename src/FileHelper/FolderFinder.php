@@ -94,6 +94,10 @@ class FolderFinder implements OptionableInterface
     {
         $this->findFolders();
 
+        usort($this->folders, static function (FolderInfo $a, FolderInfo $b) : int {
+            return strnatcasecmp($a->getPath(), $b->getPath());
+        });
+
         return $this->folders;
     }
 
