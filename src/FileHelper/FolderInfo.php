@@ -178,12 +178,12 @@ class FolderInfo extends AbstractPathInfo
     /**
      * @return int The size of all files in the folder (recursive), in bytes.
      */
-    public function getSize(): int
+    public function getSize(bool $recursive=true): int
     {
-        return $this->walkSize($this->getPath());
+        return $this->walkSize($this->getPath(), $recursive);
     }
 
-    private function walkSize(string $path) : int
+    private function walkSize(string $path, bool $recursive) : int
     {
         $this->requireExists();
 
@@ -196,8 +196,8 @@ class FolderInfo extends AbstractPathInfo
                 if($bytes !== false) {
                     $size += $bytes;
                 }
-            } else {
-                $size += $this->walkSize($item);
+            } else if($recursive) {
+                $size += $this->walkSize($item, $recursive);
             }
         }
 
@@ -229,5 +229,20 @@ class FolderInfo extends AbstractPathInfo
     public function saveJSONFile(array $data, string $fileName, bool $pretty=false) : JSONFile
     {
         return FileHelper::saveAsJSON($data, $this.'/'.$fileName, $pretty);
+    }
+
+    /**
+     * Helper method that uses the folder finder to
+     * fetch all subfolders of this folder.
+     *
+     * See {@see self::createFolderFinder()}.
+     *
+     * @return FolderInfo[]
+     */
+    public function getSubFolders(bool $recursive=false) : array
+    {
+        return $this->createFolderFinder()
+            ->makeRecursive($recursive)
+            ->getFolderInfos();
     }
 }
