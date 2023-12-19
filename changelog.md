@@ -1,3 +1,8 @@
+## v1.0.4 - FileHelper enhancements
+- FolderInfo: Added `getSubFolders()` helper method.
+- FolderInfo: Added the `$recursive` parameter to `getSize()`.
+- FolderFinder: The paths are now sorted alphabetically by default.
+
 ## v1.0.3 - StringBuilder enhancements
 - StringBuilder: Added `useClass()` and `useClasses()`.
 - StringBuilder: Added `italic()`.
