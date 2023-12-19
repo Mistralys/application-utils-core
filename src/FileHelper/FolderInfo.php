@@ -245,4 +245,19 @@ class FolderInfo extends AbstractPathInfo
             ->makeRecursive($recursive)
             ->getFolderInfos();
     }
+
+    /**
+     * Fetches a file from this folder given the specified filename.
+     *
+     * NOTE: This does not check if the file actually exists.
+     * Use {@see FileInfo::exists()} to check if it does.
+     *
+     * @param string $nameOrRelativePath A filename or relative path from the folder's root.
+     * @return FileInfo
+     * @throws FileHelper_Exception
+     */
+    public function getSubFile(string $nameOrRelativePath) : FileInfo
+    {
+        return FileInfo::factory($this->getPath().'/'.$nameOrRelativePath);
+    }
 }
