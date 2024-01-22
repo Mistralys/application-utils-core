@@ -90,7 +90,7 @@ trait OptionableTrait
      * the string is empty.
      *
      * @param string $name
-     * @param string $default Used if the option does not exist, is invalid, or empty.
+     * @param string $default Used if the option does not exist, or is invalid, or empty.
      * @return string
      */
     public function getStringOption(string $name, string $default='') : string
