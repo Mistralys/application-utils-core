@@ -1,3 +1,7 @@
+## v1.1.0 - Added the Type Filter helper
+- TypeFilter: Added the `StrictType` and `LenientType` classes.
+- Traits: Added the `RuntimePropertizable` trait and interface.
+
 ## v1.0.4 - FileHelper enhancements
 - FolderInfo: Added `getSubFolders()` helper method.
 - FolderInfo: Added the `$recursive` parameter to `getSize()`.
