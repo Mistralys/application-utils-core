@@ -1,3 +1,6 @@
+## v1.1.2 - JSHelper enhancement
+- JSHelper: Added HTML tag awareness to `quoteStyle()`.
+
 ## v1.1.1 - JSHelper enhancement
 - JSHelper: Added the quote style converter with `quoteStyle()`.
 
