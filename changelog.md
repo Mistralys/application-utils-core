@@ -1,3 +1,6 @@
+## v1.1.1 - JSHelper enhancement
+- JSHelper: Added the quote style converter with `quoteStyle()`.
+
 ## v1.1.0 - Added the Type Filter helper
 - TypeFilter: Added the `StrictType` and `LenientType` classes.
 - Traits: Added the `RuntimePropertizable` trait and interface.
