@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AppUtilsTests;
+namespace AppUtilsTests\JSHelper;
 
-use AppUtilsTestClasses\BaseTestCase;
 use AppUtils\JSHelper;
+use AppUtilsTestClasses\BaseTestCase;
 use stdClass;
 
 final class JSHelperTests extends BaseTestCase
