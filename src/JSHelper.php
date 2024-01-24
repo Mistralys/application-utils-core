@@ -14,6 +14,7 @@ namespace AppUtils;
 use AppUtils\ConvertHelper\JSONConverter;
 use AppUtils\ConvertHelper\JSONConverter\JSONConverterException;
 use AppUtils\JSHelper\JSHelperException;
+use AppUtils\JSHelper\QuoteConverter;
 
 /**
  * Simplifies building JavaScript statements from PHP variables.
@@ -367,5 +368,10 @@ class JSHelper
             'new RegExp(%s)',
             ConvertHelper::var2json($format)
         );
+    }
+
+    public static function quoteStyle(string $statement) : QuoteConverter
+    {
+        return new QuoteConverter($statement);
     }
 }
