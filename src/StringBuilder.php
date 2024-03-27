@@ -116,38 +116,40 @@ class StringBuilder implements StringBuilder_Interface
     * Adds an unordered list with the specified items.
     * 
     * @param array<int,string|number|StringableInterface|NULL> $items
+    * @param AttributeCollection|NULL $attributes Optional attributes for the list tag.
     * @return $this
     */
-    public function ul(array $items) : StringBuilder
+    public function ul(array $items, ?AttributeCollection $attributes=null) : StringBuilder
     {
-        return $this->list('ul', $items);
+        return $this->list('ul', $items, $attributes);
     }
     
    /**
     * Adds an ordered list with the specified items.
     * 
     * @param array<int,string|number|StringableInterface|NULL> $items
+    * @param AttributeCollection|NULL $attributes Optional attributes for the list tag.
     * @return $this
     */
-    public function ol(array $items) : StringBuilder
+    public function ol(array $items, ?AttributeCollection $attributes=null) : StringBuilder
     {
-        return $this->list('ol', $items);
+        return $this->list('ol', $items, $attributes);
     }
     
    /**
-    * Creates a list tag with the items list.
+    * Creates a list tag with the provided list of items.
     * 
     * @param string $type The list type, `ol` or `ul`.
     * @param array<int,string|number|StringableInterface|NULL> $items
+    * @param AttributeCollection|NULL $attributes
     * @return $this
     */
-    protected function list(string $type, array $items) : StringBuilder
+    protected function list(string $type, array $items, ?AttributeCollection $attributes=null) : StringBuilder
     {
-        return $this->html(sprintf(
-            '<%1$s><li>%2$s</li></%1$s>',
-            $type,
-            implode('</li><li>', $items)
-        ));
+        return $this->html(
+            HTMLTag::create($type, $attributes)
+                ->setContent('<li>'.implode('</li><li>', $items).'</li>')
+        );
     }
     
    /**
@@ -221,7 +223,7 @@ class StringBuilder implements StringBuilder_Interface
     }
     
    /**
-    * Adds a text that is meant as a reference to a UI element,
+    * Adds a text meant as a reference to a UI element,
     * like a menu item, button, etc.
     * 
     * @param string|number|StringableInterface $string
@@ -229,7 +231,7 @@ class StringBuilder implements StringBuilder_Interface
     */
     public function reference($string) : StringBuilder
     {
-        return $this->sf('"%s"', $string);
+        return $this->quote($string);
     }
 
    /**
@@ -250,11 +252,12 @@ class StringBuilder implements StringBuilder_Interface
     * Adds a bold string.
     * 
     * @param string|number|StringableInterface $string
+    * @param AttributeCollection|NULL $attributes
     * @return $this
     */
-    public function bold($string) : StringBuilder
+    public function bold($string, ?AttributeCollection $attributes=null) : StringBuilder
     {
-        return $this->tag('b', $string);
+        return $this->tag('b', $string, $attributes);
     }
     
    /**
@@ -336,10 +339,11 @@ class StringBuilder implements StringBuilder_Interface
    /**
     * Adds two linebreaks.
     *
-    * @param StringBuilder_Interface|string|number|NULL $content
+    * @param StringableInterface|string|number|NULL $content
+    * @param AttributeCollection|NULL $attributes
     * @return $this
     */
-    public function para($content=null) : StringBuilder
+    public function para($content=null, ?AttributeCollection $attributes=null) : StringBuilder
     {
         if($content !== null)
         {
@@ -348,7 +352,11 @@ class StringBuilder implements StringBuilder_Interface
                 return $this;
             }
 
-            return $this->html(sprintf('<p%s>', $this->compileClasses()))->nospace($content)->html('</p>');
+            return $this->html(
+                HTMLTag::create('p', $attributes)
+                    ->addClasses($this->classes)
+                    ->setContent($content)
+            );
         }
 
         return $this->nl()->nl();
@@ -357,8 +365,8 @@ class StringBuilder implements StringBuilder_Interface
     /**
      * Adds an anchor HTML tag.
      *
-     * @param string|StringableInterface $label
-     * @param string|StringableInterface $url
+     * @param string|number|StringableInterface $label
+     * @param string|number|StringableInterface $url
      * @param bool $newTab
      * @param AttributeCollection|null $attributes
      * @return $this
@@ -386,9 +394,15 @@ class StringBuilder implements StringBuilder_Interface
             ->addText($label);
     }
 
-    public function linkOpen(string $url, bool $newTab=false, ?AttributeCollection $attributes=null) : StringBuilder
+    /**
+     * @param string|number|StringableInterface $url
+     * @param bool $newTab
+     * @param AttributeCollection|null $attributes
+     * @return $this
+     */
+    public function linkOpen($url, bool $newTab=false, ?AttributeCollection $attributes=null) : StringBuilder
     {
-        return $this->html($this->createLink('', $url, $newTab, $attributes)->renderOpen());
+        return $this->html($this->createLink('', (string)$url, $newTab, $attributes)->renderOpen());
     }
 
     public function linkClose() : StringBuilder
@@ -400,22 +414,24 @@ class StringBuilder implements StringBuilder_Interface
     * Wraps the string in a `code` tag.
     * 
     * @param string|number|StringableInterface $string
+    * @param AttributeCollection|NULL $attributes
     * @return $this
     */
-    public function code($string) : StringBuilder
+    public function code($string, ?AttributeCollection $attributes=null) : StringBuilder
     {
-        return $this->tag('code', $string);
+        return $this->tag('code', $string, $attributes);
     }
     
    /**
     * Wraps the string in a `pre` tag.
     * 
     * @param string|number|StringableInterface|NULL $string
+    * @param AttributeCollection|NULL $attributes
     * @return $this
     */
-    public function pre($string) : StringBuilder
+    public function pre($string, ?AttributeCollection $attributes=null) : StringBuilder
     {
-        return $this->tag('pre', $string);
+        return $this->tag('pre', $string, $attributes);
     }
     
    /**
@@ -423,9 +439,10 @@ class StringBuilder implements StringBuilder_Interface
     * 
     * @param string|number|StringableInterface $string
     * @param string|string[] $classes
+    * @param AttributeCollection|NULL $attributes
     * @return $this
     */
-    public function spanned($string, $classes) : StringBuilder
+    public function spanned($string, $classes, ?AttributeCollection $attributes=null) : StringBuilder
     {
         if(is_array($classes))
         {
@@ -436,7 +453,7 @@ class StringBuilder implements StringBuilder_Interface
             $this->useClass($classes);
         }
         
-        return $this->tag('span', $string);
+        return $this->tag('span', $string, $attributes);
     }
 
     /**
@@ -445,9 +462,19 @@ class StringBuilder implements StringBuilder_Interface
      * @return $this
      * @throws ConvertHelper_Exception
      */
-    public function bool($value, bool $yesNo=false) : StringBuilder
+    public function bool($value, bool $yesNo=false) : self
     {
         return $this->add(ConvertHelper::bool2string($value, $yesNo));
+    }
+
+    /**
+     * @param string|bool|int $value
+     * @return $this
+     * @throws ConvertHelper_Exception
+     */
+    public function boolYes($value) : self
+    {
+        return $this->bool($value, true);
     }
 
     /**
@@ -608,17 +635,25 @@ class StringBuilder implements StringBuilder_Interface
 
     /**
      * @param string|int|float|StringableInterface|NULL $string
+     * @param AttributeCollection|NULL $attributes
      * @return $this
      */
-    public function italic($string) : StringBuilder
+    public function italic($string, ?AttributeCollection $attributes=null) : StringBuilder
     {
         return $this->tag(
             'i',
-            $string
+            $string,
+            $attributes
         );
     }
 
-    public function tag(string $name, $content) : StringBuilder
+    /**
+     * @param string $name
+     * @param string|number|StringableInterface|NULL $content The content of the tag
+     * @param AttributeCollection|null $attributes
+     * @return $this
+     */
+    public function tag(string $name, $content, ?AttributeCollection $attributes=null) : StringBuilder
     {
         $content = (string)$content;
 
@@ -627,15 +662,20 @@ class StringBuilder implements StringBuilder_Interface
             return $this;
         }
 
-        return $this->sf(
-            '<%1$s%2$s>%3$s</%1$s>',
-            $name,
-            $this->compileClasses(),
-            $content
-        );
+        if($attributes === null)
+        {
+            $attributes = AttributeCollection::create();
+        }
+
+        $attributes->addClasses($this->classes);
+
+        return $this->add(HTMLTag::create($name, $attributes)->setContent($content));
     }
 
-    public function useNoSpace() : StringBuilder
+    /**
+     * @return $this
+     */
+    public function useNoSpace() : self
     {
         $this->separatorEnabled = false;
         return $this;
