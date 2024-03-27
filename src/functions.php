@@ -79,6 +79,16 @@ function sb() : StringBuilder
 }
 
 /**
+ * Creates a new attribute collection, optionally with initial attributes.
+ * @param array<string,string|number|bool|NULL|StringableInterface>|string|NULL $attributes Associative array, or a query string that will be parsed.
+ * @return AttributeCollection
+ */
+function attr($attributes=null) : AttributeCollection
+{
+    return AttributeCollection::createAuto($attributes);
+}
+
+/**
  * Creates an interval wrapper, that makes it a lot easier
  * to work with date intervals. It also solves
  *
