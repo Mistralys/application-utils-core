@@ -60,13 +60,33 @@ class AttributeCollection
     private array $empty = array();
 
     /**
-     * @param array<string,string|number|bool|NULL|StringableInterface|StringBuilder_Interface> $attributes
+     * @param array<string,string|number|bool|NULL|StringableInterface> $attributes
      */
     private function __construct(array $attributes)
     {
         $this->styles = StyleCollection::create();
 
         $this->setAttributes($attributes);
+    }
+
+    /**
+     * @param array<string,string|number|bool|NULL|StringableInterface>|string|NULL $attributes Associative array, or a query string that will be parsed.
+     * @return AttributeCollection
+     */
+    public static function createAuto($attributes=null) : AttributeCollection
+    {
+        if(is_array($attributes))
+        {
+            return self::create($attributes);
+        }
+
+        if($attributes === null)
+        {
+            return self::create();
+        }
+
+        return self::create()
+            ->setAttributeString((string)$attributes);
     }
 
     public function getStyles() : StyleCollection
@@ -78,7 +98,7 @@ class AttributeCollection
      * @param array<string,string|number|bool|NULL|StringableInterface|StringBuilder_Interface|NULL> $attributes
      * @return $this
      */
-    public function setAttributes(array $attributes) : AttributeCollection
+    public function setAttributes(array $attributes) : self
     {
         foreach($attributes as $name => $value)
         {
@@ -86,6 +106,11 @@ class AttributeCollection
         }
 
         return $this;
+    }
+
+    public function setAttributeString(string $attributes) : self
+    {
+        return $this->setAttributes(ConvertHelper::parseQueryString($attributes));
     }
 
     public function getAttribute(string $name, string $default='') : string
