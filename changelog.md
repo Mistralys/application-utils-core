@@ -1,3 +1,11 @@
+## v1.1.4 - String builder attribute support
+- Classable: Classes are now sorted alphabetically by default.
+- StringBuilder: Added optional attributes to all tag methods.
+- StringBuilder: Added `boolYes()`.
+- AttributeCollection: Added the global function `attr()` for brevity.
+- AttributeCollection: Added support for parsing query strings for attributes.
+- AttributeCollection: Added `setAttributeString()`.
+
 ## v1.1.3 - String builder tweak
 - StringBuilder: Link parameters `$label` and `$url` now accept `StringableInterface`.
 
