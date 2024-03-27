@@ -43,6 +43,8 @@ trait ClassableTrait
         if(!in_array($name, $this->classes, true)) {
             $this->classes[] = $name;
         }
+
+        sort($this->classes);
         
         return $this;
     }
