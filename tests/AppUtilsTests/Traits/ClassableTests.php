@@ -27,7 +27,7 @@ final class ClassableTests extends TestCase
     {
         $this->subject->addClasses(array('foo', 'bar'));
 
-        $this->assertEquals(array('foo', 'bar'), $this->subject->getClasses());
+        $this->assertEquals(array('bar', 'foo'), $this->subject->getClasses());
     }
 
     public function test_removeClass(): void
@@ -50,13 +50,13 @@ final class ClassableTests extends TestCase
     {
         $this->subject->addClasses(array('foo', 'bar'));
 
-        $this->assertEquals('foo bar', $this->subject->classesToString());
+        $this->assertEquals('bar foo', $this->subject->classesToString());
     }
 
     public function test_classesToAttribute(): void
     {
         $this->subject->addClasses(array('foo', 'bar'));
 
-        $this->assertEquals(' class="foo bar" ', $this->subject->classesToAttribute());
+        $this->assertEquals(' class="bar foo" ', $this->subject->classesToAttribute());
     }
 }

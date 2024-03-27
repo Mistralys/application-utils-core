@@ -6,6 +6,7 @@ namespace AppUtilsTests;
 
 use AppUtils\AttributeCollection;
 use AppUtilsTestClasses\BaseTestCase;
+use function AppUtils\attr;
 use function AppUtils\sb;
 
 final class AttributeCollectionTest extends BaseTestCase
@@ -21,6 +22,21 @@ final class AttributeCollectionTest extends BaseTestCase
         $this->assertTrue($attribs->hasClass('class-one'));
         $this->assertTrue($attribs->hasClass('class-two'));
         $this->assertEquals('Name', $attribs->getAttribute('name'));
+    }
+
+    public function test_initialAttributeString() : void
+    {
+        $attribs = AttributeCollection::createAuto('name=Foo&id=45');
+
+        $this->assertEquals('Foo', $attribs->getAttribute('name'));
+        $this->assertEquals('45', $attribs->getAttribute('id'));
+    }
+
+    public function test_globalFunction() : void
+    {
+        $attribs = attr('name=Foo');
+
+        $this->assertEquals('Foo', $attribs->getAttribute('name'));
     }
 
     public function test_hasAttribute(): void

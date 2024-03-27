@@ -6,6 +6,7 @@ namespace AppUtilsTests;
 
 use AppUtilsTestClasses\BaseTestCase;
 use DateTime;
+use function AppUtils\attr;
 use function AppUtils\sb;
 
 final class StringBuilderTest extends BaseTestCase
@@ -31,11 +32,19 @@ final class StringBuilderTest extends BaseTestCase
         $this->assertEquals('One here and Two', $result);
     }
 
+    public function test_translate_with_context(): void
+    {
+        $result = (string)sb()->tex('%1$s here and %2$s', 'Context here', 'One', 'Two');
+
+        $this->assertEquals('One here and Two', $result);
+    }
+
     public function test_para(): void
     {
         $this->assertEquals('<br><br>', (string)sb()->para());
         $this->assertEquals('<p>Test</p>', (string)sb()->para('Test'));
         $this->assertEquals('', (string)sb()->para(''));
+        $this->assertEquals('<p id="42">Foo</p>', (string)sb()->para('Foo', attr('id=42')));
     }
 
     public function test_nospace(): void
@@ -164,6 +173,32 @@ final class StringBuilderTest extends BaseTestCase
     public function test_spanned() : void
     {
         $this->assertEquals('<span class="classA">Test</span>', (string)sb()->spanned('Test', 'classA'));
+    }
+
+    public function test_bool() : void
+    {
+        $this->assertEquals('true', sb()->bool(true));
+        $this->assertEquals('yes', sb()->bool(true, true));
+    }
+
+    public function test_boolYes() : void
+    {
+        $this->assertEquals('yes', sb()->boolYes(true));
+    }
+
+    public function test_quote() : void
+    {
+        $this->assertEquals('&quot;Foobar&quot;', (string)sb()->quote('Foobar'));
+    }
+
+    public function test_ul() : void
+    {
+        $this->assertEquals('<ul><li>Test</li></ul>', (string)sb()->ul(array('Test')));
+    }
+
+    public function test_ol() : void
+    {
+        $this->assertEquals('<ol><li>Test</li></ol>', (string)sb()->ol(array('Test')));
     }
 
     public function test_bold() : void
