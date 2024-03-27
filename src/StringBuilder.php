@@ -357,15 +357,15 @@ class StringBuilder implements StringBuilder_Interface
     /**
      * Adds an anchor HTML tag.
      *
-     * @param string $label
-     * @param string $url
+     * @param string|StringableInterface $label
+     * @param string|StringableInterface $url
      * @param bool $newTab
      * @param AttributeCollection|null $attributes
      * @return $this
      */
-    public function link(string $label, string $url, bool $newTab=false, ?AttributeCollection $attributes=null) : StringBuilder
+    public function link($label, $url, bool $newTab=false, ?AttributeCollection $attributes=null) : StringBuilder
     {
-        return $this->add($this->createLink($label, $url, $newTab, $attributes));
+        return $this->add($this->createLink((string)$label, (string)$url, $newTab, $attributes));
     }
 
     private function createLink(string $label, string $url, bool $newTab=false, ?AttributeCollection $attributes=null) : HTMLTag
