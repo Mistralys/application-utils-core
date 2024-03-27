@@ -1,4 +1,4 @@
-## v1.1.1 - String builder tweak
+## v1.1.3 - String builder tweak
 - StringBuilder: Link parameters `$label` and `$url` now accept `StringableInterface`.
 
 ## v1.1.2 - JSHelper enhancement
