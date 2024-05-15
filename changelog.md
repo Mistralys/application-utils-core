@@ -1,3 +1,8 @@
+## v1.1.5 - Added string conversion methods
+- ConvertHelper: Added `camel2snake()`.
+- ConvertHelper: Added `isStringUnicode()`.
+- ConvertHelper: Added `isCharUppercase()`.
+
 ## v1.1.4 - String builder attribute support
 - Classable: Classes are now sorted alphabetically by default.
 - StringBuilder: Added optional attributes to all tag methods.
