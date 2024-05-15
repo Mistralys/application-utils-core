@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace AppUtilsTests;
 
+use AppUtils\ConvertHelper_String;
+use AppUtils\VariableInfo;
 use AppUtilsTestClasses\BaseTestCase;
 use AppUtils\ConvertHelper;
 use AppUtils\ConvertHelper_Exception;
 use AppUtils\ConvertHelper_SizeNotation;
 use AppUtils\ConvertHelper_StorageSizeEnum;
 use DateInterval;
+use ForceUTF8\Encoding;
 use stdClass;
 
 final class ConvertHelperTests extends BaseTestCase
@@ -1447,12 +1450,13 @@ final class ConvertHelperTests extends BaseTestCase
     }
 
     /**
-     * The `callback2string()` method must work even if the
-     * target is not actually a callable. This is different
-     * from `parseVariable($callback)->toString()`, which
-     * can only detect callable arrays by checking if they
-     * are indeed callable. Here it is assumed that the
-     * specified value is a callable.
+     * The {@see ConvertHelper::callback2string()} method
+     * must work even if the target is not a callable method.
+     * This is different from {@see VariableInfo::toString()},
+     * which can only detect callable arrays by checking if they
+     * are indeed callable.
+     *
+     * Here it is assumed that the specified value is a callable method.
      */
     public function test_callback2string_notCallable(): void
     {
@@ -1460,5 +1464,70 @@ final class ConvertHelperTests extends BaseTestCase
             'foo::bar()',
             ConvertHelper::callback2string(array('foo', 'bar'))
         );
+    }
+
+    public function test_isUnicode() : void
+    {
+        $this->assertFalse(ConvertHelper::isStringUnicode('Some ASCII text !{}'));
+        $this->assertTrue(ConvertHelper::isStringUnicode('Some Unicode text äöü'));
+    }
+
+    public function test_isUppercase() : void
+    {
+        $this->assertFalse(ConvertHelper::isCharUppercase('a'), '"a" must be lowercase');
+        $this->assertTrue(ConvertHelper::isCharUppercase('A'), '"A" must be uppercase');
+        $this->assertFalse(ConvertHelper::isCharUppercase('ä'), '"ä" must be lowercase');
+        $this->assertTrue(ConvertHelper::isCharUppercase('Ä'), '"Ä" must be uppercase');
+    }
+
+    public function test_camel2snake() : void
+    {
+        $tests = array(
+            array(
+                'label' => 'Regular',
+                'text' => 'camelCase',
+                'expected' => 'camel_case',
+                'transliterate' => false
+            ),
+            array(
+                'label' => 'Longer',
+                'text' => 'camelCaseString',
+                'expected' => 'camel_case_string',
+                'transliterate' => false
+            ),
+            array(
+                'label' => 'With starting capital letter',
+                'text' => 'CamelCase',
+                'expected' => 'camel_case',
+                'transliterate' => false
+            ),
+            array(
+                'label' => 'With double capital letter',
+                'text' => 'CamelACase',
+                'expected' => 'camel_a_case',
+                'transliterate' => false
+            ),
+            array(
+                'label' => 'Unicode, no transliteration',
+                'text' => 'ÖffnenDasFenster',
+                'expected' => 'öffnen_das_fenster',
+                'transliterate' => false
+            ),
+            array(
+                'label' => 'Unicode, with transliteration',
+                'text' => 'ÖffnenDasFenster',
+                'expected' => 'oeffnen_das_fenster',
+                'transliterate' => true
+            )
+        );
+
+        foreach($tests as $test)
+        {
+            $this->assertSame(
+                Encoding::toUTF8($test['expected']),
+                ConvertHelper::camel2snake($test['text'], $test['transliterate']),
+                $test['label']
+            );
+        }
     }
 }
