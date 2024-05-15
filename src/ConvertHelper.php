@@ -1023,6 +1023,50 @@ class ConvertHelper
     }
 
     /**
+     * Whether the specified string contains unicode characters.
+     *
+     * @param string $string
+     * @return bool
+     */
+    public static function isStringUnicode(string $string) : bool
+    {
+        return ConvertHelper_String::isUnicode($string);
+    }
+
+    /**
+     * Checks whether the specified character is an uppercase character,
+     * with Unicode support.
+     *
+     * @param string $char A single character, or a longer string. Only the first character will be used.
+     * @return bool
+     */
+    public static function isCharUppercase(string $char) : bool
+    {
+        return ConvertHelper_String::isCharUppercase($char);
+    }
+
+    /**
+     * Converts a camel case string to snake case (underscores).
+     *
+     * Examples:
+     *
+     * - camelCase > camel_case
+     * - camelCaseString > camel_case_string
+     * - CamelCase > camel_case
+     * - CamelACase > camel_a_case
+     * - ÖffnenDasFenster > öffnen_das_fenster
+     * - ÖffnenDasFenster > oeffnen_das_fenster (transliterated)
+     *
+     * @param string $camelCase
+     * @param bool $transliterate
+     * @return string
+     */
+    public static function camel2snake(string $camelCase, bool $transliterate=false) : string
+    {
+        return ConvertHelper_String::camel2snake($camelCase, $transliterate);
+    }
+
+    /**
      * Converts the specified callable to string.
      *
      * NOTE: Will work even if the callable is not

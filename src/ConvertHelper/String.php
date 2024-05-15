@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace AppUtils;
 
 use ForceUTF8\Encoding;
+use function PHPUnit\Framework\returnArgument;
 
 /**
  * String conversion helper: focuses on string operations.
@@ -317,5 +318,72 @@ class ConvertHelper_String
         }
 
         return $keep;
+    }
+
+    /**
+     * Whether the specified string contains unicode characters.
+     *
+     * @param string $string
+     * @return bool
+     */
+    public static function isUnicode(string $string) : bool
+    {
+        return strlen($string) !== strlen(utf8_decode($string));
+    }
+
+    /**
+     * Checks whether the specified character is an uppercase character,
+     * with Unicode support.
+     *
+     * @param string $char A single character, or a longer string. Only the first character will be used.
+     * @return bool
+     * @see https://stackoverflow.com/a/55992883/2298192
+     */
+    public static function isCharUppercase(string $char) : bool
+    {
+        if(mb_strlen($char) > 1) {
+            $char = mb_substr($char, 0, 1);
+        }
+
+        return preg_match('~^\p{Lu}~u', $char) === 1;
+    }
+
+    /**
+     * Converts a camel case string to snake case (with underscores),
+     * with Unicode support.
+     *
+     * Examples:
+     *
+     * - camelCase > camel_case
+     * - camelCaseString > camel_case_string
+     * - CamelCase > camel_case
+     * - CamelACase > camel_a_case
+     * - ÖffnenDasFenster > öffnen_das_fenster
+     *
+     * @param string $camelCase
+     * @param bool $transliterate
+     * @return string
+     */
+    public static function camel2snake(string $camelCase, bool $transliterate=false) : string
+    {
+        $result = '';
+        $camelCase = self::toUtf8($camelCase);
+
+        foreach(self::toArray($camelCase) as $char)
+        {
+            if (self::isCharUppercase($char)) {
+                $result .= '_' . mb_strtolower($char, 'UTF-8');
+            } else {
+                $result .= $char;
+            }
+        }
+
+        $result = ltrim($result, '_');
+
+        if($transliterate) {
+            return self::transliterate($result, '_');
+        }
+
+        return $result;
     }
 }
