@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace AppUtils;
 
 use ForceUTF8\Encoding;
-use function PHPUnit\Framework\returnArgument;
 
 /**
  * String conversion helper: focuses on string operations.
@@ -162,16 +161,13 @@ class ConvertHelper_String
      */
     public static function isHTML(string $string) : bool
     {
-        if(preg_match('%<[a-z/][\s\S]*>%siU', $string)) {
+        if(preg_match('%<[a-z/][\s\S]*>%iU', $string)) {
             return true;
         }
 
         $decoded = html_entity_decode($string);
-        if($decoded !== $string) {
-            return true;
-        }
 
-        return false;
+        return $decoded !== $string;
     }
 
     /**
@@ -225,9 +221,7 @@ class ConvertHelper_String
      */
     public static function hidden2visible(string $string) : string
     {
-        $converter = new ConvertHelper_HiddenConverter();
-
-        return $converter->convert($string);
+        return (new ConvertHelper_HiddenConverter())->convert($string);
     }
 
     /**
@@ -367,7 +361,7 @@ class ConvertHelper_String
     public static function camel2snake(string $camelCase, bool $transliterate=false) : string
     {
         $result = '';
-        $camelCase = self::toUtf8($camelCase);
+        $camelCase = self::removeSpecialChars($camelCase, '_');
 
         foreach(self::toArray($camelCase) as $char)
         {
@@ -378,12 +372,135 @@ class ConvertHelper_String
             }
         }
 
-        $result = ltrim($result, '_');
+        if($transliterate) {
+            $result = self::transliterate($result, '_');
+        }
+
+        return implode('_', self::explodeTrim('_', $result));
+    }
+
+    public static function snake2camel(string $snakeCase, bool $transliterate=false) : string
+    {
+        if(strpos($snakeCase, '_') === false) {
+            return $snakeCase;
+        }
+
+        $snakeCase = mb_strtolower(self::toUtf8($snakeCase));
 
         if($transliterate) {
-            return self::transliterate($result, '_');
+            $snakeCase = self::transliterate($snakeCase, '_', false);
+        }
+
+        return self::words2Camel(self::explodeTrim('_', $snakeCase));
+    }
+
+    /**
+     * Extracts all words from the target string and returns them
+     * as an indexed array. Ignores all special characters.
+     *
+     * @param string $subject
+     * @param string[]|NULL $wordChars Characters to include in words, e.g. "_" so that "foo_bar" is matched as a word.
+     * @return string[]|null
+     */
+    public static function explodeWords(string $subject, ?array $wordChars=null) : ?array
+    {
+        $subject = self::removeSpecialChars($subject, ' ', $wordChars);
+
+        return preg_split("/ +/", $subject, 0, PREG_SPLIT_NO_EMPTY);
+    }
+
+    /**
+     * Removes punctuation, white space and other special characters from
+     * the string. Unicode-safe.
+     *
+     * @param string $subject
+     * @param string $replaceChar
+     * @param string[]|null $preserveChars Special characters to preserve.
+     * @return string
+     */
+    public static function removeSpecialChars(string $subject, string $replaceChar='', ?array $preserveChars=array()) : string
+    {
+        self::toUtf8($subject);
+
+        $replaces = array();
+
+        // Replace the specified characters with something that will not
+        // be stripped by the normalization regex.
+        if(!empty($preserveChars)) {
+            $wordChars = array_unique($preserveChars);
+            $counter = 0;
+            foreach ($preserveChars as $char) {
+                $replaces[$char] = '9aw' . $counter . 'wa9';
+                $counter++;
+            }
+
+            $subject = str_replace(array_keys($replaces), array_values($replaces), $subject);
+        }
+
+        // Replace all special characters and white space with spaces.
+        // With the unicode flag, punctuation includes things like EM dashes.
+        $subject = preg_replace('/[[:punct:]´€°\s]/u', $replaceChar, $subject);
+
+        // Restore the characters to keep
+        if(!empty($wordChars)) {
+            $subject = str_replace(array_values($replaces), array_keys($replaces), $subject);
+        }
+
+        return $subject;
+    }
+
+    private static function words2Camel(array $words) : string
+    {
+        $result = '';
+        foreach(array_values($words) as $idx => $part)
+        {
+            if($idx > 0) {
+                $part = self::ucFirst($part);
+            }
+
+            $result .= $part;
         }
 
         return $result;
+    }
+
+    public static function toCamel(string $subject, bool $transliterate=false) : string
+    {
+        $subject = self::toUtf8($subject);
+
+        if($transliterate) {
+            $subject = self::transliterate($subject, ' ');
+        }
+
+        return self::words2Camel(self::explodeWords(mb_strtolower($subject)));
+    }
+
+    public static function toSnake(string $subject, bool $transliterate=false) : string
+    {
+        $subject = self::toUtf8($subject);
+
+        if($transliterate) {
+            $subject = self::transliterate($subject, ' ');
+        }
+
+        return implode('_', self::explodeWords(mb_strtolower($subject)));
+    }
+
+    /**
+     * Unicode-safe <code>ucfirst</code> implementation.
+     *
+     * @param string $subject
+     * @return string
+     */
+    public static function ucFirst(string $subject) : string
+    {
+        if($subject === '') {
+            return '';
+        }
+
+        $chars = self::toArray($subject);
+        $chars[0] = mb_strtoupper($chars[0]);
+
+        return implode('', $chars);
     }
 }
