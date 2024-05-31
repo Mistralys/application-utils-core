@@ -1,3 +1,33 @@
+## v1.2.0 - String conversions and Refactoring (Deprecation)
+- Core: Refactored some classes for a more logical structure.
+- ConvertHelper: Added `string2camel()`.
+- ConvertHelper: Added `string2snake()`.
+- ConvertHelper: Added `snake2camel()`.
+- ConvertHelper: Added `removeSpecialCharacters()`.
+- ConvertHelper: Added `ucFirst()`.
+- ConvertHelper: Added `addWordCharacter()` in the word splitter.
+- ConvertHelper: Fixed the word splitter preserving some special characters.
+
+### Deprecation changes
+
+Several classes have been deprecated. They have been moved 
+to more logical places. Stubs have been left in place to make the
+migration easier to be backwards compatible.
+
+- `ConvertHelper_Date` => `DateTimeHelper`
+- `ConvertHelper_DateInterval` => `DateTimeHelper\DateIntervalExtended`
+- `ConvertHelper_DurationConverter` => `DateTimeHelper\DurationConverter`
+- `ConvertHelper_IntervalConverter` => `DateTimeHelper\IntervalConverter`
+- `ConvertHelper_TimeConverter` => `DateTimeHelper\TimeConverter`
+- `ConvertHelper_String` => `StringHelper`
+- `ConvertHelper_QueryParser` => `StringHelper\QueryParser`
+- `ConvertHelper_StringMatch` => `StringHelper\StringMatch`
+- `ConvertHelper\WordSplitter` => `StringHelper\WordSplitter`
+- `ConvertHelper_WordWrapper` => `StringHelper\WordWrapper`
+
+> NOTE: Deprecated class have been moved to `src/_deprecated` to remove
+> clutter in the source folders. This has no effect on the autoloading.
+
 ## v1.1.5 - Added string conversion methods
 - ConvertHelper: Added `camel2snake()`.
 - ConvertHelper: Added `isStringUnicode()`.
