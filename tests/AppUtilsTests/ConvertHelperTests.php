@@ -1484,6 +1484,18 @@ final class ConvertHelperTests extends BaseTestCase
     {
         $tests = array(
             array(
+                'label' => 'Single',
+                'text' => 'camel',
+                'expected' => 'camel',
+                'transliterate' => false
+            ),
+            array(
+                'label' => 'Single with capital letters',
+                'text' => 'Camel',
+                'expected' => 'camel',
+                'transliterate' => false
+            ),
+            array(
                 'label' => 'Regular',
                 'text' => 'camelCase',
                 'expected' => 'camel_case',
@@ -1515,9 +1527,15 @@ final class ConvertHelperTests extends BaseTestCase
             ),
             array(
                 'label' => 'Unicode, with transliteration',
-                'text' => 'ÖffnenDasFenster',
-                'expected' => 'oeffnen_das_fenster',
+                'text' => 'ÖffneDieTür',
+                'expected' => 'oeffne_die_tuer',
                 'transliterate' => true
+            ),
+            array(
+                'label' => 'Special chars get stripped',
+                'text' => '#Camel~With___Under--—?Scores!',
+                'expected' => 'camel_with_under_scores',
+                'transliterate' => false
             )
         );
 
@@ -1529,5 +1547,136 @@ final class ConvertHelperTests extends BaseTestCase
                 $test['label']
             );
         }
+    }
+
+    public function test_snake2camel() : void
+    {
+        $tests = array(
+            array(
+                'label' => 'Regular',
+                'text' => 'snake_case',
+                'expected' => 'snakeCase',
+                'transliterate' => false
+            ),
+            array(
+                'label' => 'Longer',
+                'text' => 'snake_case_string',
+                'expected' => 'snakeCaseString',
+                'transliterate' => false
+            ),
+            array(
+                'label' => 'With capital letters',
+                'text' => 'Snake_Case',
+                'expected' => 'snakeCase',
+                'transliterate' => false
+            ),
+            array(
+                'label' => 'All uppercase',
+                'text' => 'SNAKE_CASE',
+                'expected' => 'snakeCase',
+                'transliterate' => false
+            ),
+            array(
+                'label' => 'Duplicate and trailing underscores',
+                'text' => '_snake____case_',
+                'expected' => 'snakeCase',
+                'transliterate' => false
+            ),
+            array(
+                'label' => 'With double capital letter',
+                'text' => 'snake_a_case',
+                'expected' => 'snakeACase',
+                'transliterate' => false
+            ),
+            array(
+                'label' => 'Unicode, no transliteration',
+                'text' => 'öffnen_das_fenster',
+                'expected' => 'öffnenDasFenster',
+                'transliterate' => false
+            ),
+            array(
+                'label' => 'Unicode, with transliteration',
+                'text' => 'öffnen_das_fenster',
+                'expected' => 'oeffnenDasFenster',
+                'transliterate' => true
+            ),
+            array(
+                'label' => 'Capital unicode char transliteration',
+                'text' => 'Foo_Über',
+                'expected' => 'fooUeber',
+                'transliterate' => true
+            )
+        );
+
+        foreach($tests as $test)
+        {
+            $this->assertSame(
+                Encoding::toUTF8($test['expected']),
+                ConvertHelper::snake2camel($test['text'], $test['transliterate']),
+                $test['label']
+            );
+        }
+    }
+
+    public function test_ucFirst() : void
+    {
+        $this->assertSame('Foo', ConvertHelper::ucFirst('foo'));
+        $this->assertSame('Öffnen', ConvertHelper::ucFirst('öffnen'));
+        $this->assertSame(' foo', ConvertHelper::ucFirst(' foo'));
+    }
+
+    public function test_toWords() : void
+    {
+        $this->assertSame(
+            array(
+                'foo4life',
+                'x2',
+                'bar',
+                'Ho',
+                'argh',
+                'UPPER',
+                'ext',
+                'öäü'
+            ),
+            ConvertHelper::string2words('#foo4life x2 bar! Ho--— / argh?_UPPER.ext, öäü')->split()
+        );
+    }
+
+    public function test_toWordsIncludeMoreWordCharacters() : void
+    {
+        $this->assertSame(
+            array(
+                'foo4life',
+                'UPPER.ext'
+            ),
+            ConvertHelper_String::explodeWords(' foo4life UPPER.ext ', array('.'))
+        );
+    }
+
+    public function test_toCamel() : void
+    {
+        $this->assertSame('camelCase', ConvertHelper::string2camel('camel case'));
+        $this->assertSame('fooBarHere', ConvertHelper::string2camel('Foo BAR_here!'));
+        $this->assertSame('öffneDieTür', ConvertHelper::string2Camel('Öffne die Tür!'));
+        $this->assertSame('oeffneDieTuer', ConvertHelper::string2Camel('Öffne die Tür!', true));
+        $this->assertSame('fooUeber', ConvertHelper::string2Camel('Foo Über', true), 'Transliterated capital letters must only have the first letter capitalized.');
+        $this->assertSame('f00Bar', ConvertHelper::string2Camel('#+   f0—0!~Bar'));
+        $this->assertSame('foo❤️Bar', ConvertHelper::string2Camel('foo❤️ bar'));
+    }
+
+    public function test_removeSpec️ialCharacters() : void
+    {
+        $this->assertSame('', ConvertHelper::removeSpecialChars('#+~*/`´?}][{()&%$§"\'!^_-—<>|,;.:=@€“”…¶¿·՚՜°！'));
+    }
+
+    public function test_toSnake() : void
+    {
+        $this->assertSame('snake_case', ConvertHelper::string2snake('snake case'));
+        $this->assertSame('foo_bar_here', ConvertHelper::string2snake('Foo BAR_here!'));
+        $this->assertSame('öffne_die_tür', ConvertHelper::string2snake('Öffne die Tür!'));
+        $this->assertSame('oeffne_die_tuer', ConvertHelper::string2snake('Öffne die Tür!', true));
+        $this->assertSame('foo_ueber', ConvertHelper::string2snake('Foo Über', true), 'Transliterated capital letters must only have the first letter capitalized.');
+        $this->assertSame('f0_0_bar', ConvertHelper::string2snake('#+   f0—0!~Bar'));
+        $this->assertSame('foo❤️_bar', ConvertHelper::string2snake('foo❤️ bar'));
     }
 }
