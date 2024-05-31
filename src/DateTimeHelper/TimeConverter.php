@@ -9,10 +9,12 @@
 
 declare(strict_types=1);
 
-namespace AppUtils;
+namespace AppUtils\DateTimeHelper;
+
+use function AppUtils\t;
 
 /**
- * Converts seconds to a human readable duration string,
+ * Converts seconds to a human-readable duration string,
  * like "5 minutes and 20 seconds".
  *
  * @package Application Utils
@@ -21,7 +23,7 @@ namespace AppUtils;
  *
  * @see ConvertHelper::time2string()
  */
-class ConvertHelper_TimeConverter
+class TimeConverter
 {
    /**
     * @var float

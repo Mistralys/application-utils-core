@@ -1,16 +1,15 @@
 <?php
 /**
- * File containing the {@see \AppUtils\ConvertHelper_DateInterval} class.
- * 
  * @package Application Utils
- * @subpackage ConvertHelper
- * @see \AppUtils\ConvertHelper_DateInterval
+ * @subpackage DateTimeHelper
  */
 
 declare(strict_types=1);
 
-namespace AppUtils;
+namespace AppUtils\DateTimeHelper;
 
+use AppUtils\ConvertHelper;
+use AppUtils\ConvertHelper_Exception;
 use DateInterval;
 use DateTime;
 use Exception;
@@ -26,14 +25,19 @@ use Exception;
  * a format string.
  * 
  * @see \AppUtils\parseInterval()
- *@subpackage ConvertHelper
+ * @subpackage DateTimeHelper
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @package Application Utils
  */
-class ConvertHelper_DateInterval
+class DateIntervalExtended
 {
     public const ERROR_CANNOT_GET_DATE_DIFF = 43601;
-    
+
+    public const INTERVAL_DAYS = 'days';
+    public const INTERVAL_HOURS = 'hours';
+    public const INTERVAL_MINUTES = 'minutes';
+    public const INTERVAL_SECONDS = 'seconds';
+
     public const TOKEN_SECONDS = 's';
     public const TOKEN_MINUTES = 'i';
     public const TOKEN_HOURS = 'h';
@@ -41,22 +45,15 @@ class ConvertHelper_DateInterval
     public const TOKEN_MONTHS = 'm';
     public const TOKEN_YEARS = 'y';
     
-   /**
-    * @var DateInterval
-    */
-    protected $interval;
-    
-   /**
-    * @var int
-    */
-    protected $seconds;
+    protected DateInterval $interval;
+    protected int $seconds;
 
     /**
      * @param int $seconds
      *
      * @throws ConvertHelper_Exception
      * @throws Exception
-     * @see ConvertHelper_DateInterval::ERROR_CANNOT_GET_DATE_DIFF
+     * @see DateIntervalExtended::ERROR_CANNOT_GET_DATE_DIFF
      */
     protected function __construct(int $seconds)
     {
@@ -84,19 +81,19 @@ class ConvertHelper_DateInterval
      * Creates the interval from a specific amount of seconds.
      *
      * @param int $seconds
-     * @return ConvertHelper_DateInterval
+     * @return DateIntervalExtended
      * @throws ConvertHelper_Exception
      */
     public static function fromSeconds(int $seconds)
     {
-        return new ConvertHelper_DateInterval($seconds);
+        return new DateIntervalExtended($seconds);
     }
     
    /**
     * Creates the interval from an existing regular interval instance.
     * 
     * @param DateInterval $interval
-    * @return ConvertHelper_DateInterval
+    * @return DateIntervalExtended
     */
     public static function fromInterval(DateInterval $interval)
     {
@@ -150,12 +147,12 @@ class ConvertHelper_DateInterval
     * @param string $token
     * @return int
     * 
-    * @see ConvertHelper_DateInterval::TOKEN_SECONDS
-    * @see ConvertHelper_DateInterval::TOKEN_MINUTES
-    * @see ConvertHelper_DateInterval::TOKEN_HOURS
-    * @see ConvertHelper_DateInterval::TOKEN_DAYS
-    * @see ConvertHelper_DateInterval::TOKEN_MONTHS
-    * @see ConvertHelper_DateInterval::TOKEN_YEARS
+    * @see DateIntervalExtended::TOKEN_SECONDS
+    * @see DateIntervalExtended::TOKEN_MINUTES
+    * @see DateIntervalExtended::TOKEN_HOURS
+    * @see DateIntervalExtended::TOKEN_DAYS
+    * @see DateIntervalExtended::TOKEN_MONTHS
+    * @see DateIntervalExtended::TOKEN_YEARS
     */
     public function getToken(string $token) : int
     {

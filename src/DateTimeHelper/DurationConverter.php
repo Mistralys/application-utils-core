@@ -1,20 +1,21 @@
 <?php
 /**
- * File containing the {@see AppUtils\ConvertHelper_DurationConverter} class.
- *
  * @package Application Utils
  * @subpackage ConvertHelper
- * @see ConvertHelper_DurationConverter
  */
 
 declare(strict_types=1);
 
-namespace AppUtils;
+namespace AppUtils\DateTimeHelper;
 
+use AppUtils\ConvertHelper;
+use AppUtils\ConvertHelper_Exception;
+use AppUtils\DateTimeHelper;
 use DateTime;
+use function AppUtils\t;
 
 /**
- * Converts a timespan to a human readable duration string,
+ * Converts a timespan to a human-readable duration string,
  * e.g. "2 months", "4 minutes".
  * 
  * @package Application Utils
@@ -23,7 +24,7 @@ use DateTime;
  * 
  * @link http://www.sajithmr.com/php-time-ago-calculation/
  */
-class ConvertHelper_DurationConverter
+class DurationConverter
 {
     public const ERROR_NO_DATE_FROM_SET = 43401;
     
@@ -95,9 +96,9 @@ class ConvertHelper_DurationConverter
     * "In two days".
     *  
     * @param DateTime $date
-    * @return ConvertHelper_DurationConverter
+    * @return DurationConverter
     */
-    public function setDateFrom(DateTime $date) : ConvertHelper_DurationConverter
+    public function setDateFrom(DateTime $date) : DurationConverter
     {
         $this->dateFrom = ConvertHelper::date2timestamp($date);
         
@@ -109,9 +110,9 @@ class ConvertHelper_DurationConverter
     * the current time if not set.
     * 
     * @param DateTime $date
-    * @return ConvertHelper_DurationConverter
+    * @return DurationConverter
     */
-    public function setDateTo(DateTime $date) : ConvertHelper_DurationConverter
+    public function setDateTo(DateTime $date) : DurationConverter
     {
         $this->dateTo = ConvertHelper::date2timestamp($date);
         
@@ -121,10 +122,10 @@ class ConvertHelper_DurationConverter
    /**
     * Converts the specified dates to a human-readable string.
     * 
-    * @throws ConvertHelper_Exception
     * @return string
-    * 
-    * @see ConvertHelper_DurationConverter::ERROR_NO_DATE_FROM_SET
+    *
+    * @throws ConvertHelper_Exception
+    * @see DurationConverter::ERROR_NO_DATE_FROM_SET
     */
     public function convert() : string
     {
@@ -389,11 +390,11 @@ class ConvertHelper_DurationConverter
      * @return string
      *
      * @throws ConvertHelper_Exception
-     * @see ConvertHelper_DurationConverter::ERROR_NO_DATE_FROM_SET
+     * @see DurationConverter::ERROR_NO_DATE_FROM_SET
      */
     public static function toString($datefrom, $dateto = -1) : string
     {
-        $converter = new ConvertHelper_DurationConverter();
+        $converter = new DurationConverter();
 
         if($datefrom instanceof DateTime)
         {
@@ -401,7 +402,7 @@ class ConvertHelper_DurationConverter
         }
         else
         {
-            $converter->setDateFrom(ConvertHelper_Date::fromTimestamp($datefrom));
+            $converter->setDateFrom(DateTimeHelper::fromTimestamp($datefrom));
         }
 
         if($dateto instanceof DateTime)
@@ -410,7 +411,7 @@ class ConvertHelper_DurationConverter
         }
         else if($dateto > 0)
         {
-            $converter->setDateTo(ConvertHelper_Date::fromTimestamp($dateto));
+            $converter->setDateTo(DateTimeHelper::fromTimestamp($dateto));
         }
 
         return $converter->convert();

@@ -1,15 +1,12 @@
 <?php
 /**
- * File containing the {@see AppUtils\ConvertHelper_StringMatch} class.
- * 
  * @package Application Utils
- * @subpackage ConvertHelper
- * @see ConvertHelper_StringMatch
+ * @subpackage StringHelper
  */
 
 declare(strict_types=1);
 
-namespace AppUtils;
+namespace AppUtils\StringHelper;
 
 /**
  * Container for an individual occurrence of a string
@@ -17,21 +14,14 @@ namespace AppUtils;
  * {@link ConvertHelper::findString()}.
  *  
  * @package Application Utils
- * @subpackage ConvertHelper
+ * @subpackage StringHelper
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @see ConvertHelper::findString()
  */
-class ConvertHelper_StringMatch
+class StringMatch
 {
-    /**
-     * @var int
-     */
-    protected $position;
-
-    /**
-     * @var string
-     */
-    protected $match;
+    protected int $position;
+    protected string $match;
     
     public function __construct(int $position, string $matchedString)
     {

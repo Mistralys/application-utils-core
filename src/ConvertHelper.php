@@ -1,17 +1,21 @@
 <?php
 /**
- * File containing the {@see AppUtils\ConvertHelper} class.
- * 
  * @package Application Utils
  * @subpackage ConvertHelper
- * @see AppUtils\ConvertHelper
  */
 
 namespace AppUtils;
 
 use AppUtils\ConvertHelper\JSONConverter;
 use AppUtils\ConvertHelper\JSONConverter\JSONConverterException;
-use AppUtils\ConvertHelper\WordSplitter;
+use AppUtils\StringHelper\QueryParser;
+use AppUtils\StringHelper\WordSplitter;
+use AppUtils\DateTimeHelper\IntervalConverter;
+use AppUtils\DateTimeHelper\DateIntervalExtended;
+use AppUtils\DateTimeHelper\DurationConverter;
+use AppUtils\DateTimeHelper\TimeConverter;
+use AppUtils\StringHelper\TextComparer;
+use AppUtils\StringHelper\StringMatch;
 use DateInterval;
 use DateTime;
 use Throwable;
@@ -34,10 +38,25 @@ class ConvertHelper
     public const ERROR_JSON_UNEXPECTED_DECODED_TYPE = 23308;
     public const ERROR_INVALID_BOOLEAN_STRING = 23306;
 
-    public const INTERVAL_DAYS = 'days';
-    public const INTERVAL_HOURS = 'hours';
-    public const INTERVAL_MINUTES = 'minutes';
-    public const INTERVAL_SECONDS = 'seconds';
+    /**
+     * @deprecated Use {@see DateIntervalExtended::INTERVAL_DAYS} instead.
+     */
+    public const INTERVAL_DAYS = DateIntervalExtended::INTERVAL_DAYS;
+
+    /**
+     * @deprecated Use {@see DateIntervalExtended::INTERVAL_HOURS} instead.
+     */
+    public const INTERVAL_HOURS = DateIntervalExtended::INTERVAL_HOURS;
+
+    /**
+     * @deprecated Use {@see DateIntervalExtended::INTERVAL_MINUTES} instead.
+     */
+    public const INTERVAL_MINUTES = DateIntervalExtended::INTERVAL_MINUTES;
+
+    /**
+     * @deprecated Use {@see DateIntervalExtended::INTERVAL_SECONDS} instead.
+     */
+    public const INTERVAL_SECONDS = DateIntervalExtended::INTERVAL_SECONDS;
 
     /**
      * Normalizes tabs in the specified string by indenting everything
@@ -51,31 +70,31 @@ class ConvertHelper
      */
     public static function normalizeTabs(string $string, bool $tabs2spaces = false) : string
     {
-        return ConvertHelper_String::normalizeTabs($string, $tabs2spaces);
+        return StringHelper::normalizeTabs($string, $tabs2spaces);
     }
 
     /**
      * Converts tabs to spaces in the specified string.
      * 
      * @param string $string
-     * @param int $tabSize The amount of spaces per tab.
+     * @param int $tabSize The number of spaces per tab.
      * @return string
      */
     public static function tabs2spaces(string $string, int $tabSize=4) : string
     {
-        return ConvertHelper_String::tabs2spaces($string, $tabSize);
+        return StringHelper::tabs2spaces($string, $tabSize);
     }
     
    /**
     * Converts spaces to tabs in the specified string.
     * 
     * @param string $string
-    * @param int $tabSize The amount of spaces per tab in the source string.
+    * @param int $tabSize The number of spaces per tab in the source string.
     * @return string
     */
     public static function spaces2tabs(string $string, int $tabSize=4) : string
     {
-        return ConvertHelper_String::spaces2tabs($string, $tabSize);
+        return StringHelper::spaces2tabs($string, $tabSize);
     }
 
     /**
@@ -87,7 +106,7 @@ class ConvertHelper
      */
     public static function hidden2visible(string $string) : string
     {
-        return ConvertHelper_String::hidden2visible($string);
+        return StringHelper::hidden2visible($string);
     }
     
    /**
@@ -100,8 +119,7 @@ class ConvertHelper
     */
     public static function time2string($seconds) : string
     {
-        $converter = new ConvertHelper_TimeConverter($seconds);
-        return $converter->toString();
+        return DateTimeHelper::time2string($seconds);
     }
 
     /**
@@ -117,11 +135,11 @@ class ConvertHelper
      * @return string
      *
      * @throws ConvertHelper_Exception
-     * @see ConvertHelper_DurationConverter::ERROR_NO_DATE_FROM_SET
+     * @see DurationConverter::ERROR_NO_DATE_FROM_SET
      */
     public static function duration2string($datefrom, $dateto = -1) : string
     {
-         return ConvertHelper_DurationConverter::toString($datefrom, $dateto);
+         return DateTimeHelper::duration2string($datefrom, $dateto);
     }
 
    /**
@@ -202,7 +220,7 @@ class ConvertHelper
     */
     public static function text_cut(string $text, int $targetLength, string $append = '...') : string
     {
-        return ConvertHelper_String::cutText($text, $targetLength, $append);
+        return StringHelper::cutText($text, $targetLength, $append);
     }
 
     /**
@@ -308,7 +326,7 @@ class ConvertHelper
      */
     public static function date2listLabel(DateTime $date, bool $includeTime = false, bool $shortMonth = false) : string
     {
-        return ConvertHelper_Date::toListLabel($date, $includeTime, $shortMonth);
+        return DateTimeHelper::toListLabel($date, $includeTime, $shortMonth);
     }
 
     /**
@@ -325,7 +343,7 @@ class ConvertHelper
      */
     public static function month2string($monthNr, bool $short = false) : string
     {
-        return ConvertHelper_Date::month2string($monthNr, $short);
+        return DateTimeHelper::month2string($monthNr, $short);
     }
 
     /**
@@ -338,7 +356,7 @@ class ConvertHelper
      */
     public static function transliterate(string $string, string $spaceChar = '-', bool $lowercase = true) : string
     {
-        return ConvertHelper_String::transliterate($string, $spaceChar, $lowercase);
+        return StringHelper::transliterate($string, $spaceChar, $lowercase);
     }
     
    /**
@@ -583,11 +601,16 @@ class ConvertHelper
     }
     
    /**
-    * Checks if the specified string is a boolean value, which
-    * includes string representations of boolean values, like 
-    * <code>yes</code> or <code>no</code>, and <code>true</code>
-    * or <code>false</code>.
-    * 
+    * Checks if the specified value is a boolean or a string
+    * representation of a boolean value, including:
+    *
+    * - `true` (Boolean or string)
+    * - `false` (Boolean or string)
+    * - `0` (Numeric or string zero)
+    * - `1` (Numeric or string one)
+    * - `yes`
+    * - `no`
+    *
     * @param mixed $value
     * @return boolean
     */
@@ -616,7 +639,7 @@ class ConvertHelper
     */
     public static function date2timestamp(DateTime $date) : int
     {
-        return ConvertHelper_Date::toTimestamp($date);
+        return DateTimeHelper::toTimestamp($date);
     }
     
    /**
@@ -626,7 +649,7 @@ class ConvertHelper
     */
     public static function timestamp2date(int $timestamp) : DateTime
     {
-        return ConvertHelper_Date::fromTimestamp($timestamp);
+        return DateTimeHelper::fromTimestamp($timestamp);
     }
     
    /**
@@ -757,7 +780,7 @@ class ConvertHelper
     */
     public static function string2utf8(string $string) : string
     {
-        return ConvertHelper_String::toUtf8($string);
+        return StringHelper::toUtf8($string);
     }
     
    /**
@@ -766,16 +789,16 @@ class ConvertHelper
     * Note: empty strings and NULL are considered ASCII.
     * Any variable types other than strings are not.
     * 
-    * @param string|float|int|NULL $string
+    * @param string|number|mixed|NULL $string
     * @return boolean
     */
     public static function isStringASCII($string) : bool
     {
-        return ConvertHelper_String::isASCII(strval($string));
+        return StringHelper::isASCII($string);
     }
     
    /**
-    * Adds HTML syntax highlighting to an URL.
+    * Adds HTML syntax highlighting to a URL.
     * 
     * NOTE: Includes the necessary CSS styles. When
     * highlighting several URLs in the same page,
@@ -807,15 +830,13 @@ class ConvertHelper
     * @param array<string,mixed> $options
     * @return float
     *
-    * @see ConvertHelper_TextComparer
-    * @see ConvertHelper_TextComparer::OPTION_MAX_LEVENSHTEIN_DISTANCE
-    * @see ConvertHelper_TextComparer::OPTION_PRECISION
+    * @see TextComparer
+    * @see TextComparer::OPTION_MAX_LEVENSHTEIN_DISTANCE
+    * @see TextComparer::OPTION_PRECISION
     */
     public static function matchString(string $source, string $target, array $options=array()) : float
     {
-        return (new ConvertHelper_TextComparer())
-            ->setOptions($options)
-            ->match($source, $target);
+        return StringHelper::calculateMatch($source, $target, $options);
     }
     
    /**
@@ -824,59 +845,58 @@ class ConvertHelper
     * 
     * @param DateInterval $interval
     * @return string
-    * @see ConvertHelper_IntervalConverter
-    *
     * @throws ConvertHelper_Exception
-    * @see ConvertHelper_IntervalConverter::ERROR_MISSING_TRANSLATION
+    * @see IntervalConverter
+    *
+    * @see IntervalConverter::ERROR_MISSING_TRANSLATION
     */
     public static function interval2string(DateInterval $interval) : string
     {
-        return (new ConvertHelper_IntervalConverter())
-            ->toString($interval);
+        return DateTimeHelper::interval2string($interval);
     }
     
    /**
-    * Converts an interval to its total amount of days.
+    * Converts an interval to its total number of days.
     * @param DateInterval $interval
     * @return int
     */
     public static function interval2days(DateInterval $interval) : int
     {
-        return ConvertHelper_DateInterval::toDays($interval);
+        return DateTimeHelper::interval2days($interval);
     }
 
    /**
-    * Converts an interval to its total amount of hours.
+    * Converts an interval to its total number of hours.
     * @param DateInterval $interval
     * @return int
     */
     public static function interval2hours(DateInterval $interval) : int
     {
-        return ConvertHelper_DateInterval::toHours($interval);
+        return DateTimeHelper::interval2hours($interval);
     }
     
    /**
-    * Converts an interval to its total amount of minutes. 
+    * Converts an interval to its total number of minutes.
     * @param DateInterval $interval
     * @return int
     */
     public static function interval2minutes(DateInterval $interval) : int
     {
-        return ConvertHelper_DateInterval::toMinutes($interval);
+        return DateTimeHelper::interval2minutes($interval);
     }
     
    /**
-    * Converts an interval to its total amount of seconds.
+    * Converts an interval to its total number of seconds.
     * @param DateInterval $interval
     * @return int
     */    
     public static function interval2seconds(DateInterval $interval) : int
     {
-        return ConvertHelper_DateInterval::toSeconds($interval);
+        return DateTimeHelper::interval2seconds($interval);
     }
     
    /**
-    * Calculates the total amount of days / hours / minutes or seconds
+    * Calculates the total number of days / hours / minutes or seconds
     * of a date interval object (depending on the specified units), and
     * returns the total amount.
     * 
@@ -884,14 +904,14 @@ class ConvertHelper
     * @param string $unit What total value to calculate.
     * @return integer
     * 
-    * @see ConvertHelper::INTERVAL_SECONDS
-    * @see ConvertHelper::INTERVAL_MINUTES
-    * @see ConvertHelper::INTERVAL_HOURS
-    * @see ConvertHelper::INTERVAL_DAYS
+    * @see DateIntervalExtended::INTERVAL_SECONDS
+    * @see DateIntervalExtended::INTERVAL_MINUTES
+    * @see DateIntervalExtended::INTERVAL_HOURS
+    * @see DateIntervalExtended::INTERVAL_DAYS
     */
     public static function interval2total(DateInterval $interval, string $unit=self::INTERVAL_SECONDS) : int
     {
-        return ConvertHelper_DateInterval::toTotal($interval, $unit);
+        return DateTimeHelper::interval2total($interval, $unit);
     }
 
    /**
@@ -903,7 +923,7 @@ class ConvertHelper
     */
     public static function date2dayName(DateTime $date, bool $short=false) : ?string
     {
-        return ConvertHelper_Date::toDayName($date, $short);
+        return DateTimeHelper::toDayName($date, $short);
     }
     
    /**
@@ -912,7 +932,7 @@ class ConvertHelper
     */
     public static function getDayNamesInvariant() : array
     {
-        return ConvertHelper_Date::getDayNamesInvariant();
+        return DateTimeHelper::getDayNamesInvariant();
     }
     
    /**
@@ -923,7 +943,7 @@ class ConvertHelper
     */
     public static function getDayNames(bool $short=false) : array
     {
-        return ConvertHelper_Date::getDayNames($short);
+        return DateTimeHelper::getDayNames($short);
     }
 
     /**
@@ -951,7 +971,7 @@ class ConvertHelper
     */
     public static function string2array(string $string) : array
     {
-        return ConvertHelper_String::toArray($string);
+        return StringHelper::toArray($string);
     }
 
     public static function string2words(string $string) : WordSplitter
@@ -967,7 +987,7 @@ class ConvertHelper
     */
     public static function isStringHTML(string $string) : bool
     {
-        return ConvertHelper_String::isHTML($string);
+        return StringHelper::isHTML($string);
     }
     
    /**
@@ -983,7 +1003,7 @@ class ConvertHelper
     */
     public static function wordwrap(string $str, int $width = 75, string $break = "\n", bool $cut = false) : string 
     {
-        return ConvertHelper_String::wordwrap($str, $width, $break, $cut);
+        return StringHelper::wordwrap($str, $width, $break, $cut);
     }
     
    /**
@@ -995,7 +1015,7 @@ class ConvertHelper
     */
     public static function string2bytes(string $string): int
     {
-        return ConvertHelper_String::toBytes($string);
+        return StringHelper::toBytes($string);
     }
     
    /**
@@ -1008,7 +1028,7 @@ class ConvertHelper
     */
     public static function string2shortHash(string $string) : string
     {
-        return ConvertHelper_String::toShortHash($string);
+        return StringHelper::toShortHash($string);
     }
 
     /**
@@ -1019,7 +1039,7 @@ class ConvertHelper
      */
     public static function string2hash(string $string): string
     {
-        return ConvertHelper_String::toHash($string);
+        return StringHelper::toHash($string);
     }
 
     /**
@@ -1030,7 +1050,7 @@ class ConvertHelper
      */
     public static function isStringUnicode(string $string) : bool
     {
-        return ConvertHelper_String::isUnicode($string);
+        return StringHelper::isUnicode($string);
     }
 
     /**
@@ -1042,11 +1062,11 @@ class ConvertHelper
      */
     public static function isCharUppercase(string $char) : bool
     {
-        return ConvertHelper_String::isCharUppercase($char);
+        return StringHelper::isCharUppercase($char);
     }
 
     /**
-     * Converts a camel case string to snake case (underscores).
+     * Converts a "camelCase" string to "snake_case".
      *
      * Examples:
      *
@@ -1054,8 +1074,8 @@ class ConvertHelper
      * - camelCaseString > camel_case_string
      * - CamelCase > camel_case
      * - CamelACase > camel_a_case
-     * - ÖffnenDasFenster > öffnen_das_fenster
-     * - ÖffnenDasFenster > oeffnen_das_fenster (transliterated)
+     * - ÖffneDieTür > öffne_die_tür
+     * - ÖffneDieTür > oeffne_die_tuer (transliterated)
      *
      * @param string $camelCase
      * @param bool $transliterate
@@ -1063,15 +1083,100 @@ class ConvertHelper
      */
     public static function camel2snake(string $camelCase, bool $transliterate=false) : string
     {
-        return ConvertHelper_String::camel2snake($camelCase, $transliterate);
+        return StringHelper::camel2snake($camelCase, $transliterate);
+    }
+
+    /**
+     * Converts a "snake_case" string to "camelCase".
+     *
+     * NOTE: Unicode-safe.
+     *
+     * @param string $snakeCase
+     * @param bool $transliterate If enabled, unicode characters will be transliterated.
+     * @return string
+     */
+    public static function snake2camel(string $snakeCase, bool $transliterate=false) : string
+    {
+        return StringHelper::snake2camel($snakeCase, $transliterate);
+    }
+
+    /**
+     * Converts any string to "camelCase".
+     *
+     * NOTE: Unicode-safe.
+     *
+     * Punctuation and special characters including whitespace
+     * are used as word boundaries.
+     *
+     * @param string $subject
+     * @param bool $transliterate If enabled, unicode characters will be transliterated.
+     * @return string
+     */
+    public static function string2Camel(string $subject, bool $transliterate=false) : string
+    {
+        return StringHelper::toCamel($subject, $transliterate);
+    }
+
+    /**
+     * Converts any string to "snake_case".
+     *
+     * NOTE: Unicode-safe.
+     *
+     * Punctuation and special characters including whitespace
+     * are used as word boundaries.
+     *
+     * Examples:
+     *
+     *  - Snake Case > snake_case
+     *  - Snake-Case > snake_case
+     *  - (~l337!~) > l337
+     *  - Öffne die Tür > öffne_die_tür
+     *  - Öffne die Tür > oeffne_die_tuer (transliterated)
+     *
+     * @param string $subject
+     * @param bool $transliterate If enabled, unicode characters will be transliterated.
+     * @return string
+     */
+    public static function string2snake(string $subject, bool $transliterate=false) : string
+    {
+        return StringHelper::toSnake($subject, $transliterate);
+    }
+
+    /**
+     * Converts the first letter of the string to uppercase.
+     *
+     * NOTE: Unicode-safe.
+     *
+     * @param string $subject
+     * @return string
+     */
+    public static function ucFirst(string $subject) : string
+    {
+        return StringHelper::ucFirst($subject);
+    }
+
+    /**
+     * Removes all special characters, punctuation and white space
+     * from the string.
+     *
+     * NOTE: Unicode-safe.
+     *
+     * @param string $subject
+     * @param string $replaceChar The character with which to replace removed characters.
+     *                            Duplicates are removed to leave only a single one at most.
+     * @param string[]|null $preserveChars List of characters to protect from being removed.
+     * @return string
+     */
+    public static function removeSpecialChars(string $subject, string $replaceChar='', ?array $preserveChars=array()) : string
+    {
+        return StringHelper::removeSpecialChars($subject, $replaceChar, $preserveChars);
     }
 
     /**
      * Converts the specified callable to string.
      *
      * NOTE: Will work even if the callable is not
-     * actually callable, as compared to
-     * `parseVariable($callback)->toString()`.
+     * callable, as compared to {@see VariableInfo::toString()}.
      *
      * @param callable|array{0:string,1:string} $callback
      * @return string
@@ -1106,11 +1211,11 @@ class ConvertHelper
     * 
     * @param string $queryString
     * @return array<string,string>
-    * @see ConvertHelper_QueryParser
+    * @see QueryParser
     */
     public static function parseQueryString(string $queryString) : array
     {
-        return (new ConvertHelper_QueryParser())->parse($queryString);
+        return (new QueryParser())->parse($queryString);
     }
 
    /**
@@ -1122,11 +1227,11 @@ class ConvertHelper
     * @param string $needle
     * @param string $haystack
     * @param bool $caseInsensitive
-    * @return ConvertHelper_StringMatch[]
+    * @return StringMatch[]
     */
     public static function findString(string $needle, string $haystack, bool $caseInsensitive=false): array
     {
-        return ConvertHelper_String::findString($needle, $haystack, $caseInsensitive);
+        return StringHelper::findString($needle, $haystack, $caseInsensitive);
     }
     
    /**
@@ -1139,7 +1244,7 @@ class ConvertHelper
     */
     public static function explodeTrim(string $delimiter, string $string) : array
     {
-        return ConvertHelper_String::explodeTrim($delimiter, $string);
+        return StringHelper::explodeTrim($delimiter, $string);
     }
     
    /**
@@ -1202,7 +1307,7 @@ class ConvertHelper
     */
     public static function seconds2interval(int $seconds) : DateInterval
     {
-        return ConvertHelper_DateInterval::fromSeconds($seconds)->getInterval();
+        return DateIntervalExtended::fromSeconds($seconds)->getInterval();
     }
     
    /**

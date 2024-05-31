@@ -1,15 +1,15 @@
 <?php
 /**
- * File containing the {@see AppUtils\ConvertHelper_WordWrapper} class.
+ * File containing the {@see \AppUtils\StringHelper\WordWrapper} class.
  * 
  * @package Application Utils
- * @subpackage ConvertHelper
- * @see AppUtils\ConvertHelper_WordWrapper
+ * @subpackage StringHelper
+ * @see \AppUtils\StringHelper\WordWrapper
  */
 
 declare(strict_types=1);
 
-namespace AppUtils;
+namespace AppUtils\StringHelper;
 
 use AppUtils\Interfaces\OptionableInterface;
 use AppUtils\Traits\OptionableTrait;
@@ -18,10 +18,10 @@ use AppUtils\Traits\OptionableTrait;
  * Wordwrap class that is used to wordwrap texts.
  * 
  * @package Application Utils
- * @subpackage ConvertHelper
+ * @subpackage StringHelper
  * @see https://stackoverflow.com/a/4988494/2298192
  */
-class ConvertHelper_WordWrapper implements OptionableInterface
+class WordWrapper implements OptionableInterface
 {
     use OptionableTrait;
     
@@ -39,7 +39,7 @@ class ConvertHelper_WordWrapper implements OptionableInterface
         );
     }
     
-    public function setLineWidth(int $width) : ConvertHelper_WordWrapper
+    public function setLineWidth(int $width) : WordWrapper
     {
         $this->setOption('width', $width);
         return $this;
@@ -50,7 +50,7 @@ class ConvertHelper_WordWrapper implements OptionableInterface
         return $this->getIntOption('width');
     }
     
-    public function setBreakCharacter(string $char) : ConvertHelper_WordWrapper
+    public function setBreakCharacter(string $char) : WordWrapper
     {
         $this->setOption('break', $char);
         return $this;
@@ -66,7 +66,7 @@ class ConvertHelper_WordWrapper implements OptionableInterface
         return $this->getBoolOption('cut');
     }
     
-    public function setCuttingEnabled(bool $enabled=true) : ConvertHelper_WordWrapper
+    public function setCuttingEnabled(bool $enabled=true) : WordWrapper
     {
         $this->setOption('cut', $enabled);
         return $this;

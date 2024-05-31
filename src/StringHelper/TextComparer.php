@@ -1,15 +1,12 @@
 <?php
 /**
- * File containing the class {@see ConvertHelper_TextComparer}.
- *
  * @package Application Utils
- * @subpackage ConvertHelper
- * @see ConvertHelper_TextComparer
+ * @subpackage StringHelper
  */
 
 declare(strict_types=1);
 
-namespace AppUtils;
+namespace AppUtils\StringHelper;
 
 use AppUtils\Interfaces\OptionableInterface;
 use AppUtils\Traits\OptionableTrait;
@@ -23,12 +20,12 @@ use AppUtils\Traits\OptionableTrait;
  * for easy processing.
  *
  * @package Application Utils
- * @subpackage ConvertHelper
+ * @subpackage StringHelper
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
  * @see ConvertHelper::matchString()
  */
-class ConvertHelper_TextComparer implements OptionableInterface
+class TextComparer implements OptionableInterface
 {
     use OptionableTrait;
 
@@ -58,9 +55,9 @@ class ConvertHelper_TextComparer implements OptionableInterface
      * value are ignored (will return a 0% match).
      *
      * @param int $distance
-     * @return ConvertHelper_TextComparer
+     * @return TextComparer
      */
-    public function setMaxDistance(int $distance) : ConvertHelper_TextComparer
+    public function setMaxDistance(int $distance) : TextComparer
     {
         return $this->setOption(self::OPTION_MAX_LEVENSHTEIN_DISTANCE, $distance);
     }
@@ -69,9 +66,9 @@ class ConvertHelper_TextComparer implements OptionableInterface
      * Sets the precision of the returned match percentage value.
      *
      * @param int $precision
-     * @return ConvertHelper_TextComparer
+     * @return TextComparer
      */
-    public function setPrecision(int $precision) : ConvertHelper_TextComparer
+    public function setPrecision(int $precision) : TextComparer
     {
         return $this->setOption(self::OPTION_PRECISION, $precision);
     }

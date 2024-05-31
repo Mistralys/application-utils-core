@@ -2,6 +2,7 @@
 
 namespace AppUtils;
 
+use AppUtils\DateTimeHelper\DateIntervalExtended;
 use AppUtils\Interfaces\StringableInterface;
 use DateInterval;
 use Throwable;
@@ -93,11 +94,11 @@ function attr($attributes=null) : AttributeCollection
  * to work with date intervals. It also solves
  *
  * @param DateInterval $interval
- * @return ConvertHelper_DateInterval
+ * @return DateIntervalExtended
  */
-function parseInterval(DateInterval $interval) : ConvertHelper_DateInterval
+function parseInterval(DateInterval $interval) : DateIntervalExtended
 {
-    return ConvertHelper_DateInterval::fromInterval($interval);
+    return DateIntervalExtended::fromInterval($interval);
 }
 
 /**

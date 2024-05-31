@@ -4,29 +4,34 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\DateTimeHelper\IntervalConverter;
+use AppUtils\DateTimeHelper\DateIntervalExtended;
+use AppUtils\DateTimeHelper\DurationConverter;
+use AppUtils\DateTimeHelper\TimeConverter;
+use DateInterval;
 use DateTime;
 
-class ConvertHelper_Date
+class DateTimeHelper
 {
     /**
      * @var array<int,string[]>
      */
-    protected static $months = array();
+    protected static array $months = array();
 
     /**
      * @var string[]
      */
-    protected static $days = array();
+    protected static array $days = array();
 
     /**
      * @var string[]
      */
-    protected static $daysShort = array();
+    protected static array $daysShort = array();
 
     /**
      * @var string[]
      */
-    protected static $daysInvariant = array(
+    protected static array $daysInvariant = array(
         'Monday',
         'Tuesday',
         'Wednesday',
@@ -35,6 +40,39 @@ class ConvertHelper_Date
         'Saturday',
         'Sunday'
     );
+
+    /**
+     * Converts the specified amount of seconds into
+     * a human-readable string split in months, weeks,
+     * days, hours, minutes and seconds.
+     *
+     * @param float $seconds
+     * @return string
+     */
+    public static function time2string($seconds) : string
+    {
+        return (new TimeConverter($seconds))->toString();
+    }
+
+    /**
+     * Converts a timestamp into an easily understandable
+     * format, e.g. "2 hours", "1 day", "3 months"
+     *
+     * If you set the date to parameter, the difference
+     * will be calculated between the two dates and not
+     * the current time.
+     *
+     * @param integer|DateTime $datefrom
+     * @param integer|DateTime $dateto
+     * @return string
+     *
+     * @throws ConvertHelper_Exception
+     * @see DurationConverter::ERROR_NO_DATE_FROM_SET
+     */
+    public static function duration2string($datefrom, $dateto = -1) : string
+    {
+        return DurationConverter::toString($datefrom, $dateto);
+    }
 
     /**
      * Converts a date to the corresponding day name.
@@ -126,7 +164,7 @@ class ConvertHelper_Date
 
         return
             '<span title="'.$date->format($toolTipDateFormat).'">'.
-                trim($label).
+            trim($label).
             '</span>';
     }
 
@@ -237,5 +275,81 @@ class ConvertHelper_Date
             t('Saturday'),
             t('Sunday')
         );
+    }
+
+    /**
+     * Converts a date interval to a human-readable string with
+     * all necessary time components, e.g. "1 year, 2 months and 4 days".
+     *
+     * @param DateInterval $interval
+     * @return string
+     * @throws ConvertHelper_Exception
+     * @see IntervalConverter
+     *
+     * @see IntervalConverter::ERROR_MISSING_TRANSLATION
+     */
+    public static function interval2string(DateInterval $interval) : string
+    {
+        return (new IntervalConverter())
+            ->toString($interval);
+    }
+
+    /**
+     * Converts an interval to its total number of days.
+     * @param DateInterval $interval
+     * @return int
+     */
+    public static function interval2days(DateInterval $interval) : int
+    {
+        return DateIntervalExtended::toDays($interval);
+    }
+
+    /**
+     * Converts an interval to its total number of hours.
+     * @param DateInterval $interval
+     * @return int
+     */
+    public static function interval2hours(DateInterval $interval) : int
+    {
+        return DateIntervalExtended::toHours($interval);
+    }
+
+    /**
+     * Converts an interval to its total number of minutes.
+     * @param DateInterval $interval
+     * @return int
+     */
+    public static function interval2minutes(DateInterval $interval) : int
+    {
+        return DateIntervalExtended::toMinutes($interval);
+    }
+
+    /**
+     * Converts an interval to its total number of seconds.
+     * @param DateInterval $interval
+     * @return int
+     */
+    public static function interval2seconds(DateInterval $interval) : int
+    {
+        return DateIntervalExtended::toSeconds($interval);
+    }
+
+    /**
+     * Calculates the total amount of days / hours / minutes or seconds
+     * of a date interval object (depending on the specified units), and
+     * returns the total amount.
+     *
+     * @param DateInterval $interval
+     * @param string $unit What total value to calculate.
+     * @return integer
+     *
+     * @see DateIntervalExtended::INTERVAL_SECONDS
+     * @see DateIntervalExtended::INTERVAL_MINUTES
+     * @see DateIntervalExtended::INTERVAL_HOURS
+     * @see DateIntervalExtended::INTERVAL_DAYS
+     */
+    public static function interval2total(DateInterval $interval, string $unit=self::INTERVAL_SECONDS) : int
+    {
+        return DateIntervalExtended::toTotal($interval, $unit);
     }
 }

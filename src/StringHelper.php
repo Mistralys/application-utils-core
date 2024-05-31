@@ -1,16 +1,18 @@
 <?php
 /**
- * File containing the {@see \AppUtils\ConvertHelper_String} class.
- *
  * @package Application Utils
  * @subpackage ConvertHelper
- * @see \AppUtils\ConvertHelper_String
  */
 
 declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\StringHelper\TextComparer;
+use AppUtils\StringHelper\WordWrapper;
+use AppUtils\StringHelper\HiddenConverter;
+use AppUtils\StringHelper\TabsNormalizer;
+use AppUtils\StringHelper\StringMatch;
 use ForceUTF8\Encoding;
 
 /**
@@ -20,7 +22,7 @@ use ForceUTF8\Encoding;
  * @subpackage ConvertHelper
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class ConvertHelper_String
+class StringHelper
 {
     /**
      * Searches for needle in the specified string, and returns a list
@@ -31,7 +33,7 @@ class ConvertHelper_String
      * @param string $needle
      * @param string $haystack
      * @param bool $caseInsensitive
-     * @return ConvertHelper_StringMatch[]
+     * @return StringMatch[]
      */
     public static function findString(string $needle, string $haystack, bool $caseInsensitive=false): array
     {
@@ -51,7 +53,7 @@ class ConvertHelper_String
         while( ($pos = $function($haystack, $needle, $pos)) !== false)
         {
             $match = mb_substr($haystack, $pos, $length);
-            $positions[] = new ConvertHelper_StringMatch($pos, $match);
+            $positions[] = new StringMatch($pos, $match);
             $pos += $length;
         }
 
@@ -137,13 +139,17 @@ class ConvertHelper_String
      * Note: empty strings and NULL are considered ASCII.
      * Any variable types other than strings are not.
      *
-     * @param mixed $string
+     * @param string|number|mixed|NULL $string
      * @return boolean
      */
     public static function isASCII($string) : bool
     {
         if($string === '' || $string === NULL) {
             return true;
+        }
+
+        if(is_numeric($string)) {
+            $string = (string)$string;
         }
 
         if(!is_string($string)) {
@@ -182,7 +188,7 @@ class ConvertHelper_String
      */
     public static function normalizeTabs(string $string, bool $tabs2spaces = false) : string
     {
-        $normalizer = new ConvertHelper_TabsNormalizer();
+        $normalizer = new TabsNormalizer();
         $normalizer->convertTabsToSpaces($tabs2spaces);
 
         return $normalizer->normalize($string);
@@ -192,7 +198,7 @@ class ConvertHelper_String
      * Converts tabs to spaces in the specified string.
      *
      * @param string $string
-     * @param int $tabSize The amount of spaces per tab.
+     * @param int $tabSize The number of spaces per tab.
      * @return string
      */
     public static function tabs2spaces(string $string, int $tabSize=4) : string
@@ -221,7 +227,7 @@ class ConvertHelper_String
      */
     public static function hidden2visible(string $string) : string
     {
-        return (new ConvertHelper_HiddenConverter())->convert($string);
+        return (new HiddenConverter())->convert($string);
     }
 
     /**
@@ -237,7 +243,7 @@ class ConvertHelper_String
      */
     public static function wordwrap(string $str, int $width = 75, string $break = "\n", bool $cut = false) : string
     {
-        $wrapper = new ConvertHelper_WordWrapper();
+        $wrapper = new WordWrapper();
 
         return $wrapper
             ->setLineWidth($width)
@@ -502,5 +508,32 @@ class ConvertHelper_String
         $chars[0] = mb_strtoupper($chars[0]);
 
         return implode('', $chars);
+    }
+
+    /**
+     * Calculates a percentage match of the source string with the target string.
+     *
+     * Options are:
+     *
+     * - maxLevenshtein, default: 10
+     *   Any levenshtein results above this value are ignored.
+     *
+     * - precision, default: 1
+     *   The precision of the percentage float value
+     *
+     * @param string $source
+     * @param string $target
+     * @param array<string,mixed> $options
+     * @return float
+     *
+     * @see TextComparer
+     * @see TextComparer::OPTION_MAX_LEVENSHTEIN_DISTANCE
+     * @see TextComparer::OPTION_PRECISION
+     */
+    public static function calculateMatch(string $source, string $target, array $options=array()) : float
+    {
+        return (new TextComparer())
+            ->setOptions($options)
+            ->match($source, $target);
     }
 }

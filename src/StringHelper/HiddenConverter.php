@@ -1,25 +1,25 @@
 <?php
 /**
- * File containing the {@see AppUtils\ConvertHelper_HiddenConverter} class.
+ * File containing the {@see \AppUtils\StringHelper\HiddenConverter} class.
  *
  * @package Application Utils
- * @subpackage ConvertHelper
- * @see AppUtils\ConvertHelper_HiddenConverter
+ * @subpackage StringHelper
+ * @see \AppUtils\StringHelper\HiddenConverter
  */
 
 declare(strict_types=1);
 
-namespace AppUtils;
+namespace AppUtils\StringHelper;
 
 /**
  * Can replace any hidden characters (like whitespace or control characters)
  * with visible, easily identifiable strings for easy debugging.
  *
  * @package Application Utils
- * @subpackage ConvertHelper
+ * @subpackage StringHelper
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class ConvertHelper_HiddenConverter
+class HiddenConverter
 {
     public const CHARS_WHITESPACE = 'whitespace';
     public const CHARS_CONTROL = 'control';
@@ -27,7 +27,7 @@ class ConvertHelper_HiddenConverter
     /**
      * @var array<string,array<string,string>>
      */
-    protected $characters = array(
+    protected array $characters = array(
         'whitespace' => array(
             "\t" => '[TAB]',
             "\n" => '[LF]',
@@ -74,7 +74,7 @@ class ConvertHelper_HiddenConverter
    /**
     * @var string[]
     */
-    protected $selected = array();
+    protected array $selected = array();
     
     public function convert(string $string) : string
     {
@@ -88,12 +88,12 @@ class ConvertHelper_HiddenConverter
     * several times to add additional sets to the collection.
     * 
     * @param string $type See the <code>CHAR_XXX</code> constants.
-    * @return ConvertHelper_HiddenConverter
+    * @return HiddenConverter
     * 
-    * @see ConvertHelper_HiddenConverter::CHARS_CONTROL
-    * @see ConvertHelper_HiddenConverter::CHARS_WHITESPACE
+    * @see HiddenConverter::CHARS_CONTROL
+    * @see HiddenConverter::CHARS_WHITESPACE
     */
-    public function selectCharacters(string $type) : ConvertHelper_HiddenConverter
+    public function selectCharacters(string $type) : HiddenConverter
     {
         if(!in_array($type, $this->selected)) {
             $this->selected[] = $type;

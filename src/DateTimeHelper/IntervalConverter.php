@@ -1,15 +1,16 @@
 <?php
 /**
- * File containing the {@see AppUtils\ConvertHelper_IntervalConverter} class.
- * 
  * @package Application Utils
  * @subpackage ConvertHelper
- * @see AppUtils\ConvertHelper_IntervalConverter
  */
 
 declare(strict_types=1);
 
-namespace AppUtils;
+namespace AppUtils\DateTimeHelper;
+
+use AppUtils\ConvertHelper_Exception;
+use function AppUtils\parseInterval;
+use function AppUtils\t;
 
 /**
  * Converts date intervals to human-readable strings.
@@ -17,10 +18,9 @@ namespace AppUtils;
  * @package Application Utils
  * @subpackage ConvertHelper
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
-
  * @see ConvertHelper::interval2string()
  */
-class ConvertHelper_IntervalConverter
+class IntervalConverter
 {
     public const ERROR_MISSING_TRANSLATION = 43501;
     
@@ -58,7 +58,7 @@ class ConvertHelper_IntervalConverter
     * @return string
     * @throws ConvertHelper_Exception
     * 
-    * @see ConvertHelper_IntervalConverter::ERROR_MISSING_TRANSLATION
+    * @see IntervalConverter::ERROR_MISSING_TRANSLATION
     */
     public function toString(\DateInterval $interval) : string
     {
@@ -92,11 +92,11 @@ class ConvertHelper_IntervalConverter
     * Translates the selected time token, e.g. "y" (for year).
     * 
     * @param string $token
-    * @param ConvertHelper_DateInterval $interval
-    * @throws ConvertHelper_Exception
+    * @param DateIntervalExtended $interval
     * @return string
+    *@throws ConvertHelper_Exception
     */
-    protected function translateToken(string $token, ConvertHelper_DateInterval $interval) : string
+    protected function translateToken(string $token, DateIntervalExtended $interval) : string
     {
         $value = $interval->getToken($token);
         
@@ -127,10 +127,10 @@ class ConvertHelper_IntervalConverter
     * Resolves all time tokens that need to be translated in
     * the subject interval, depending on its length.
     * 
-    * @param ConvertHelper_DateInterval $interval
+    * @param DateIntervalExtended $interval
     * @return string[]
     */
-    protected function resolveTokens(ConvertHelper_DateInterval $interval) : array
+    protected function resolveTokens(DateIntervalExtended $interval) : array
     {
         $offset = 0;
         

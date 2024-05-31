@@ -120,10 +120,15 @@ class ConvertHelper_Bool
     }
 
     /**
-     * Checks if the specified string is a boolean value, which
-     * includes string representations of boolean values, like
-     * <code>yes</code> or <code>no</code>, and <code>true</code>
-     * or <code>false</code>.
+     * Checks if the specified value is a boolean or a string
+     *  representation of a boolean value, including:
+     *
+     *  - `true` (Boolean or string)
+     *  - `false` (Boolean or string)
+     *  - `0` (Numeric or string zero)
+     *  - `1` (Numeric or string one)
+     *  - `yes`
+     *  - `no`
      *
      * @param mixed $value
      * @return boolean

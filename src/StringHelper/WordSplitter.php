@@ -1,19 +1,19 @@
 <?php
 /**
  * @package Application Utils
- * @subpackage ConvertHelper
- * @see \AppUtils\ConvertHelper\WordSplitter
+ * @subpackage StringHelper
+ * @see \AppUtils\StringHelper\WordSplitter
  */
 
 declare(strict_types=1);
 
-namespace AppUtils\ConvertHelper;
+namespace AppUtils\StringHelper;
 
-use AppUtils\ConvertHelper_String;
+use AppUtils\StringHelper;
 
 /**
  * @package Application Utils
- * @subpackage ConvertHelper
+ * @subpackage StringHelper
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 class WordSplitter
@@ -82,7 +82,7 @@ class WordSplitter
      */
     public function split() : array
     {
-        $words = ConvertHelper_String::explodeWords($this->subject, $this->wordCharacters);
+        $words = StringHelper::explodeWords($this->subject, $this->wordCharacters);
 
         $words = $this->filterEmpty($words);
 

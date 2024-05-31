@@ -1,15 +1,12 @@
 <?php
 /**
- * File containing the {@see AppUtils\ConvertHelper_QueryParser} class.
- *
  * @package Application Utils
- * @subpackage ConvertHelper
- * @see AppUtils\ConvertHelper_QueryParser
+ * @subpackage StringHelper
  */
 
 declare(strict_types=1);
 
-namespace AppUtils;
+namespace AppUtils\StringHelper;
 
 /**
  * Query parser that works as a drop-in for the native
@@ -17,20 +14,15 @@ namespace AppUtils;
  * limitations.
  *
  * @package Application Utils
- * @subpackage ConvertHelper
+ * @subpackage StringHelper
  * @see https://www.php.net/manual/en/function.parse-str.php
  */
-class ConvertHelper_QueryParser
+class QueryParser
 {
-    public function __construct()
-    {
-        
-    }
-    
    /**
     * We parse the query string ourselves, because the PHP implementation
     * of parse_str has limitations that do not apply to query strings. This
-    * is due to the fact that parse_str has to create PHP-compatible variable
+    * is because <code>parse_str</code> has to create PHP-compatible variable
     * names from the parameters. URL parameters simply allow way more things
     * than PHP variable names.
     * 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppUtilsTests;
 
-use AppUtils\ConvertHelper_String;
+use AppUtils\StringHelper;
 use AppUtils\VariableInfo;
 use AppUtilsTestClasses\BaseTestCase;
 use AppUtils\ConvertHelper;
@@ -218,7 +218,9 @@ final class ConvertHelperTests extends BaseTestCase
             array('()?%$"46[]{}!+*', true, 'ASCII Characters'),
             array('A single ö', false, 'Special character'),
             array('', true, 'Empty string'),
-            array(null, true, 'NULL')
+            array(null, true, 'NULL'),
+            array(42, true, 'Integer'),
+            array(0.7, true, 'Float')
         );
 
         foreach ($tests as $def) {
@@ -1649,7 +1651,7 @@ final class ConvertHelperTests extends BaseTestCase
                 'foo4life',
                 'UPPER.ext'
             ),
-            ConvertHelper_String::explodeWords(' foo4life UPPER.ext ', array('.'))
+            StringHelper::explodeWords(' foo4life UPPER.ext ', array('.'))
         );
     }
 

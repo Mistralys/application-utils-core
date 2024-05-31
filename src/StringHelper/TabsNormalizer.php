@@ -3,22 +3,24 @@
  * File containing the {@see AppUtils\ConvertHelper_TabsNormalizer} class.
  *
  * @package Application Utils
- * @subpackage ConvertHelper
+ * @subpackage StringHelper
  * @see AppUtils\ConvertHelper_TabsNormalizer
  */
 declare(strict_types=1);
 
-namespace AppUtils;
+namespace AppUtils\StringHelper;
+
+use AppUtils\ConvertHelper;
 
 /**
  * Reduces tabbed indentation in a string so the text
  * is left-adjusted.
  *
  * @package Application Utils
- * @subpackage ConvertHelper
+ * @subpackage StringHelper
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class ConvertHelper_TabsNormalizer
+class TabsNormalizer
 {
    /**
     * @var integer
@@ -55,9 +57,9 @@ class ConvertHelper_TabsNormalizer
     * of tabs to spaces.
     * 
     * @param bool $enable
-    * @return ConvertHelper_TabsNormalizer
+    * @return TabsNormalizer
     */
-    public function convertTabsToSpaces(bool $enable=true) : ConvertHelper_TabsNormalizer
+    public function convertTabsToSpaces(bool $enable=true) : TabsNormalizer
     {
         $this->tabs2spaces = $enable;
         
@@ -69,9 +71,9 @@ class ConvertHelper_TabsNormalizer
     * from spaces and the other way around. Defaults to 4.
     * 
     * @param int $amountSpaces
-    * @return ConvertHelper_TabsNormalizer
+    * @return TabsNormalizer
     */
-    public function setTabSize(int $amountSpaces) : ConvertHelper_TabsNormalizer
+    public function setTabSize(int $amountSpaces) : TabsNormalizer
     {
         $this->tabSize = $amountSpaces;
         

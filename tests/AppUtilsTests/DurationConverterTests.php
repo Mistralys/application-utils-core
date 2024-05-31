@@ -7,7 +7,7 @@ namespace AppUtilsTests;
 use AppUtilsTestClasses\BaseTestCase;
 use DateInterval;
 use DateTime;
-use AppUtils\ConvertHelper_DurationConverter;
+use AppUtils\DateTimeHelper\DurationConverter;
 
 final class DurationConverterTests extends BaseTestCase
 {
@@ -21,34 +21,34 @@ final class DurationConverterTests extends BaseTestCase
                 'expected' => '50 seconds ago'
             ),
             array(
-                'duration' => ConvertHelper_DurationConverter::SECONDS_PER_HOUR - 1,
+                'duration' => DurationConverter::SECONDS_PER_HOUR - 1,
                 'expected' => '59 minutes ago'
             ),
             array(
-                'duration' => ConvertHelper_DurationConverter::SECONDS_PER_DAY - 1,
+                'duration' => DurationConverter::SECONDS_PER_DAY - 1,
                 'expected' => '23 hours ago'
             ),
             array(
-                'duration' => ConvertHelper_DurationConverter::SECONDS_PER_WEEK - 1,
+                'duration' => DurationConverter::SECONDS_PER_WEEK - 1,
                 'expected' => '6 days ago'
             ),
             array(
-                'duration' => ConvertHelper_DurationConverter::SECONDS_PER_MONTH_APPROX - 1,
+                'duration' => DurationConverter::SECONDS_PER_MONTH_APPROX - 1,
                 'expected' => '4 weeks ago'
             ),
             array(
-                'duration' => ConvertHelper_DurationConverter::SECONDS_PER_YEAR - 1,
+                'duration' => DurationConverter::SECONDS_PER_YEAR - 1,
                 'expected' => '11 months ago'
             ),
             array(
-                'duration' => ConvertHelper_DurationConverter::SECONDS_PER_YEAR + 1,
+                'duration' => DurationConverter::SECONDS_PER_YEAR + 1,
                 'expected' => 'One year ago'
             )
         );
 
         foreach ($tests as $test)
         {
-            $converter = new ConvertHelper_DurationConverter();
+            $converter = new DurationConverter();
             $converter->setDateFrom($now);
 
             $target = new DateTime();
