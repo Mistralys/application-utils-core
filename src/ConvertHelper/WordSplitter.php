@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace AppUtils\ConvertHelper;
 
+use AppUtils\ConvertHelper_String;
+
 /**
  * @package Application Utils
  * @subpackage ConvertHelper
@@ -20,6 +22,7 @@ class WordSplitter
     private bool $removeDuplicates = false;
     private bool $sorting = false;
     private int $minWordLength = 0;
+    private array $wordCharacters = array();
     private bool $duplicatesCaseInsensitive;
 
     public function __construct(string $subject)
@@ -31,6 +34,34 @@ class WordSplitter
     {
         $this->removeDuplicates = $remove;
         $this->duplicatesCaseInsensitive = $caseInsensitive;
+        return $this;
+    }
+
+    /**
+     * Adds a special character that should be recognized as a word.
+     * For example, adding the underscore as word character will
+     * preserve any words separated by underscores.
+     *
+     *<code>addWordCharacter('.')</code>
+     *
+     * @param string $char
+     * @return $this
+     */
+    public function addWordCharacter(string $char) : self
+    {
+        if(!in_array($char, $this->wordCharacters, true)) {
+            $this->wordCharacters[] = $char;
+        }
+
+        return $this;
+    }
+
+    public function addWordCharacters(array $chars) : self
+    {
+        foreach ($chars as $char) {
+            $this->addWordCharacter($char);
+        }
+
         return $this;
     }
 
@@ -51,7 +82,7 @@ class WordSplitter
      */
     public function split() : array
     {
-        $words = preg_split("/\W+/", $this->subject);
+        $words = ConvertHelper_String::explodeWords($this->subject, $this->wordCharacters);
 
         $words = $this->filterEmpty($words);
 
