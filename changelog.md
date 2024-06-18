@@ -1,6 +1,3 @@
-## v1.2.1 - StringBuilder zero fix
-- StringBuilder: Changed behavior when passing zero values to methods ([#1](https://github.com/Mistralys/application-utils-core/issues/1)).
-
 ## v1.2.0 - String conversions and Refactoring (Deprecation)
 - Core: Refactored some classes for a more logical structure.
 - ConvertHelper: Added `string2camel()`.
@@ -10,6 +7,7 @@
 - ConvertHelper: Added `ucFirst()`.
 - ConvertHelper: Added `addWordCharacter()` in the word splitter.
 - ConvertHelper: Fixed the word splitter preserving some special characters.
+- StringBuilder: Changed behavior when passing zero values to methods ([#1](https://github.com/Mistralys/application-utils-core/issues/1)).
 
 ### Deprecation changes
 
