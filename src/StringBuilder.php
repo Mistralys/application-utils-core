@@ -74,7 +74,7 @@ class StringBuilder implements StringBuilder_Interface
     {
         $string = (string)$string;
 
-        if(!empty($string))
+        if($string === '0' || !empty($string))
         {
             if(!$this->separatorEnabled) {
                 $string = $this->noSeparator.$string;
@@ -146,9 +146,22 @@ class StringBuilder implements StringBuilder_Interface
     */
     protected function list(string $type, array $items, ?AttributeCollection $attributes=null) : StringBuilder
     {
+        $keep = array();
+        foreach($items as $item)
+        {
+            $item = (string)$item;
+            if(!empty($item) || $item === '0') {
+                $keep[] = $item;
+            }
+        }
+
+        if(empty($keep)) {
+            return $this;
+        }
+
         return $this->html(
             HTMLTag::create($type, $attributes)
-                ->setContent('<li>'.implode('</li><li>', $items).'</li>')
+                ->setContent('<li>'.implode('</li><li>', $keep).'</li>')
         );
     }
     
@@ -219,7 +232,13 @@ class StringBuilder implements StringBuilder_Interface
     */
     public function quote($string) : StringBuilder
     {
-        return $this->sf('&quot;%s&quot;', (string)$string);
+        $content = (string)$string;
+
+        if(!empty($content) || $content === '0') {
+            return $this->sf('&quot;%s&quot;', (string)$string);
+        }
+
+        return $this;
     }
     
    /**
@@ -657,7 +676,7 @@ class StringBuilder implements StringBuilder_Interface
     {
         $content = (string)$content;
 
-        if(empty($content))
+        if(empty($content) && $content !== '0')
         {
             return $this;
         }
