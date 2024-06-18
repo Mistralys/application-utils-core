@@ -54,6 +54,8 @@ final class StringBuilderTest extends BaseTestCase
         $this->assertEquals('Test YoFoo', (string)sb()->nospace('Test')->add('Yo')->nospace('Foo'));
         $this->assertEquals('', (string)sb()->nospace(null));
         $this->assertEquals('', (string)sb()->nospace(''));
+        $this->assertEquals('0', (string)sb()->nospace(0));
+        $this->assertEquals('0', (string)sb()->nospace('0'));
     }
 
     public function test_ifTrue(): void
@@ -109,6 +111,8 @@ final class StringBuilderTest extends BaseTestCase
     {
         $this->assertEquals('<i>Test</i>', (string)sb()->italic('Test'));
         $this->assertEquals('<i class="classA">Test</i>', (string)sb()->useClass('classA')->italic('Test'));
+        $this->assertEquals('<i>0</i>', (string)sb()->italic(0));
+        $this->assertEquals('<i>0</i>', (string)sb()->italic('0'));
     }
 
     public function test_useClass() : void
@@ -173,12 +177,18 @@ final class StringBuilderTest extends BaseTestCase
     public function test_spanned() : void
     {
         $this->assertEquals('<span class="classA">Test</span>', (string)sb()->spanned('Test', 'classA'));
+        $this->assertEquals('<span class="classA">0</span>', (string)sb()->spanned(0, 'classA'));
+        $this->assertEquals('<span class="classA">0</span>', (string)sb()->spanned('0', 'classA'));
     }
 
     public function test_bool() : void
     {
         $this->assertEquals('true', sb()->bool(true));
         $this->assertEquals('yes', sb()->bool(true, true));
+        $this->assertEquals('true', sb()->bool(1));
+        $this->assertEquals('true', sb()->bool('1'));
+        $this->assertEquals('true', sb()->bool('true'));
+        $this->assertEquals('true', sb()->bool('yes'));
     }
 
     public function test_boolYes() : void
@@ -189,16 +199,23 @@ final class StringBuilderTest extends BaseTestCase
     public function test_quote() : void
     {
         $this->assertEquals('&quot;Foobar&quot;', (string)sb()->quote('Foobar'));
+        $this->assertEquals('', (string)sb()->quote(''));
+        $this->assertEquals('&quot;0&quot;', (string)sb()->quote(0));
+        $this->assertEquals('&quot;0&quot;', (string)sb()->quote('0'));
     }
 
     public function test_ul() : void
     {
         $this->assertEquals('<ul><li>Test</li></ul>', (string)sb()->ul(array('Test')));
+        $this->assertEquals('<ul><li>0</li></ul>', (string)sb()->ul(array('0')));
+        $this->assertEquals('', (string)sb()->ul(array(null, '')));
     }
 
     public function test_ol() : void
     {
         $this->assertEquals('<ol><li>Test</li></ol>', (string)sb()->ol(array('Test')));
+        $this->assertEquals('<ol><li>0</li></ol>', (string)sb()->ol(array('0')));
+        $this->assertEquals('', (string)sb()->ol(array(null, '')));
     }
 
     public function test_bold() : void
@@ -216,6 +233,9 @@ final class StringBuilderTest extends BaseTestCase
     public function test_code() : void
     {
         $this->assertEquals('<code>Test</code>', (string)sb()->code('Test'));
+        $this->assertEquals('<code>0</code>', (string)sb()->code(0));
+        $this->assertEquals('<code>0</code>', (string)sb()->code('0'));
         $this->assertEquals('<code class="classA">Test</code>', (string)sb()->useClass('classA')->code('Test'));
+        $this->assertEquals('', (string)sb()->code(null));
     }
 }
