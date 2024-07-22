@@ -301,11 +301,24 @@ class FileHelper
      * @param string|PathInfoInterface|SplFileInfo $fileName
      * @param bool $lowercase
      * @return string
-     * @throws FileHelper_Exception
      */
     public static function getExtension($fileName, bool $lowercase = true) : string
     {
-        return self::getPathInfo($fileName)->getExtension($lowercase);
+        if($fileName instanceof PathInfoInterface) {
+            return $fileName->getExtension($lowercase);
+        }
+
+        if($fileName instanceof SplFileInfo) {
+            $fileName = $fileName->getFilename();
+        }
+
+        $ext = (string)pathinfo($fileName, PATHINFO_EXTENSION);
+
+        if($lowercase) {
+            $ext = mb_strtolower($ext);
+        }
+
+        return $ext;
     }
 
     /**
