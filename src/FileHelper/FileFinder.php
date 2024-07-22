@@ -267,6 +267,24 @@ class FileFinder implements OptionableInterface
         
         return $this->found;
     }
+
+    /**
+     * Like {@see self::getAll()}, but returns {@see FileInfo}
+     * instances for each file.
+     *
+     * @return FileInfo[]
+     */
+    public function getFileInfos() : array
+    {
+        $this->setPathmodeAbsolute();
+
+        $result = array();
+        foreach($this->getAll() as $path) {
+            $result[] = FileInfo::factory($path);
+        }
+
+        return $result;
+    }
     
    /**
     * Retrieves only PHP files. Can be combined with other
