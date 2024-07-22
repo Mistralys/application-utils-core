@@ -10,6 +10,9 @@ use AppUtilsTestClasses\FileHelperTestCase;
 
 class FolderInfoTest extends FileHelperTestCase
 {
+    const PATH_FOLDER_TREE = __DIR__ . '/../../assets/FileHelper/FolderTree';
+    const PATH_FOLDER_WITH_FILES = __DIR__ . '/../../assets/FileHelper/PathInfo/FolderWithFiles';
+
     public function test_isFolderExists() : void
     {
         $info = FolderInfo::factory($this->assetsFolder.'/FileFinder');
@@ -69,14 +72,14 @@ class FolderInfoTest extends FileHelperTestCase
 
     public function test_getSize() : void
     {
-        $info = FolderInfo::factory(__DIR__.'/../../assets/FileHelper/PathInfo/FolderWithFiles');
+        $info = FolderInfo::factory(self::PATH_FOLDER_WITH_FILES);
 
         $this->assertSame(14, $info->getSize());
     }
 
     public function test_getSubFolders() : void
     {
-        $info = FolderInfo::factory(__DIR__.'/../../assets/FileHelper/FolderTree');
+        $info = FolderInfo::factory(self::PATH_FOLDER_TREE);
 
         $this->assertTrue($info->exists());
 
@@ -89,12 +92,53 @@ class FolderInfoTest extends FileHelperTestCase
 
     public function test_getSubFile() : void
     {
-        $info = FolderInfo::factory(__DIR__.'/../../assets/FileHelper/PathInfo/FolderWithFiles');
+        $info = FolderInfo::factory(self::PATH_FOLDER_WITH_FILES);
 
         $this->assertTrue($info->exists());
 
         $subFile = $info->getSubFile('fileA.txt');
 
         $this->assertTrue($subFile->exists());
+    }
+
+    public function test_isEmpty_nonEmptyFolderIsNotEmpty() : void
+    {
+        $this->assertFalse(FolderInfo::factory(self::PATH_FOLDER_TREE)->isEmpty());
+    }
+
+    public function test_isEmpty_emptyFolderIsEmpty() : void
+    {
+        $folder = FolderInfo::factory(__DIR__.'/../../assets/FileHelper/EmptyFolder')->create();
+
+        $this->assertTrue($folder->isEmpty());
+
+        $folder->delete();
+    }
+
+    public function test_isEmpty_nonExistentFolderIsEmpty() : void
+    {
+        $folder = FolderInfo::factory(__DIR__.'/../../assets/FileHelper/NonExistentFolder');
+
+        $this->assertFalse($folder->exists());
+        $this->assertTrue($folder->isEmpty());
+    }
+
+    public function test_getSubFiles() : void
+    {
+        $files = FolderInfo::factory(self::PATH_FOLDER_WITH_FILES)->getSubFiles();
+
+        $this->assertCount(2, $files);
+        $this->assertSame('fileA.txt', $files[0]->getName());
+        $this->assertSame('fileB.txt', $files[1]->getName());
+    }
+
+    public function test_createFileFinder() : void
+    {
+        $files = FolderInfo::factory(self::PATH_FOLDER_WITH_FILES)
+            ->createFileFinder()
+            ->includeExtension('txt')
+            ->getFileInfos();
+
+        $this->assertCount(2, $files);
     }
 }

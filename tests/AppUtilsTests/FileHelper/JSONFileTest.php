@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace AppUtilsTests\FileHelper;
 
 use AppUtils\FileHelper;
+use AppUtils\FileHelper\FileInfo;
+use AppUtils\FileHelper\JSONFile;
 use AppUtilsTestClasses\FileHelperTestCase;
 
 class JSONFileTest extends FileHelperTestCase
@@ -27,6 +29,12 @@ class JSONFileTest extends FileHelperTestCase
 
         $this->assertArrayHasKey( self::TEST_FILE_VALID_KEY, $data);
         $this->assertSame(self::TEST_FILE_VALID_VALUE, $data[self::TEST_FILE_VALID_KEY]);
+    }
+
+    public function test_extensionCreatesJSONInfoInstance() : void
+    {
+        $targetFile = $this->assetsFolder.'/'.self::TEST_FILE_VALID;
+        $this->assertInstanceOf(JSONFile::class, FileInfo::factory($targetFile));
     }
 
     public function test_parseInvalid() : void
