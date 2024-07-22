@@ -50,8 +50,9 @@ class FileInfo extends AbstractPathInfo
 
     /**
      * @param string|PathInfoInterface|SplFileInfo $path
-     * @return FileInfo
+     * @return FileInfo|JSONFile|PHPFile|SerializedFile Will return the specialized info class for known types.
      * @throws FileHelper_Exception
+     * @throws BaseException
      */
     public static function factory($path) : FileInfo
     {
@@ -60,7 +61,7 @@ class FileInfo extends AbstractPathInfo
 
     /**
      * @param string|PathInfoInterface|SplFileInfo $path
-     * @return FileInfo
+     * @return FileInfo|JSONFile|PHPFile|SerializedFile Will return the specialized info class for known types.
      *
      * @throws FileHelper_Exception
      * @throws BaseException
@@ -90,31 +91,50 @@ class FileInfo extends AbstractPathInfo
             );
         }
 
-        $key = $pathString.';'.static::class;
+        $class = static::class;
 
-        if(!isset(self::$infoCache[$key]))
-        {
-            $class = static::class;
-            $instance = new $class($pathString);
-
-            if(!$instance instanceof self) {
-                throw new FileHelper_Exception(
-                    'Invalid class created',
-                    sprintf(
-                        'Expected: [%s]'.PHP_EOL.
-                        'Created: [%s]',
-                        self::class,
-                        parseVariable($instance)->enableType()->toString()
-                    ),
-                    self::ERROR_INVALID_INSTANCE_CREATED
-                );
-            }
-
-            self::$infoCache[$key] = $instance;
+        $ext = FileHelper::getExtension($pathString);
+        if(isset(self::EXTENSION_CLASSES[$ext])) {
+            $class = self::EXTENSION_CLASSES[$ext];
         }
 
-        return self::$infoCache[$key];
+        $key = $pathString.';'.static::class;
+
+        if(isset(self::$infoCache[$key])) {
+            return self::$infoCache[$key];
+        }
+
+        $instance = new $class($pathString);
+
+        if(!$instance instanceof self) {
+            throw new FileHelper_Exception(
+                'Invalid class created',
+                sprintf(
+                    'Expected: [%s]'.PHP_EOL.
+                    'Created: [%s]',
+                    self::class,
+                    parseVariable($instance)->enableType()->toString()
+                ),
+                self::ERROR_INVALID_INSTANCE_CREATED
+            );
+        }
+
+        self::$infoCache[$key] = $instance;
+
+        return $instance;
     }
+
+    /**
+     * List of file extensions and dedicated file classes
+     * that can handle them.
+     *
+     * @var array<string,class-string>
+     */
+    public const EXTENSION_CLASSES = array(
+        'json' => JSONFile::class,
+        'php' => PHPFile::class,
+        'ser' => SerializedFile::class,
+    );
 
     /**
      * Clears the file cache that keeps track of any files
@@ -193,14 +213,12 @@ class FileInfo extends AbstractPathInfo
 
     public function getExtension(bool $lowercase=true) : string
     {
-        $ext = (string)pathinfo($this->path, PATHINFO_EXTENSION);
+        return FileHelper::getExtension($this->path, $lowercase);
+    }
 
-        if($lowercase)
-        {
-            $ext = mb_strtolower($ext);
-        }
-
-        return $ext;
+    public function getFolder() : FolderInfo
+    {
+        return FolderInfo::factory($this->getFolderPath());
     }
 
     public function getFolderPath() : string
