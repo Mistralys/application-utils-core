@@ -1,3 +1,12 @@
+## v1.2.1 - File improvements
+- FileInfo: The `factory()` method now returns specialized instances by extension (e.g. `JSONFile`).
+- FileInfo: Added `getFolder()` to get the `FolderInfo` instance.
+- FolderInfo: Added `getSubFiles()`.
+- FolderInfo: Added `isEmpty()`.
+- FolderInfo: Added `createFileFinder()`.
+- FileFinder: Added `getFileInfos()` to fetch `FileInfo` instances.
+- FileHelper: `getExtension()` no longer creates object instances.
+
 ## v1.2.0 - String conversions and Refactoring (Deprecation)
 - Core: Refactored some classes for a more logical structure.
 - ConvertHelper: Added `string2camel()`.
