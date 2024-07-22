@@ -8,6 +8,7 @@ use AppUtils\ConvertHelper;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
 use DirectoryIterator;
+use FilesystemIterator;
 use SplFileInfo;
 
 /**
@@ -20,7 +21,7 @@ class FolderInfo extends AbstractPathInfo
     /**
      * @var array<string,FolderInfo>
      */
-    private static $infoCache = array();
+    private static array $infoCache = array();
 
     /**
      * @param string|PathInfoInterface|SplFileInfo $path
@@ -259,5 +260,48 @@ class FolderInfo extends AbstractPathInfo
     public function getSubFile(string $nameOrRelativePath) : FileInfo
     {
         return FileInfo::factory($this->getPath().'/'.$nameOrRelativePath);
+    }
+
+    /**
+     * Checks if the target folder exists and is empty.
+     *
+     * NOTE: A folder that does not exist is considered empty.
+     *
+     * @return bool
+     */
+    public function isEmpty() : bool
+    {
+        if(!$this->exists()) {
+            return true;
+        }
+
+        $iterator = new FilesystemIterator($this->getPath());
+        return !$iterator->valid();
+    }
+
+    public function createFileFinder() : FileFinder
+    {
+        return FileHelper::createFileFinder($this->getPath());
+    }
+
+    /**
+     * @return FileInfo[]
+     * @throws FileHelper_Exception
+     */
+    public function getSubFiles() : array
+    {
+        $files = array();
+
+        foreach($this->getIterator() as $item) {
+            if($item->isFile()) {
+                $files[] = FileInfo::factory($item);
+            }
+        }
+
+        usort($files, function (FileInfo $a, FileInfo $b) : int {
+            return strnatcasecmp($a->getName(), $b->getName());
+        });
+
+        return $files;
     }
 }
