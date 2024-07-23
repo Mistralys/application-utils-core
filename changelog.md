@@ -1,4 +1,4 @@
-## v1.2.1 - File improvements
+## v1.2.1 - File helper improvements
 - FileInfo: The `factory()` method now returns specialized instances by extension (e.g. `JSONFile`).
 - FileInfo: Added `getFolder()` to get the `FolderInfo` instance.
 - FolderInfo: Added `getSubFiles()`.
