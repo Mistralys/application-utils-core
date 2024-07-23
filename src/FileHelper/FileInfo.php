@@ -467,4 +467,18 @@ class FileInfo extends AbstractPathInfo
     {
         return FileHelper_MimeTypes::getMime($this->getExtension());
     }
+
+    /**
+     * Alias for using {@see self::getDownloader()} to send the file,
+     * with the added benefit of being able to chain the method calls.
+     *
+     * @param string $fileName
+     * @param bool|null $asAttachment
+     * @return $this
+     */
+    public function send(string $fileName, ?bool $asAttachment=false) : self
+    {
+        $this->getDownloader()->send($fileName, $asAttachment);
+        return $this;
+    }
 }
