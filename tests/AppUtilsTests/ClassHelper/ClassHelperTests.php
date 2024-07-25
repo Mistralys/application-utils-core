@@ -8,7 +8,14 @@ use AppUtils\ClassHelper;
 use AppUtils\ClassHelper\BaseClassHelperException;
 use AppUtils\ClassHelper\ClassNotExistsException;
 use AppUtils\ClassHelper\ClassNotImplementsException;
+use AppUtils\FileHelper;
+use AppUtils\FileHelper\FolderInfo;
 use AppUtilsTestClasses\BaseTestCase;
+use AppUtilsTestClasses\ClassHelper\ReferenceClasses\BaseFooClass;
+use AppUtilsTestClasses\ClassHelper\ReferenceClasses\Foo\Argh;
+use AppUtilsTestClasses\ClassHelper\ReferenceClasses\Foo\Bar;
+use AppUtilsTestClasses\ClassHelper\ReferenceClasses\Foo\Foo;
+use AppUtilsTestClasses\ClassHelper\ReferenceClasses\Foo\SillyName;
 use stdClass;
 use AppUtilsTestClasses\ClassHelper\TestStubClassInstanceOf;
 use AppUtilsTestClasses\ClassHelper\Namespaced\TestStubNamespacedClass;
@@ -16,6 +23,8 @@ use AppUtilsTestClasses_ClassHelper_LegacyNaming_TestStubLegacyNamedClass;
 
 final class ClassHelperTests extends BaseTestCase
 {
+    const PATH_REFERENCE_CLASSES = __DIR__ . '/../../AppUtilsTestClasses/ClassHelper/ReferenceClasses/Foo';
+
     public function test_getAutoLoader() : void
     {
         ClassHelper::getClassLoader();
@@ -155,5 +164,63 @@ final class ClassHelperTests extends BaseTestCase
             'Mistralys\AppUtils',
             ClassHelper::getClassNamespace('Mistralys\AppUtils\ClassName')
         );
+    }
+
+    public function test_resolveClassByTemplate() : void
+    {
+        // This also tests that "Foo" being the class name and
+        // in the namespace path do not conflict with each other
+        // to build the target class name.
+        $this->assertSame(
+            Foo::class,
+            ClassHelper::resolveClassByReference('Foo', Bar::class)
+        );
+    }
+
+    public function test_getClassesInFolder() : void
+    {
+        $classes = ClassHelper::getClassesInFolder(
+            FolderInfo::factory(self::PATH_REFERENCE_CLASSES),
+            Foo::class
+        );
+
+        $this->assertSame(
+            array(
+                Argh::class,
+                Bar::class,
+                Foo::class,
+                SillyName::class
+            ),
+            $classes
+        );
+    }
+
+    /**
+     * This test showcases a typical use case for loading
+     * classes dynamically from a folder, using the file
+     * names and one example class name to divine their names.
+     */
+    public function test_example_loadClassesFromFolder() : void
+    {
+        $fileIDs = FileHelper::createFileFinder(self::PATH_REFERENCE_CLASSES)
+            ->getPHPClassNames();
+
+        $classReference = Foo::class;
+
+        echo 'Dynamically loaded classes:'.PHP_EOL;
+
+        foreach($fileIDs as $fileID)
+        {
+            $class = ClassHelper::resolveClassByReference($fileID, $classReference);
+
+            $instance = ClassHelper::requireObjectInstanceOf(
+                BaseFooClass::class,
+                new $class()
+            );
+
+            echo '- '.get_class($instance).PHP_EOL;
+        }
+
+        $this->addToAssertionCount(1);
     }
 }
