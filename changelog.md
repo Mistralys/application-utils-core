@@ -1,3 +1,7 @@
+## v2.2.3 - ClassHelper improvements
+- ClassHelper: Added `resolveClassByReference()`.
+- ClassHelper: Added `getClassesInFolder()`.
+
 ## v2.2.2 - File helper improvements
 - FileInfo: Added chainable `send()` as alias for using `getDownloader()`.
 
