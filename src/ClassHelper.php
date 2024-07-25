@@ -12,6 +12,9 @@ namespace AppUtils;
 use AppUtils\ClassHelper\ClassLoaderNotFoundException;
 use AppUtils\ClassHelper\ClassNotExistsException;
 use AppUtils\ClassHelper\ClassNotImplementsException;
+use AppUtils\FileHelper\FolderInfo;
+use AppUtilsTestClasses\ClassHelper\ReferenceClasses\BaseFooClass;
+use AppUtilsTestClasses\ClassHelper\ReferenceClasses\Foo\Foo;
 use Composer\Autoload\ClassLoader;
 use Throwable;
 
@@ -260,5 +263,62 @@ class ClassHelper
         $class = str_replace('\\', '_', $class);
 
         return explode('_', $class);
+    }
+
+    /**
+     * Builds a class name within the same namespace or name with underscores
+     * as the reference class, using the given class ID.
+     *
+     * This is handy to dynamically load classes from a folder, for example.
+     * Given one of the classes as example, it can build the other class names
+     * by using their base file names.
+     *
+     * Example: {@see \AppUtilsTests\ClassHelper\ClassHelperTests::test_example_loadClassesFromFolder()}.
+     *
+     * @param string $classID
+     * @param class-string $referenceClass
+     * @return string
+     * @throws ClassNotExistsException
+     */
+    public static function resolveClassByReference(string $classID, string $referenceClass) : string
+    {
+        $referenceID = self::getClassTypeName($referenceClass);
+
+        // Using explodeTrim removes all empty parts, including the
+        // spot where the reference class ID was.
+        $parts = ConvertHelper::explodeTrim($referenceID, $referenceClass);
+
+        // Rebuild the string and add the new class ID.
+        $class = implode($referenceID, $parts).$classID;
+
+        self::requireClassExists($class);
+
+        return $class;
+    }
+
+    /**
+     * Loads all class names from the target folder, using the given
+     * class name as reference to build the class names from, inferred
+     * from the file names.
+     *
+     * @param FolderInfo $folder
+     * @param string $classReference
+     * @return class-string[]
+     * @throws ClassNotExistsException
+     * @throws FileHelper_Exception
+     */
+    public static function getClassesInFolder(FolderInfo $folder, string $classReference) : array
+    {
+        $fileIDs = FileHelper::createFileFinder($folder)
+            ->getPHPClassNames();
+
+        $classes = array();
+        foreach($fileIDs as $fileID) {
+            $classes[] = self::resolveClassByReference($fileID, $classReference);
+        }
+
+        sort($classes);
+
+        return $classes;
     }
 }
