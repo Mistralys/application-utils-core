@@ -1,3 +1,6 @@
+## v2.2.4 - Mime Types
+- FileHelper: Added the mime types for `wmv` and `mkv` files.
+
 ## v2.2.3 - ClassHelper improvements
 - ClassHelper: Added `resolveClassByReference()`.
 - ClassHelper: Added `getClassesInFolder()`.
