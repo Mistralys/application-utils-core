@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the class {@see \AppUtils\FileHelper\JSONFile}.
- *
  * @package AppUtils
  * @subpackage FileHelper
- * @see \AppUtils\FileHelper\JSONFile
  */
 
 declare(strict_types=1);
@@ -15,6 +12,7 @@ use AppUtils\ClassHelper;
 use AppUtils\ConvertHelper\JSONConverter;
 use AppUtils\ConvertHelper\JSONConverter\JSONConverterException;
 use AppUtils\FileHelper;
+use AppUtils\FileHelper\JSONFile\JSONFileOptions;
 use AppUtils\FileHelper_Exception;
 use JsonException;
 use SplFileInfo;
@@ -29,8 +27,6 @@ use function AppUtils\sb;
  */
 class JSONFile extends FileInfo
 {
-    public const DEFAULT_TRAILING_NEWLINE = true;
-
     /**
      * @var string
      */
@@ -41,7 +37,10 @@ class JSONFile extends FileInfo
      */
     private $sourceEncodings = '';
 
-    private bool $trailingNewline = self::DEFAULT_TRAILING_NEWLINE;
+    /**
+     * @var JSONFileOptions|mixed
+     */
+    private $options;
 
     /**
      * @param string|PathInfoInterface|SplFileInfo $path
@@ -56,15 +55,49 @@ class JSONFile extends FileInfo
         );
     }
 
+    protected function init(): void
+    {
+        parent::init();
+
+        $this->options = new JSONFileOptions();
+    }
+
+    public function options() : JSONFileOptions
+    {
+        return $this->options;
+    }
+
     /**
      * Whether to add a trailing newline at the end of the JSON file.
      *
-     * @param bool $enabled Default: {@see JSONFile::DEFAULT_TRAILING_NEWLINE}
+     * @param bool $enabled
      * @return $this
      */
     public function setTrailingNewline(bool $enabled) : self
     {
-        $this->trailingNewline = $enabled;
+        $this->options->setTrailingNewline($enabled);
+        return $this;
+    }
+
+    /**
+     * Whether to escape slashes in the JSON data values.
+     * @param bool $enabled
+     * @return $this
+     */
+    public function setEscapeSlashes(bool $enabled) : self
+    {
+        $this->options->setEscapeSlashes($enabled);
+        return $this;
+    }
+
+    /**
+     * Whether to indent and prettify the JSON output.
+     * @param bool $enabled
+     * @return $this
+     */
+    public function setPrettyPrint(bool $enabled) : self
+    {
+        $this->options->setPrettyPrint($enabled);
         return $this;
     }
 
@@ -159,26 +192,38 @@ class JSONFile extends FileInfo
         return $contents;
     }
 
+    public function getJSONOptionsBitmask() : int
+    {
+        $options = 0;
+
+        if($this->options->isPrettyPrintEnabled()) {
+            $options = $options | JSON_PRETTY_PRINT;
+        }
+
+        if(!$this->options->isEscapeSlashesEnabled()) {
+            $options = $options | JSON_UNESCAPED_SLASHES;
+        }
+
+        return $options;
+    }
+
     /**
      * @param mixed $data
      * @param bool $pretty
      * @return $this
      * @throws FileHelper_Exception
      */
-    public function putData($data, bool $pretty=false) : self
+    public function putData($data, ?bool $pretty=false) : self
     {
-        $options = 0;
-
-        if($pretty)
-        {
-            $options = JSON_PRETTY_PRINT;
+        if($pretty === true) {
+            $this->setPrettyPrint(true);
         }
 
         try
         {
-            $json = JSONConverter::var2json($data, $options);
+            $json = JSONConverter::var2json($data, $this->getJSONOptionsBitmask());
 
-            if($this->trailingNewline) {
+            if($this->options->isTrailingNewlineEnabled()) {
                 $json .= PHP_EOL;
             }
 
