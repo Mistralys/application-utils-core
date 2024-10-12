@@ -7,6 +7,7 @@ namespace AppUtilsTests\FileHelper;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper\FileInfo;
 use AppUtils\FileHelper\JSONFile;
+use AppUtils\FileHelper\JSONFile\JSONFileOptions;
 use AppUtilsTestClasses\FileHelperTestCase;
 
 class JSONFileTest extends FileHelperTestCase
@@ -61,5 +62,96 @@ class JSONFileTest extends FileHelperTestCase
         FileHelper::saveAsJSON($data, $targetFile);
 
         $this->assertSame($data, FileHelper::parseJSONFile($targetFile));
+    }
+
+    public function test_escapingSlashesEnabledByDefault() : void
+    {
+        $targetFile = JSONFile::factory($this->assetsFolder . '/' . self::TEST_FILE_WRITE)
+            ->putData(array(
+                'test' => 'https://example.com'
+            ));
+
+        $json = $targetFile->getContents();
+        $this->assertStringContainsString('\\/', $json);
+    }
+
+    public function test_turnOffEscapingSlashes() : void
+    {
+        $targetFile = JSONFile::factory($this->assetsFolder . '/' . self::TEST_FILE_WRITE)
+            ->setEscapeSlashes(false)
+            ->putData(array(
+                'test' => 'https://example.com'
+            ));
+
+        $json = $targetFile->getContents();
+        $this->assertStringNotContainsString('\\/', $json);
+    }
+
+    public function test_prettyPrintDisabledByDefault() : void
+    {
+        $targetFile = JSONFile::factory($this->assetsFolder . '/' . self::TEST_FILE_WRITE)
+            ->setTrailingNewline(false)
+            ->putData(array(
+                'test' => 'okay'
+            ));
+
+        $json = $targetFile->getContents();
+        $this->assertStringNotContainsString("\n", $json);
+    }
+
+    public function test_setPrettyPrint() : void
+    {
+        $targetFile = JSONFile::factory($this->assetsFolder . '/' . self::TEST_FILE_WRITE)
+            ->setTrailingNewline(false)
+            ->setPrettyPrint(true)
+            ->putData(array(
+                'test' => 'okay'
+            ));
+
+        $json = $targetFile->getContents();
+        $this->assertStringContainsString("\n", $json);
+    }
+
+    public function test_globalOptionDefaults() : void
+    {
+        $defaultOptions = JSONFile::factory('somefile.json')->options();
+
+        $this->assertSame($defaultOptions->isEscapeSlashesEnabled(), true);
+        $this->assertSame($defaultOptions->isPrettyPrintEnabled(), false);
+        $this->assertSame($defaultOptions->isTrailingNewlineEnabled(), false);
+    }
+
+    public function test_globalOptionOverwriting() : void
+    {
+        JSONFileOptions::setGlobalOption(JSONFileOptions::OPTION_ESCAPE_SLASHES, false);
+        JSONFileOptions::setGlobalOption(JSONFileOptions::OPTION_PRETTY_PRINT, true);
+        JSONFileOptions::setGlobalOption(JSONFileOptions::OPTION_TRAILING_NEWLINE, true);
+
+        $defaultOptions = JSONFile::factory('somefile.json')->options();
+
+        $this->assertSame(false, $defaultOptions->isEscapeSlashesEnabled());
+        $this->assertSame(true, $defaultOptions->isPrettyPrintEnabled());
+        $this->assertSame(true, $defaultOptions->isTrailingNewlineEnabled());
+    }
+
+    public function test_localOptionTakesPrecedence() : void
+    {
+        JSONFileOptions::setGlobalOption(JSONFileOptions::OPTION_ESCAPE_SLASHES, false);
+
+        $file = JSONFile::factory('somefile.json');
+        $options = $file->options();
+
+        $this->assertSame(false, $options->isEscapeSlashesEnabled());
+
+        $file->setEscapeSlashes(true);
+
+        $this->assertSame(true, $options->isEscapeSlashesEnabled());
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        JSONFileOptions::resetGlobalOptions();
     }
 }
