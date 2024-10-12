@@ -1,3 +1,7 @@
+## v2.2.5 - JSONFile improvements
+- JSONFile: Made the `$pretty` parameter optional.
+- JSONFile: Added `getData()` as alias for `parse()`.
+
 ## v2.2.4 - Mime Types
 - FileHelper: Added the mime types for `wmv` and `mkv` files.
 
