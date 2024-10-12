@@ -8,6 +8,7 @@
 namespace AppUtils\Traits;
 
 use AppUtils\Interfaces\OptionableInterface;
+use AppUtils\Traits\OptionableTrait\ArrayAdvancedOption;
 
 /**
  * Trait for adding options to a class: allows setting
@@ -25,9 +26,14 @@ use AppUtils\Interfaces\OptionableInterface;
 trait OptionableTrait
 {
     /**
-     * @var array<string,mixed>|NULL
+     * @var array<string,mixed>|null
      */
-    protected ?array $options = null;
+    protected ?array $optionDefaults = null;
+
+    /**
+     * @var array<string,mixed>
+     */
+    protected array $options = array();
 
     /**
      * Sets an option to the specified value. This can be any
@@ -39,10 +45,6 @@ trait OptionableTrait
      */
     public function setOption(string $name, $value) : self
     {
-        if(!isset($this->options)) {
-            $this->options = $this->getDefaultOptions();
-        }
-
         $this->options[$name] = $value;
         return $this;
     }
@@ -75,12 +77,7 @@ trait OptionableTrait
      */
     public function getOption(string $name, $default=null)
     {
-        if(!isset($this->options))
-        {
-            $this->options = $this->getDefaultOptions();
-        }
-
-        return $this->options[$name] ?? $default;
+        return $this->options[$name] ?? $default ?? $this->getOptionDefault($name);
     }
 
     /**
@@ -95,7 +92,7 @@ trait OptionableTrait
      */
     public function getStringOption(string $name, string $default='') : string
     {
-        $value = $this->getOption($name, false);
+        $value = $this->getOption($name);
 
         if((is_string($value) || is_numeric($value)) && !empty($value)) {
             return (string)$value;
@@ -162,6 +159,23 @@ trait OptionableTrait
         return array();
     }
 
+    private ?ArrayAdvancedOption $arrayAdvancedOption = null;
+
+    /**
+     * Returns the advanced array option handler, which
+     * has specialized methods for handling array options.
+     *
+     * @return ArrayAdvancedOption
+     */
+    public function getArrayAdvanced() : ArrayAdvancedOption
+    {
+        if(!isset($this->arrayAdvancedOption)) {
+            $this->arrayAdvancedOption = new ArrayAdvancedOption($this);
+        }
+
+        return $this->arrayAdvancedOption;
+    }
+
     /**
      * Checks whether the specified option exists - even
      * if it has a NULL value.
@@ -171,11 +185,15 @@ trait OptionableTrait
      */
     public function hasOption(string $name) : bool
     {
-        if(!isset($this->options)) {
-            $this->options = $this->getDefaultOptions();
+        if(array_key_exists($name, $this->options)) {
+            return true;
         }
 
-        return array_key_exists($name, $this->options);
+        if(!isset($this->optionDefaults)) {
+            $this->optionDefaults = $this->getDefaultOptions();
+        }
+
+        return array_key_exists($name, $this->optionDefaults);
     }
 
     /**
@@ -185,11 +203,11 @@ trait OptionableTrait
      */
     public function getOptions() : array
     {
-        if(!isset($this->options)) {
-            $this->options = $this->getDefaultOptions();
+        if(!isset($this->optionDefaults)) {
+            $this->optionDefaults = $this->getDefaultOptions();
         }
 
-        return $this->options;
+        return array_merge($this->optionDefaults, $this->options);
     }
 
     /**
@@ -202,5 +220,29 @@ trait OptionableTrait
     public function isOption(string $name, $value) : bool
     {
         return $this->getOption($name) === $value;
+    }
+
+    public function setOptionDefault(string $name, $value) : self
+    {
+        if(!isset($this->optionDefaults)) {
+            $this->optionDefaults = $this->getDefaultOptions();
+        }
+
+        $this->optionDefaults[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return mixed|NULL
+     */
+    public function getOptionDefault(string $name)
+    {
+        if(!isset($this->optionDefaults)) {
+            $this->optionDefaults = $this->getDefaultOptions();
+        }
+
+        return $this->optionDefaults[$name] ?? null;
     }
 }
