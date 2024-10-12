@@ -35,6 +35,12 @@ abstract class AbstractPathInfo implements PathInfoInterface
     protected function __construct(string $path)
     {
         $this->path = FileHelper::normalizePath($path);
+        $this->init();
+    }
+
+    protected function init() : void
+    {
+
     }
 
     public static function pathHasEndingSlash(string $path) : bool
