@@ -29,6 +29,8 @@ use function AppUtils\sb;
  */
 class JSONFile extends FileInfo
 {
+    public const DEFAULT_TRAILING_NEWLINE = true;
+
     /**
      * @var string
      */
@@ -38,6 +40,8 @@ class JSONFile extends FileInfo
      * @var string|string[]|NULL
      */
     private $sourceEncodings = '';
+
+    private bool $trailingNewline = self::DEFAULT_TRAILING_NEWLINE;
 
     /**
      * @param string|PathInfoInterface|SplFileInfo $path
@@ -50,6 +54,18 @@ class JSONFile extends FileInfo
             self::class,
             self::createInstance($path)
         );
+    }
+
+    /**
+     * Whether to add a trailing newline at the end of the JSON file.
+     *
+     * @param bool $enabled Default: {@see JSONFile::DEFAULT_TRAILING_NEWLINE}
+     * @return $this
+     */
+    public function setTrailingNewline(bool $enabled) : self
+    {
+        $this->trailingNewline = $enabled;
+        return $this;
     }
 
     /**
@@ -73,12 +89,21 @@ class JSONFile extends FileInfo
     }
 
     /**
+     * Alias for {@see JSONFile::parse()}.
+     * @return array<int|string,mixed>
+     * @throws FileHelper_Exception
+     */
+    public function getData() : array
+    {
+        return $this->parse();
+    }
+
+    /**
      * Opens a serialized file and returns the unserialized data.
      * Only supports serialized arrays - classes are not allowed.
      *
      * @return array<int|string,mixed>
      * @throws FileHelper_Exception
-     * @throws JsonException
      * @see FileHelper::parseSerializedFile()
      *
      * @see FileHelper::ERROR_FILE_DOES_NOT_EXIST
@@ -140,7 +165,7 @@ class JSONFile extends FileInfo
      * @return $this
      * @throws FileHelper_Exception
      */
-    public function putData($data, bool $pretty) : self
+    public function putData($data, bool $pretty=false) : self
     {
         $options = 0;
 
@@ -152,6 +177,10 @@ class JSONFile extends FileInfo
         try
         {
             $json = JSONConverter::var2json($data, $options);
+
+            if($this->trailingNewline) {
+                $json .= PHP_EOL;
+            }
 
             $this->putContents($json);
 
