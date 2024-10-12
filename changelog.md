@@ -1,6 +1,14 @@
 ## v2.2.5 - JSONFile improvements
 - JSONFile: Made the `$pretty` parameter optional.
 - JSONFile: Added `getData()` as alias for `parse()`.
+- JSONFile: Added `setPrettyPrint()` to set the option separately.
+- JSONFile: Added `setTrailingNewline()` to add a newline at the end of the file.
+- JSONFile: Added `setEscapeSlashes()` to set whether to escape slashes in the output.
+- JSONFile: Added `options()` to work with all options.
+- JSONFile: Added `JSONOptions` with the possibility to set options globally.
+- Optionable: Tweaked the handling of default values.
+- Optionable: Added setting option default values.
+- Optionable: Added `getArrayAdvanced()` for type-specific array handling.
 
 ## v2.2.4 - Mime Types
 - FileHelper: Added the mime types for `wmv` and `mkv` files.
