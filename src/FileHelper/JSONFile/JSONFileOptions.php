@@ -86,7 +86,7 @@ class JSONFileOptions implements OptionableInterface
      * Existing instances will not be affected.
      *
      * @param string $name
-     * @param $value
+     * @param mixed $value
      * @return void
      */
     public static function setGlobalOption(string $name, $value) : void
