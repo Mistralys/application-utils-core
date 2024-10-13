@@ -12,6 +12,7 @@ namespace AppUtils;
 use AppUtils\ClassHelper\ClassLoaderNotFoundException;
 use AppUtils\ClassHelper\ClassNotExistsException;
 use AppUtils\ClassHelper\ClassNotImplementsException;
+use AppUtils\FileHelper\FileFinder;
 use AppUtils\FileHelper\FolderInfo;
 use AppUtilsTestClasses\ClassHelper\ReferenceClasses\BaseFooClass;
 use AppUtilsTestClasses\ClassHelper\ReferenceClasses\Foo\Foo;
@@ -95,7 +96,7 @@ class ClassHelper
      */
     public static function requireClassExists(string $className) : void
     {
-        if(class_exists($className))
+        if(class_exists($className) || interface_exists($className) || trait_exists($className))
         {
             return;
         }
@@ -109,23 +110,36 @@ class ClassHelper
      * not, an exception is thrown.
      *
      * @param class-string $targetClass
-     * @param class-string $extendsClass
+     * @param class-string $instanceClass
      * @return void
      *
      * @throws ClassNotImplementsException
      * @throws ClassNotExistsException
      */
-    public static function requireClassInstanceOf(string $targetClass, string $extendsClass) : void
+    public static function requireClassInstanceOf(string $targetClass, string $instanceClass) : void
     {
-        self::requireClassExists($targetClass);
-        self::requireClassExists($extendsClass);
-
-        if(is_a($targetClass, $extendsClass, true))
-        {
+        if(self::isClassInstanceOf($targetClass, $instanceClass)) {
             return;
         }
 
-        throw new ClassNotImplementsException($extendsClass, $targetClass);
+        throw new ClassNotImplementsException($instanceClass, $targetClass);
+    }
+
+    /**
+     * Checks whether the target class is an instance of the specified
+     * class or interface.
+     *
+     * @param string $targetClass
+     * @param string $instanceClass
+     * @return bool
+     * @throws ClassNotExistsException
+     */
+    public static function isClassInstanceOf(string $targetClass, string $instanceClass) : bool
+    {
+        self::requireClassExists($targetClass);
+        self::requireClassExists($instanceClass);
+
+        return is_a($targetClass, $instanceClass, true);
     }
 
     /**
@@ -297,9 +311,13 @@ class ClassHelper
     }
 
     /**
-     * Loads all class names from the target folder, using the given
-     * class name as reference to build the class names from, inferred
-     * from the file names.
+     * Generates a list of class names from the target folder, using
+     * the given class name as reference to build the class names from,
+     * inferred from the file names.
+     *
+     * NOTE: This is very fast, but relies on all classes in the folder
+     * to use the same namespace and naming convention. Consider the
+     * alternative {@see self::findClassesInFolder()} if this is not the case.
      *
      * @param FolderInfo $folder
      * @param string $classReference
@@ -310,7 +328,8 @@ class ClassHelper
     public static function getClassesInFolder(FolderInfo $folder, string $classReference) : array
     {
         $fileIDs = FileHelper::createFileFinder($folder)
-            ->getPHPClassNames();
+            ->getFiles()
+            ->PHPClassNames();
 
         $classes = array();
         foreach($fileIDs as $fileID) {
@@ -320,5 +339,64 @@ class ClassHelper
         sort($classes);
 
         return $classes;
+    }
+
+    /**
+     * Goes through the target folder and analyzes the source code in
+     * all PHP files to detect any PHP classes they may contain.
+     * It will return an array of {@see FileHelper_PHPClassInfo_Class}
+     * objects.
+     *
+     * NOTE: This method is slow, as it looks into each of the PHP files'
+     * source code. It does not load the entire file, but it can still mean
+     * a lot of disk I/O depending on the size of the folder.
+     *
+     * It is recommended to cache the results if this is done regularly.
+     *
+     * @param FolderInfo $folder
+     * @param bool $recursive Whether to recursively go through sub-folders.
+     * @param class-string|null $instanceOf Is set, only classes that are instances
+     *        of the specified class/interface will be returned.
+     * @return FileHelper_PHPClassInfo_Class[]
+     * @throws ClassNotExistsException
+     * @throws FileHelper_Exception
+     */
+    public static function findClassesInFolder(FolderInfo $folder, bool $recursive=false, ?string $instanceOf=null) : array
+    {
+        $phpFiles = FileHelper::createFileFinder($folder)
+            ->makeRecursive($recursive)
+            ->getFiles()
+            ->typePHP();
+
+        $result = array();
+
+        foreach($phpFiles as $file) {
+            array_push($result, ...$file->findClasses()->getClasses());
+        }
+
+        if($instanceOf !== null) {
+            return self::filterByInstanceOf($result, $instanceOf);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param FileHelper_PHPClassInfo_Class[] $classes
+     * @param string $instanceOf
+     * @return FileHelper_PHPClassInfo_Class[]
+     * @throws ClassNotExistsException
+     */
+    private static function filterByInstanceOf(array $classes, string $instanceOf) : array
+    {
+        $filtered = array();
+
+        foreach($classes as $class) {
+            if(ClassHelper::isClassInstanceOf($class->getNameNS(), $instanceOf)) {
+                $filtered[] = $class;
+            }
+        }
+
+        return $filtered;
     }
 }
