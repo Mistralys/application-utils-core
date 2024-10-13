@@ -1,4 +1,4 @@
-## v2.2.5 - JSONFile improvements
+## v2.3.0 - FileHelper Improvements (Deprecation)
 - JSONFile: Made the `$pretty` parameter optional.
 - JSONFile: Added `getData()` as alias for `parse()`.
 - JSONFile: Added `setPrettyPrint()` to set the option separately.
@@ -9,6 +9,19 @@
 - Optionable: Tweaked the handling of default values.
 - Optionable: Added setting option default values.
 - Optionable: Added `getArrayAdvanced()` for type-specific array handling.
+- FileFinder: Added `getFiles()` for a wider range of type-specific methods to access files.
+- ClassHelper: Added `findClassesInFolder()` to get all classes in a folder.
+- ClassHelper: `requireClassExists()` can now be used interchangeably for classes, interfaces, and traits.
+- ClassHelper: Added `isClassInstanceOf()`.
+
+### Deprecations
+
+The following FileFinder methods have been deprecated:
+
+- `FileFinder::getAll()` > `FileFinder::getMatches()`
+- `FileFinder::getFileInfos()` > `FileFinder::getFiles()->typeANY()`
+- `FileFinder::getPHPFiles()` > `FileFinder::getFiles()->typePHP()`
+- `FileFinder::getPHPClassNames()` > `FileFinder::getFiles()->PHPClassNames()`
 
 ## v2.2.4 - Mime Types
 - FileHelper: Added the mime types for `wmv` and `mkv` files.
