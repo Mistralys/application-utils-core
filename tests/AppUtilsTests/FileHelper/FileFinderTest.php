@@ -17,7 +17,7 @@ final class FileFinderTest extends FileHelperTestCase
     {
         $finder = FileHelper::createFileFinder($this->assetsFolderInfo);
 
-        $files = $finder->getAll();
+        $files = $finder->getMatches();
 
         $expected = array(
             $this->assetsFolderInfo . '/.extension',
@@ -38,7 +38,7 @@ final class FileFinderTest extends FileHelperTestCase
 
         $finder->makeRecursive();
 
-        $files = $finder->getAll();
+        $files = $finder->getMatches();
 
         $expected = array(
             $this->assetsFolderInfo . '/.extension',
@@ -64,7 +64,7 @@ final class FileFinderTest extends FileHelperTestCase
         $finder->makeRecursive();
         $finder->setPathmodeRelative();
 
-        $files = $finder->getAll();
+        $files = $finder->getMatches();
 
         $expected = array(
             '.extension',
@@ -91,7 +91,7 @@ final class FileFinderTest extends FileHelperTestCase
         $finder->setPathmodeRelative();
         $finder->stripExtensions();
 
-        $files = $finder->getAll();
+        $files = $finder->getMatches();
 
         $expected = array(
             'README',
@@ -116,7 +116,7 @@ final class FileFinderTest extends FileHelperTestCase
         $finder->setPathmodeRelative();
         $finder->excludeExtensions(array('txt'));
 
-        $files = $finder->getAll();
+        $files = $finder->getMatches();
 
         $expected = array(
             '.extension',
@@ -137,7 +137,7 @@ final class FileFinderTest extends FileHelperTestCase
         $finder->setPathmodeRelative();
         $finder->includeExtensions(array('txt'));
 
-        $files = $finder->getAll();
+        $files = $finder->getMatches();
 
         $expected = array(
             'README.txt',
@@ -156,7 +156,7 @@ final class FileFinderTest extends FileHelperTestCase
         $finder->setPathmodeRelative();
         $finder->includeExtensions(array('php'));
 
-        $files = $finder->getAll();
+        $files = $finder->getMatches();
 
         $expected = array(
             'Subfolder-script',
@@ -174,11 +174,10 @@ final class FileFinderTest extends FileHelperTestCase
 
     public function test_findFiles_getPHPClassNames() : void
     {
-        $finder = FileHelper::createFileFinder($this->assetsFolderInfo);
-
-        $finder->makeRecursive();
-
-        $files = $finder->getPHPClassNames();
+        $files = FileHelper::createFileFinder($this->assetsFolderInfo)
+            ->makeRecursive()
+            ->getFiles()
+            ->PHPClassNames();
 
         $expected = array(
             'Subfolder_script',

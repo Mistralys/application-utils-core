@@ -480,7 +480,7 @@ class FileHelper
         
         $finder->setOptions($options);
         
-        return $finder->getAll();
+        return $finder->getMatches();
     }
 
     /**

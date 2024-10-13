@@ -137,7 +137,8 @@ class FolderInfoTest extends FileHelperTestCase
         $files = FolderInfo::factory(self::PATH_FOLDER_WITH_FILES)
             ->createFileFinder()
             ->includeExtension('txt')
-            ->getFileInfos();
+            ->getFiles()
+            ->typeANY();
 
         $this->assertCount(2, $files);
     }
