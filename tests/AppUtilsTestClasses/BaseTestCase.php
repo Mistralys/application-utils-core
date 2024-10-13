@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 class BaseTestCase extends TestCase
 {
     protected string $assetsRootFolder;
+    private static int $counter = 0;
 
     protected function setUp() : void
     {
@@ -25,5 +26,10 @@ class BaseTestCase extends TestCase
         {
             $this->markTestSkipped('Webserver URL has not been set.');
         }
+    }
+
+    protected function getTestCounter() : int
+    {
+        return self::$counter++;
     }
 }
