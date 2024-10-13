@@ -61,6 +61,11 @@ class FileHelper_PHPClassInfo
         
         $this->parseFile();
     }
+
+    public function getFile(): PHPFile
+    {
+        return $this->file;
+    }
     
    /**
     * The name of the namespace of the classes in the file, if any.
