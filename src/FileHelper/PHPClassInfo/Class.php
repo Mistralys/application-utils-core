@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\FileHelper\PHPFile;
+
 /**
  * Container for the information on a single class found
  * in a PHP file. Used to easily access all available 
@@ -47,25 +49,10 @@ class FileHelper_PHPClassInfo_Class
     */
     protected $implements = array();
     
-   /**
-    * @var string
-    */
-    protected $name;
-    
-   /**
-    * @var string
-    */
-    protected $declaration;
-    
-   /**
-    * @var string
-    */
-    protected $keyword;
-
-    /**
-     * @var string
-     */
-    private $type;
+    protected string $name;
+    protected string $declaration;
+    protected string $keyword;
+    private string $type;
 
     /**
     * @param FileHelper_PHPClassInfo $info The class info instance.
@@ -80,6 +67,15 @@ class FileHelper_PHPClassInfo_Class
         $this->type = $type;
         
         $this->analyzeCode();
+    }
+
+    /**
+     * Gets the PHP file in which this class was found.
+     * @return PHPFile
+     */
+    public function getSourceFile() : PHPFile
+    {
+        return $this->info->getFile();
     }
     
    /**
