@@ -10,7 +10,14 @@ use AppUtils\ClassHelper\ClassNotExistsException;
 use AppUtils\ClassHelper\ClassNotImplementsException;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper\FolderInfo;
+use AppUtils\FileHelper_PHPClassInfo_Class;
 use AppUtilsTestClasses\BaseTestCase;
+use AppUtilsTestClasses\ClassHelper\ClassFinder\ExtendsBase\FinderSubclassExtendsBaseClass;
+use AppUtilsTestClasses\ClassHelper\ClassFinder\FinderBaseClass;
+use AppUtilsTestClasses\ClassHelper\ClassFinder\FinderExtendsBaseClass;
+use AppUtilsTestClasses\ClassHelper\ClassFinder\FinderImplementsInterface;
+use AppUtilsTestClasses\ClassHelper\ClassFinder\FinderInterface;
+use AppUtilsTestClasses\ClassHelper\ClassFinder\FinderNoExtends;
 use AppUtilsTestClasses\ClassHelper\ReferenceClasses\BaseFooClass;
 use AppUtilsTestClasses\ClassHelper\ReferenceClasses\Foo\Argh;
 use AppUtilsTestClasses\ClassHelper\ReferenceClasses\Foo\Bar;
@@ -23,7 +30,8 @@ use AppUtilsTestClasses_ClassHelper_LegacyNaming_TestStubLegacyNamedClass;
 
 final class ClassHelperTests extends BaseTestCase
 {
-    const PATH_REFERENCE_CLASSES = __DIR__ . '/../../AppUtilsTestClasses/ClassHelper/ReferenceClasses/Foo';
+    private const PATH_REFERENCE_CLASSES = __DIR__ . '/../../AppUtilsTestClasses/ClassHelper/ReferenceClasses/Foo';
+    private const FINDER_CLASSES_FOLDER = __DIR__ . '/../../AppUtilsTestClasses/ClassHelper/ClassFinder';
 
     public function test_getAutoLoader() : void
     {
@@ -203,24 +211,93 @@ final class ClassHelperTests extends BaseTestCase
     public function test_example_loadClassesFromFolder() : void
     {
         $fileIDs = FileHelper::createFileFinder(self::PATH_REFERENCE_CLASSES)
-            ->getPHPClassNames();
+            ->getFiles()
+            ->PHPClassNames();
 
         $classReference = Foo::class;
-
-        echo 'Dynamically loaded classes:'.PHP_EOL;
 
         foreach($fileIDs as $fileID)
         {
             $class = ClassHelper::resolveClassByReference($fileID, $classReference);
 
-            $instance = ClassHelper::requireObjectInstanceOf(
+            ClassHelper::requireObjectInstanceOf(
                 BaseFooClass::class,
                 new $class()
             );
 
-            echo '- '.get_class($instance).PHP_EOL;
+            $this->addToAssertionCount(1);
+        }
+    }
+
+    public function test_findAllClassesInFolder() : void
+    {
+        $classes = ClassHelper::findClassesInFolder(FolderInfo::factory(self::FINDER_CLASSES_FOLDER));
+
+        $this->assertClassListContainsClasses(
+            $classes,
+            FinderBaseClass::class,
+            FinderExtendsBaseClass::class,
+            FinderImplementsInterface::class,
+            FinderInterface::class,
+            FinderNoExtends::class
+        );
+    }
+
+    public function test_findAllClassesRecursive() : void
+    {
+        $classes = ClassHelper::findClassesInFolder(FolderInfo::factory(self::FINDER_CLASSES_FOLDER), true);
+
+        $this->assertClassListContainsClass($classes, FinderSubclassExtendsBaseClass::class);
+    }
+
+    public function test_findClassesInstanceOf() : void
+    {
+        $classes = ClassHelper::findClassesInFolder(
+            FolderInfo::factory(self::FINDER_CLASSES_FOLDER),
+            true,
+            FinderInterface::class
+        );
+
+        $this->assertCount(2, $classes);
+        $this->assertClassListContainsClass($classes, FinderInterface::class);
+        $this->assertClassListContainsClass($classes, FinderImplementsInterface::class);
+    }
+
+    /**
+     * @param FileHelper_PHPClassInfo_Class[] $list
+     * @param class-string ...$classes
+     * @return void
+     */
+    private function assertClassListContainsClasses(array $list, ...$classes) : void
+    {
+        foreach($classes as $class) {
+            $this->assertClassListContainsClass($list, $class);
+        }
+    }
+
+    /**
+     * @param FileHelper_PHPClassInfo_Class[] $list
+     * @param class-string $class
+     * @return void
+     */
+    private function assertClassListContainsClass(array $list, string $class) : void
+    {
+        $names = array();
+        foreach($list as $classInfo) {
+            $name = $classInfo->getNameNS();
+            $names[] = $name;
+            if($name === $class) {
+                $this->addToAssertionCount(1);
+                return;
+            }
         }
 
-        $this->addToAssertionCount(1);
+        $this->fail(sprintf(
+            'Class [%s] not found in list. '.PHP_EOL.
+            'Classes present are: '.PHP_EOL.
+            '- %s',
+            $class,
+            implode(PHP_EOL.'- ', $names)
+        ));
     }
 }

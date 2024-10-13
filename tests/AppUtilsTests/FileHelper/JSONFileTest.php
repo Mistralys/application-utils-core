@@ -114,7 +114,7 @@ class JSONFileTest extends FileHelperTestCase
 
     public function test_globalOptionDefaults() : void
     {
-        $defaultOptions = JSONFile::factory('somefile.json')->options();
+        $defaultOptions = $this->createTestJSONFile()->options();
 
         $this->assertSame($defaultOptions->isEscapeSlashesEnabled(), true);
         $this->assertSame($defaultOptions->isPrettyPrintEnabled(), false);
@@ -127,7 +127,7 @@ class JSONFileTest extends FileHelperTestCase
         JSONFileOptions::setGlobalOption(JSONFileOptions::OPTION_PRETTY_PRINT, true);
         JSONFileOptions::setGlobalOption(JSONFileOptions::OPTION_TRAILING_NEWLINE, true);
 
-        $defaultOptions = JSONFile::factory('somefile.json')->options();
+        $defaultOptions = $this->createTestJSONFile()->options();
 
         $this->assertSame(false, $defaultOptions->isEscapeSlashesEnabled());
         $this->assertSame(true, $defaultOptions->isPrettyPrintEnabled());
@@ -138,7 +138,7 @@ class JSONFileTest extends FileHelperTestCase
     {
         JSONFileOptions::setGlobalOption(JSONFileOptions::OPTION_ESCAPE_SLASHES, false);
 
-        $file = JSONFile::factory('somefile.json');
+        $file = $this->createTestJSONFile();
         $options = $file->options();
 
         $this->assertSame(false, $options->isEscapeSlashesEnabled());
@@ -153,5 +153,10 @@ class JSONFileTest extends FileHelperTestCase
         parent::setUp();
 
         JSONFileOptions::resetGlobalOptions();
+    }
+
+    public function createTestJSONFile() : JSONFile
+    {
+        return JSONFile::factory('somefile'.$this->getTestCounter().'.json');
     }
 }
