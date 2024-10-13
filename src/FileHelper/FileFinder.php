@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace AppUtils\FileHelper;
 
 use AppUtils\FileHelper;
+use AppUtils\FileHelper\FileFinder\FileCollector;
 use AppUtils\FileHelper_Exception;
 use AppUtils\Interfaces\OptionableInterface;
 use AppUtils\Traits\OptionableTrait;
@@ -254,64 +255,74 @@ class FileFinder implements OptionableInterface
     {
         return $this->setOption(self::OPTION_PATHMODE, $mode);
     }
-    
+
+    private ?FileCollector $collector = null;
+
+    /**
+     * Fetch files using the file collector, wich gives
+     * choices on how to return the files.
+     *
+     * @return FileCollector
+     */
+    public function getFiles() : FileCollector
+    {
+        if(!isset($this->collector)) {
+            $this->collector = new FileCollector($this);
+        }
+
+        return $this->collector;
+    }
+
+    /**
+     * Retrieves a list of all matching file names/paths,
+     * depending on the selected options.
+     *
+     * @return string[]
+     */
+    public function getMatches() : array
+    {
+        $this->find((string)$this->path, true);
+
+        return $this->found;
+    }
+
    /**
     * Retrieves a list of all matching file names/paths,
     * depending on the selected options.
     * 
     * @return string[]
+    * @deprecated Use {@see self::getMatches()} instead.
     */
     public function getAll() : array
     {
-        $this->find((string)$this->path, true);
-        
-        return $this->found;
+        return $this->getMatches();
     }
 
     /**
-     * Like {@see self::getAll()}, but returns {@see FileInfo}
-     * instances for each file.
-     *
      * @return FileInfo[]
+     * @deprecated Use {@see self::getFiles()} > {@see FileCollector::typeANY()} instead.
      */
     public function getFileInfos() : array
     {
-        $this->setPathmodeAbsolute();
-
-        $result = array();
-        foreach($this->getAll() as $path) {
-            $result[] = FileInfo::factory($path);
-        }
-
-        return $result;
+        return $this->getFiles()->typeANY();
     }
     
    /**
-    * Retrieves only PHP files. Can be combined with other
-    * options like enabling recursion into sub-folders.
-    * 
     * @return string[]
+    * @deprecated Use {@see self::getFiles()} > {@see FileCollector::PHPPaths()} instead.
     */
     public function getPHPFiles() : array
     {
-        $this->includeExtensions(array('php'));
-        return $this->getAll();
+        return $this->getFiles()->PHPPaths();
     }
     
    /**
-    * Generates PHP class names from file paths: it replaces
-    * slashes with underscores, and removes file extensions.
-    * 
     * @return string[] An array of PHP file names without extension.
+    * @deprecated Use {@see self::getFiles()} > {@see FileCollector::PHPClassNames()} instead.
     */
     public function getPHPClassNames() : array
     {
-        $this->includeExtensions(array('php'));
-        $this->stripExtensions();
-        $this->setSlashReplacement('_');
-        $this->setPathmodeRelative();
-        
-        return $this->getAll();
+        return $this->getFiles()->PHPClassNames();
     }
     
     protected function find(string $path, bool $isRoot=false) : void
