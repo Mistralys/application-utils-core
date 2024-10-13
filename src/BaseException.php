@@ -33,7 +33,11 @@ class BaseException extends Exception
      */
     public function __construct(string $message, ?string $details=null, ?int $code=null, ?Throwable $previous=null)
     {
-        if(defined('APP_UTILS_TESTSUITE') && APP_UTILS_TESTSUITE === 'true')
+        if(
+            defined('APP_UTILS_TESTSUITE') && APP_UTILS_TESTSUITE === 'true'
+            ||
+            defined('PHPUNIT_COMPOSER_INSTALL')
+        )
         {
             $message .= PHP_EOL.$details;
         }
