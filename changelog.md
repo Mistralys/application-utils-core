@@ -1,3 +1,6 @@
+## v2.3.1 - URLInfo Stringable
+- URLInfo: Added the Stringable interface to allow casting URLs to string.
+
 ## v2.3.0 - FileHelper Improvements (Deprecation)
 - JSONFile: Made the `$pretty` parameter optional.
 - JSONFile: Added `getData()` as alias for `parse()`.
