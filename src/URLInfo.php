@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\Interfaces\StringableInterface;
 use AppUtils\URLInfo\URIConnectionTester;
 use AppUtils\URLInfo\URIFilter;
 use AppUtils\URLInfo\URINormalizer;
@@ -29,7 +30,10 @@ use ReturnTypeWillChange;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @implements ArrayAccess<string,mixed>
  */
-class URLInfo implements ArrayAccess
+class URLInfo
+    implements
+    ArrayAccess,
+    StringableInterface
 {
     public const ERROR_MISSING_SCHEME = 42101;
     public const ERROR_INVALID_SCHEME = 42102;
@@ -746,5 +750,10 @@ class URLInfo implements ArrayAccess
     public function hasIPAddress() : bool
     {
         return isset($this->info['ip']);
+    }
+
+    public function __toString() : string
+    {
+        return $this->getNormalized();
     }
 }
