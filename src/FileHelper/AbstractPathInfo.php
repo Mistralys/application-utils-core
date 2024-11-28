@@ -391,4 +391,33 @@ abstract class AbstractPathInfo implements PathInfoInterface
         $date->setTimestamp($time);
         return $date;
     }
+
+    /**
+     * Like {@see self::getModifiedDate()}, but guarantees a non-null
+     * return value.
+     *
+     * NOTE: It will throw an exception if the target does not exist,
+     * or no modified date can be gotten from it.
+     *
+     * @return DateTime
+     * @throws FileHelper_Exception
+     */
+    public function requireModifiedDate() : DateTime
+    {
+        $this->requireExists();
+
+        $date = $this->getModifiedDate();
+        if($date !== null) {
+            return $date;
+        }
+
+        throw new FileHelper_Exception(
+            'A path has no modification date.',
+            sprintf(
+                'The path [%s] exists, but no modification date can be gotten from it.',
+                $this->getPath()
+            ),
+            FileHelper::ERROR_NO_MODIFIED_DATE_AVAILABLE
+        );
+    }
 }
