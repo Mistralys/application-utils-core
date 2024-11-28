@@ -17,3 +17,9 @@ parameters:
         -
             message: '#RGBAColor does not accept int.#'
             path: ../AppUtilsTests/RGBAColor/ColorArrayAccessTest.php
+        -
+            message: '#should return class-string but returns string#'
+            path: ../../src/FileHelper/PHPClassInfo/Class.php
+        -
+            message: '#with class-string and class-string will always evaluate to true.#'
+            path: ../../src/FileHelper/PHPClassInfo/Class.php
