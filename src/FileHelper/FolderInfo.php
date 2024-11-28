@@ -279,12 +279,25 @@ class FolderInfo extends AbstractPathInfo
         return !$iterator->valid();
     }
 
+    /**
+     * Creates a file finder instance for this folder,
+     * to find specific subfiles.
+     *
+     * @return FileFinder
+     * @throws FileHelper_Exception
+     */
     public function createFileFinder() : FileFinder
     {
         return FileHelper::createFileFinder($this->getPath());
     }
 
     /**
+     * Gets all files in the folder (non-recursive),
+     * sorted by file name.
+     *
+     * Use {@see self::createFileFinder()} for more advanced
+     * file finding options.
+     *
      * @return FileInfo[]
      * @throws FileHelper_Exception
      */
