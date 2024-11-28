@@ -2,6 +2,7 @@
 
 cls 
 
+set BinDir=../../vendor/bin
 set AnalysisLevel=6
 set OutputFile=./output.txt
 set ConfigFile=./phpstan.neon
@@ -12,6 +13,6 @@ echo -------------------------------------------------------
 
 echo.
 
-call ../vendor/bin/phpstan analyse -c %ConfigFile% -l %AnalysisLevel% > %OutputFile%
+call %BinDir%/phpstan analyse -c %ConfigFile% -l %AnalysisLevel% > %OutputFile%
 
 start "" "%OutputFile%"
