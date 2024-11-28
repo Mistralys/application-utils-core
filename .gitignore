@@ -10,3 +10,4 @@ composer.phar
 /localization/vendor/
 /tests/phpstan/result.txt
 tests/phpstan/output.txt
+.idea/encodings.xml
