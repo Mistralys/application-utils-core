@@ -40,7 +40,8 @@
     "ext-mbstring": "*",
     "ext-curl": "*",
     "ext-ctype": "*",
-    "ext-libxml": "*"
+    "ext-libxml": "*",
+    "ext-dom": "*"
   },
   "require-dev" :
   {
