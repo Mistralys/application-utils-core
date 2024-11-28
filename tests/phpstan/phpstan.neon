@@ -1,13 +1,19 @@
 parameters:
     bootstrapFiles:
         - ./constants.php
+    dynamicConstantNames:
+        - APP_UTILS_TESTSUITE
     paths:
         - ../../src
-        - ../
+        - ../AppUtilsTestClasses
+        - ../AppUtilsTests
     ignoreErrors:
         -
             message: '#of function call_user_func_array expects callable\(\)#'
             path: ../../src/functions.php
         -
-            message: '#RGBAColor does not accept int#'
-            path: ../testsuites/RGBAColorTests/ColorArrayAccessTest.php
+            message: '#Instanceof between DateInterval and DateInterval will always evaluate to true.#'
+            path: ../../src/DateTimeHelper/DateIntervalExtended.php
+        -
+            message: '#RGBAColor does not accept int.#'
+            path: ../AppUtilsTests/RGBAColor/ColorArrayAccessTest.php
