@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\Highlighter\HighlighterException;
 use DOMDocument;
 use DOMException;
 use DOMNode;
@@ -97,7 +98,33 @@ class XMLHelper
         $this->dom = $dom;
     }
 
-   /**
+    /**
+     * @param string $xml
+     * @return string
+     * @throws XMLHelper_Exception {@see XMLHelper_Exception::ERROR_FAILED_TO_FORMAT_XML}
+     */
+    public static function formatXML(string $xml): string
+    {
+        $dom = new DOMDocument();
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+
+        $dom->loadXML($xml);
+
+        $xml = $dom->saveXML();
+
+        if (is_string($xml)) {
+            return $xml;
+        }
+
+        throw new XMLHelper_Exception(
+            'Failed to format the XML source.',
+            '',
+            XMLHelper_Exception::ERROR_FAILED_TO_FORMAT_XML
+        );
+    }
+
+    /**
     * @return DOMDocument
     */
     public function getDOM() : DOMDocument
