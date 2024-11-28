@@ -2,6 +2,7 @@
 - Code: PHPStan type fixes, clean up to level 6.
 - HTMLHelper: Added static `formatHTML()`.
 - XMLHelper: Added static `formatXML()`.
+- ArrayDataCollection: Updated type docs to allow mixed arrays.
 
 ## v2.3.2 - FileHelper Improvements
 - Files and Folders: Added `requireModifiedDate()` with a guaranteed return value.
