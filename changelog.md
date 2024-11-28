@@ -1,3 +1,6 @@
+## v2.3.2 - FileHelper Improvements
+- Files and Folders: Added `requireModifiedDate()` with a guaranteed return value.
+
 ## v2.3.1 - URLInfo Stringable
 - URLInfo: Added the Stringable interface to allow casting URLs to string.
 
