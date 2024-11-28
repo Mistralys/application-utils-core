@@ -9,3 +9,4 @@ composer.phar
 /localization/storage.json
 /localization/vendor/
 /tests/phpstan/result.txt
+tests/phpstan/output.txt
