@@ -289,6 +289,8 @@ final class VariableInfoTests extends TestCase
         
     }
 
+    private string $assetsRootFolder;
+
     protected function setUp(): void
     {
         parent::setUp();

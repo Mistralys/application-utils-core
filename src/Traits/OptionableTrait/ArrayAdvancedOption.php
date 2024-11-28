@@ -48,6 +48,10 @@ class ArrayAdvancedOption
         return $list;
     }
 
+    /**
+     * @param mixed $subject
+     * @return string|null
+     */
     private function toString($subject) : ?string
     {
         $string = '';

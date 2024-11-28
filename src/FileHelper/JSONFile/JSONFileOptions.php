@@ -18,6 +18,9 @@ class JSONFileOptions implements OptionableInterface
     public const OPTION_TRAILING_NEWLINE = 'trailingNewline';
     public const OPTION_ESCAPE_SLASHES = 'escapeSlashes';
 
+    /**
+     * @var array<string,scalar>
+     */
     private static array $globalDefaults = array(
         self::OPTION_TRAILING_NEWLINE => self::DEFAULT_TRAILING_NEWLINE,
         self::OPTION_ESCAPE_SLASHES => self::DEFAULT_ESCAPE_SLASHES,

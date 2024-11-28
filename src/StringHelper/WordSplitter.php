@@ -22,7 +22,12 @@ class WordSplitter
     private bool $removeDuplicates = false;
     private bool $sorting = false;
     private int $minWordLength = 0;
+
+    /**
+     * @var string[]
+     */
     private array $wordCharacters = array();
+
     private bool $duplicatesCaseInsensitive;
 
     public function __construct(string $subject)
@@ -56,6 +61,10 @@ class WordSplitter
         return $this;
     }
 
+    /**
+     * @param string[] $chars
+     * @return $this
+     */
     public function addWordCharacters(array $chars) : self
     {
         foreach ($chars as $char) {

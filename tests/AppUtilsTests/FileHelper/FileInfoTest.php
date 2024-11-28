@@ -98,7 +98,6 @@ class FileInfoTest extends FileHelperTestCase
 
             $message = 'Folder name: ['.$folderName.']';
 
-            $this->assertNotInstanceOf(FileInfo::class, $info);
             $this->assertTrue($info->isFolder(), $message);
             $this->assertFalse($info->isFile(), $message);
             $this->assertFalse(FileInfo::is_file($folderName), $message);

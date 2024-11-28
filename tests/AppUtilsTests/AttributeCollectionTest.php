@@ -6,6 +6,7 @@ namespace AppUtilsTests;
 
 use AppUtils\AttributeCollection;
 use AppUtilsTestClasses\BaseTestCase;
+use AppUtilsTestClasses\AttributableTraitImpl;
 use function AppUtils\attr;
 use function AppUtils\sb;
 
@@ -148,5 +149,14 @@ final class AttributeCollectionTest extends BaseTestCase
         $attribs->attr('string', 'Value');
 
         $this->assertSame(' string="Value"', $attribs->render());
+    }
+
+    public function test_attributableTrait() : void
+    {
+        $attributable = new AttributableTraitImpl();
+
+        $attributable->attr('name', 'Foo');
+
+        $this->assertSame('Foo', $attributable->getAttributes()->getAttribute('name'));
     }
 }

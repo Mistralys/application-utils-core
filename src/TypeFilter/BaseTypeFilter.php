@@ -35,6 +35,9 @@ abstract class BaseTypeFilter implements StringableInterface
      */
     protected $value;
 
+    /**
+     * @param mixed $value
+     */
     public function __construct($value)
     {
         $this->value = $value;
@@ -132,11 +135,17 @@ abstract class BaseTypeFilter implements StringableInterface
         return $this->value !== 0 && $this->value !== '0' && empty($this->value);
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getArray() : array
     {
         return (array)$this->getArrayOrNull();
     }
 
+    /**
+     * @return array<mixed>|null
+     */
     public function getArrayOrNull() : ?array
     {
         if(is_array($this->value)) {

@@ -36,20 +36,20 @@ use Exception;
 class ArrayDataCollection
 {
     /**
-     * @var array<string,mixed>
+     * @var array<string|int,mixed>
      */
-    protected array $data;
+    protected array $data = array();
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string|int,mixed> $data
      */
     public function __construct(array $data=array())
     {
-        $this->data = $data;
+        $this->setKeys($data);
     }
 
     /**
-     * @param ArrayDataCollection|array<string,mixed>|NULL $data
+     * @param ArrayDataCollection|array<string|int,mixed>|NULL $data
      * @return ArrayDataCollection
      */
     public static function create($data=array()) : ArrayDataCollection
@@ -82,14 +82,14 @@ class ArrayDataCollection
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string|int,mixed> $data
      * @return $this
      */
     public function setKeys(array $data) : self
     {
         foreach($data as $key => $value)
         {
-            $this->setKey($key, $value);
+            $this->setKey((string)$key, $value);
         }
 
         return $this;

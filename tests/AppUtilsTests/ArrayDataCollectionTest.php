@@ -6,6 +6,7 @@ namespace AppUtilsTests;
 
 use AppUtils\ArrayDataCollection;
 use AppUtils\BaseException;
+use AppUtils\ConvertHelper\JSONConverter;
 use AppUtils\Microtime;
 use DateTime;
 use AppUtilsTestClasses\BaseTestCase;
@@ -437,6 +438,23 @@ class ArrayDataCollectionTest extends BaseTestCase
             $time->getISODate(),
             $stored->getISODate()
         );
+    }
+
+    public function test_createFromJSON() : void
+    {
+        $json = JSONConverter::var2json(array(
+            'foo' => 'bar',
+            'int' => 42,
+            'float' => 14.78,
+            'array' => array('data' => 'here')
+        ));
+
+        $collection = ArrayDataCollection::createFromJSON($json);
+
+        $this->assertSame('bar', $collection->getString('foo'));
+        $this->assertSame(42, $collection->getInt('int'));
+        $this->assertSame(14.78, $collection->getFloat('float'));
+        $this->assertSame(array('data' => 'here'), $collection->getArray('array'));
     }
 
     // endregion

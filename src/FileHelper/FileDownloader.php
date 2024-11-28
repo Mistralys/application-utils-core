@@ -10,20 +10,9 @@ use AppUtils\RequestHelper;
 
 class FileDownloader
 {
-    /**
-     * @var string
-     */
-    private $url;
-
-    /**
-     * @var int
-     */
-    private $timeout = 14;
-
-    /**
-     * @var bool
-     */
-    private $SSLEnabled = true;
+    private string $url;
+    private int $timeout = 14;
+    private bool $SSLEnabled = true;
 
     private function __construct(string $url)
     {
@@ -112,14 +101,14 @@ class FileDownloader
         curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($ch, CURLOPT_REFERER, $this->url);
         curl_setopt($ch, CURLOPT_USERAGENT, "Google Chrome/1.0");
-        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
 
         if(!$this->SSLEnabled)
         {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         }
 

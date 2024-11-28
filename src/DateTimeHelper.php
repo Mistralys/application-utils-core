@@ -348,7 +348,7 @@ class DateTimeHelper
      * @see DateIntervalExtended::INTERVAL_HOURS
      * @see DateIntervalExtended::INTERVAL_DAYS
      */
-    public static function interval2total(DateInterval $interval, string $unit=self::INTERVAL_SECONDS) : int
+    public static function interval2total(DateInterval $interval, string $unit=DateIntervalExtended::INTERVAL_SECONDS) : int
     {
         return DateIntervalExtended::toTotal($interval, $unit);
     }

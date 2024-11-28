@@ -31,7 +31,7 @@ class XMLHelper_DOMErrors
     private array $errors = array();
     
    /**
-    * @param LibXMLError[]|XMLHelper_DOMErrors_Error[] $libxmlErrors
+    * @param array<int,LibXMLError|XMLHelper_DOMErrors_Error|mixed> $libxmlErrors
     */
     public function __construct(array $libxmlErrors)
     {

@@ -455,6 +455,10 @@ class StringHelper
         return $subject;
     }
 
+    /**
+     * @param string[] $words
+     * @return string
+     */
     private static function words2Camel(array $words) : string
     {
         $result = '';

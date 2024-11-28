@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace AppUtils\FileHelper;
 
 use AppUtils\BaseException;
+use AppUtils\ClassHelper;
 use AppUtils\ConvertHelper;
 use AppUtils\ConvertHelper_EOL;
 use AppUtils\FileHelper;
@@ -104,20 +105,10 @@ class FileInfo extends AbstractPathInfo
             return self::$infoCache[$key];
         }
 
-        $instance = new $class($pathString);
-
-        if(!$instance instanceof self) {
-            throw new FileHelper_Exception(
-                'Invalid class created',
-                sprintf(
-                    'Expected: [%s]'.PHP_EOL.
-                    'Created: [%s]',
-                    self::class,
-                    parseVariable($instance)->enableType()->toString()
-                ),
-                self::ERROR_INVALID_INSTANCE_CREATED
-            );
-        }
+        $instance = ClassHelper::requireObjectInstanceOf(
+            FileInfo::class,
+            new $class($pathString)
+        );
 
         self::$infoCache[$key] = $instance;
 

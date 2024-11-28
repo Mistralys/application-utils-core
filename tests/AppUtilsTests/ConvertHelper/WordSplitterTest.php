@@ -128,5 +128,22 @@ final class WordSplitterTest extends BaseTestCase
             $result
         );
     }
+
+    public function test_preserveCharactersMultiple() : void
+    {
+        $result = ConvertHelper::string2words('Lorem-ipsum dolor_sit amet.')
+            ->setRemoveDuplicates(true, true)
+            ->addWordCharacters(array('_', '-'))
+            ->split();
+
+        $this->assertSame(
+            array(
+                'Lorem-ipsum',
+                'dolor_sit',
+                'amet'
+            ),
+            $result
+        );
+    }
 }
 

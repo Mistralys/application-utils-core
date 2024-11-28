@@ -432,7 +432,7 @@ class StringBuilder implements StringBuilder_Interface
    /**
     * Wraps the string in a `code` tag.
     * 
-    * @param string|number|StringableInterface $string
+    * @param string|number|StringableInterface|NULL $string
     * @param AttributeCollection|NULL $attributes
     * @return $this
     */
@@ -629,6 +629,10 @@ class StringBuilder implements StringBuilder_Interface
      */
     private array $classes = array();
 
+    /**
+     * @param string[] $classes
+     * @return $this
+     */
     public function useClasses(array $classes) : StringBuilder
     {
         $this->classes = $classes;
@@ -638,18 +642,6 @@ class StringBuilder implements StringBuilder_Interface
     public function useClass(string $class) : StringBuilder
     {
         return $this->useClasses(array($class));
-    }
-
-    private function compileClasses() : string
-    {
-        if(empty($this->classes))
-        {
-            return '';
-        }
-
-        sort($this->classes);
-
-        return ' class="'.implode(' ', $this->classes).'"';
     }
 
     /**

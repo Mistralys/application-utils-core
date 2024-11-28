@@ -100,7 +100,7 @@ final class MicrotimeTests extends BaseTestCase
 
         $info = $date->getTimezoneInfo();
         $this->assertInstanceOf(NamedTimeZoneInfo::class, $info);
-        $this->assertSame('Europe/Paris', $date->getTimezoneInfo()->getName());
+        $this->assertSame('Europe/Paris', $info->getName());
 
         $tz = $date->getTimezone();
         $this->assertSame('Europe/Paris', $tz->getName());

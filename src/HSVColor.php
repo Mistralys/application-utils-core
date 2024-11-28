@@ -202,7 +202,7 @@ class HSVColor implements ArrayAccess
     // region: Array access
 
     /**
-     * @param float $offset
+     * @param string $offset
      * @return bool
      */
     public function offsetExists($offset) : bool

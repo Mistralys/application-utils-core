@@ -42,7 +42,12 @@ class QuoteConverter
      * @var array<string,string>
      */
     private array $htmlReplaces = array();
+
+    /**
+     * @var array<string,string>
+     */
     private array $quotes = array();
+
     private string $original;
 
     public function __construct(string $statement)

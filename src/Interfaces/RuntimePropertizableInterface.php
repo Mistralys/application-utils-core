@@ -29,9 +29,14 @@ interface RuntimePropertizableInterface
 
     /**
      * @param string $name
-     * @return mixed|NULL
+     * @return StrictType
      */
     public function getRuntimeProperty(string $name) : StrictType;
+
+    /**
+     * @param string $name
+     * @return mixed|NULL
+     */
     public function getRuntimePropertyRaw(string $name);
 
     /**

@@ -222,6 +222,11 @@ trait OptionableTrait
         return $this->getOption($name) === $value;
     }
 
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
     public function setOptionDefault(string $name, $value) : self
     {
         if(!isset($this->optionDefaults)) {
