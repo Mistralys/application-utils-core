@@ -106,9 +106,9 @@ class FileHelper
     }
     
    /**
-    * Create a folder, if it does not exist yet.
+    * Create a folder if it does not exist yet.
     *  
-    * @param string|PathInfoInterface $path
+    * @param string|PathInfoInterface|SplFileInfo $path
     * @throws FileHelper_Exception
     * @see FileHelper::ERROR_CANNOT_CREATE_FOLDER
     */
@@ -386,10 +386,10 @@ class FileHelper
 
     /**
      * Creates an instance of the file finder, which is an easier
-     * alternative to the other manual findFile methods, since all
-     * options can be set by chaining.
+     * alternative to the other manual findFile methods, since chaining
+     * can set all options.
      *
-     * @param string|AbstractPathInfo|SplFileInfo $path
+     * @param string|PathInfoInterface|SplFileInfo $path
      * @return FileFinder
      * @throws FileHelper_Exception
      *
@@ -504,10 +504,10 @@ class FileHelper
 
         if($keepPath)
         {
-            return $filename;
+            return (string)$filename;
         }
 
-        return basename($filename);
+        return basename((string)$filename);
     }
 
     /**

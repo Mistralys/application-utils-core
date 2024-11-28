@@ -35,7 +35,7 @@ class JSONConverter
      *
      * @param mixed $variable
      * @param int $options JSON encode options.
-     * @param int $depth
+     * @param int<1,max> $depth
      * @return string
      *
      * @throws JSONConverterException
@@ -162,7 +162,7 @@ class JSONConverter
      *
      * @param mixed $variable
      * @param int $options
-     * @param int $depth
+     * @param int<1,max> $depth
      * @return string
      */
     public static function var2jsonSilent($variable, int $options=0, int $depth=512) : string

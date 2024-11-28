@@ -416,7 +416,7 @@ class FileHelper_MimeTypes
         {
             if($mime === $mimeType)
             {
-                $result[] = $extension;
+                $result[] = (string)$extension;
             }
         }
 

@@ -25,22 +25,19 @@ use function AppUtils\t;
  */
 class TimeConverter
 {
-   /**
-    * @var float
-    */
-    private $seconds;
+    private float $seconds;
 
    /**
     * @var array<int,array<string,string|int>>|NULL
     */
-    private static $units;
+    private static ?array $units = null;
     
    /**
-    * @param float $seconds
+    * @param float|int $seconds
     */
     public function __construct($seconds)
     {
-        $this->seconds = $seconds;   
+        $this->seconds = (float)$seconds;
         
         $this->initUnits();
     }
@@ -91,7 +88,7 @@ class TimeConverter
     
     public function toString() : string
     {
-        // specifically handle zero
+        // Handle zero explicitly
         if($this->seconds <= 0) 
         {
             return '0 ' . t('seconds');
@@ -126,7 +123,7 @@ class TimeConverter
         
         foreach(self::$units as $def)
         {
-            $unitValue = intval($seconds / $def['value']);
+            $unitValue = intval($seconds / (float)$def['value']);
             
             if($unitValue <= 0)
             {
@@ -146,7 +143,7 @@ class TimeConverter
             
             $tokens[] = $item;
             
-            $seconds -= $unitValue * $def['value'];
+            $seconds -= $unitValue * (float)$def['value'];
         }
         
         return $tokens;

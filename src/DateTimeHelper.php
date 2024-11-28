@@ -42,11 +42,11 @@ class DateTimeHelper
     );
 
     /**
-     * Converts the specified amount of seconds into
+     * Converts the specified number of seconds into
      * a human-readable string split in months, weeks,
      * days, hours, minutes and seconds.
      *
-     * @param float $seconds
+     * @param float|int $seconds
      * @return string
      */
     public static function time2string($seconds) : string

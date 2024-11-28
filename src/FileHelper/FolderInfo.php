@@ -189,8 +189,12 @@ class FolderInfo extends AbstractPathInfo
         $this->requireExists();
 
         $size = 0;
+        $list = glob(rtrim($path, '/').'/*', GLOB_NOSORT);
+        if($list === false) {
+            return 0;
+        }
 
-        foreach (glob(rtrim($path, '/').'/*', GLOB_NOSORT) as $item)
+        foreach ($list as $item)
         {
             if(is_file($item)) {
                 $bytes = filesize($item);

@@ -67,7 +67,23 @@ class UnicodeHandling
 
         $fp = fopen($file->getPath(), 'rb');
 
+        if($fp === false)
+        {
+            throw new FileHelper_Exception(
+                'Failed to open file for reading.',
+                sprintf(
+                    'Attempted to open file [%s].',
+                    $file->getPath()
+                ),
+                FileHelper::ERROR_CANNOT_OPEN_FILE_TO_DETECT_BOM
+            );
+        }
+
         $text = fread($fp, 20);
+
+        if($text === false) {
+            $text = '';
+        }
 
         fclose($fp);
 

@@ -88,9 +88,9 @@ class ClassHelper
     }
 
     /**
-     * Throws an exception if the target class can not be found.
+     * Throws an exception if the target class cannot be found.
      *
-     * @param string $className
+     * @param class-string $className
      * @return void
      * @throws ClassNotExistsException
      */
@@ -129,8 +129,8 @@ class ClassHelper
      * Checks whether the target class is an instance of the specified
      * class or interface.
      *
-     * @param string $targetClass
-     * @param string $instanceClass
+     * @param class-string $targetClass
+     * @param class-string $instanceClass
      * @return bool
      * @throws ClassNotExistsException
      */
@@ -291,7 +291,7 @@ class ClassHelper
      *
      * @param string $classID
      * @param class-string $referenceClass
-     * @return string
+     * @return class-string
      * @throws ClassNotExistsException
      */
     public static function resolveClassByReference(string $classID, string $referenceClass) : string
@@ -305,9 +305,11 @@ class ClassHelper
         // Rebuild the string and add the new class ID.
         $class = implode($referenceID, $parts).$classID;
 
-        self::requireClassExists($class);
+        if(class_exists($class) || interface_exists($class) || trait_exists($class)) {
+            return $class;
+        }
 
-        return $class;
+        throw new ClassNotExistsException($class);
     }
 
     /**
@@ -320,7 +322,7 @@ class ClassHelper
      * alternative {@see self::findClassesInFolder()} if this is not the case.
      *
      * @param FolderInfo $folder
-     * @param string $classReference
+     * @param class-string $classReference
      * @return class-string[]
      * @throws ClassNotExistsException
      * @throws FileHelper_Exception
@@ -383,7 +385,7 @@ class ClassHelper
 
     /**
      * @param FileHelper_PHPClassInfo_Class[] $classes
-     * @param string $instanceOf
+     * @param class-string $instanceOf
      * @return FileHelper_PHPClassInfo_Class[]
      * @throws ClassNotExistsException
      */

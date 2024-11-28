@@ -82,10 +82,10 @@ class FileHelper_PHPClassInfo_Class
     * Check if this class is a subclass of the specified
     * class name.
     * 
-    * @param string $className
+    * @param class-string $className
     * @return bool
     */
-    public function isSublassOf(string $className) : bool
+    public function isSubclassOf(string $className) : bool
     {
         return is_subclass_of($this->getNameNS(), $className);
     }
@@ -101,7 +101,7 @@ class FileHelper_PHPClassInfo_Class
     
    /**
     * The absolute class name with namespace (if any).
-    * @return string
+    * @return class-string
     */
     public function getNameNS() : string
     {

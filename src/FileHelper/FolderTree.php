@@ -91,8 +91,8 @@ class FolderTree
     /**
      * Copies a folder tree to the target folder.
      *
-     * @param string|PathInfoInterface|DirectoryIterator $source
-     * @param string|PathInfoInterface|DirectoryIterator $target
+     * @param string|PathInfoInterface|SplFileInfo $source
+     * @param string|PathInfoInterface|SplFileInfo $target
      * @throws FileHelper_Exception
      */
     public static function copy($source, $target) : void

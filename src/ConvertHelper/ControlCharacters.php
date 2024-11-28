@@ -133,7 +133,10 @@ class ConvertHelper_ControlCharacters
         
         $result = array();
         foreach($chars as $char) {
-            $result[] = hex2bin($char);
+            $converted = hex2bin($char);
+            if($converted !== false) {
+                $result[] = $converted;
+            }
         }
         
         return $result;

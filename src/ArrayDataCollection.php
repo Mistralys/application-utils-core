@@ -74,7 +74,7 @@ class ArrayDataCollection
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string|int,mixed>
      */
     public function getData() : array
     {

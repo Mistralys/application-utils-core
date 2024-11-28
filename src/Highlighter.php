@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the {@see AppUtils\Highlighter} class.
- *
  * @package Application Utils
  * @subpackage Highlighter
- * @see AppUtils\Highlighter
  */
 
 namespace AppUtils;
@@ -12,7 +9,6 @@ namespace AppUtils;
 use AppUtils\ConvertHelper\JSONConverter;
 use AppUtils\ConvertHelper\JSONConverter\JSONConverterException;
 use GeSHi;
-use DOMDocument;
 
 /**
  * Syntax highlighter helper: Uses GeSHi and other ways to add syntax
@@ -131,21 +127,14 @@ class Highlighter
     */
     public static function xml(string $xml, bool $formatSource=false) : string
     {
-        if($formatSource)
-        {
-            $dom = new DOMDocument();
-            $dom->preserveWhiteSpace = false;
-            $dom->formatOutput = true;
-            
-            $dom->loadXML($xml);
-            
-            $xml = $dom->saveXML();
+        if($formatSource) {
+            $xml = XMLHelper::formatXML($xml);
         }
         
         return self::parseString($xml, 'xml');
     }
-    
-   /**
+
+    /**
     * Adds HTML syntax highlighting to the specified HTML code.
     * 
     * @param string $html
@@ -154,15 +143,8 @@ class Highlighter
     */
     public static function html(string $html, bool $formatSource=false) : string
     {
-        if($formatSource)
-        {
-            $dom = new DOMDocument();
-            $dom->preserveWhiteSpace = false;
-            $dom->formatOutput = true;
-            
-            $dom->loadHTML($html);
-            
-            $html = $dom->saveHTML();
+        if($formatSource) {
+            $html = HTMLHelper::formatHTML($html);
         }
         
         return self::parseString($html, 'xml');

@@ -60,7 +60,12 @@ class LineReader
             return null;
         }
 
-        return $file->current();
+        $current = $file->current();
+        if(is_string($current)) {
+            return $current;
+        }
+
+        return null;
     }
 
     public function countLines() : int

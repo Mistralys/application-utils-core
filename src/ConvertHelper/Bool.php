@@ -7,9 +7,9 @@ namespace AppUtils;
 class ConvertHelper_Bool
 {
     /**
-     * @var array<mixed,bool>
+     * @var array<int|string,bool>
      */
-    protected static $booleanStrings = array(
+    protected static array $booleanStrings = array(
         1 => true,
         0 => false,
         'true' => true,
@@ -29,7 +29,7 @@ class ConvertHelper_Bool
      */
     public static function fromString($string) : bool
     {
-        if($string === '' || !is_scalar($string))
+        if($string === '' || !is_scalar($string) || is_float($string))
         {
             return false;
         }
@@ -139,7 +139,7 @@ class ConvertHelper_Bool
             return true;
         }
 
-        if(!is_scalar($value)) {
+        if(!is_scalar($value) || is_float($value)) {
             return false;
         }
 

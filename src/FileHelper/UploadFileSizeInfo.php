@@ -31,7 +31,7 @@ class UploadFileSizeInfo
     private static function resolveSize() : void
     {
         // Start with post_max_size.
-        $post_max_size = self::parse_size(ini_get('post_max_size'));
+        $post_max_size = self::parse_size('post_max_size');
 
         if ($post_max_size > 0) {
             self::$max_size = $post_max_size;
@@ -39,15 +39,20 @@ class UploadFileSizeInfo
 
         // If upload_max_size is less, then reduce. Except if upload_max_size is
         // zero, which indicates no limit.
-        $upload_max = self::parse_size(ini_get('upload_max_filesize'));
+        $upload_max = self::parse_size('upload_max_filesize');
 
         if ($upload_max > 0 && $upload_max < self::$max_size) {
             self::$max_size = $upload_max;
         }
     }
 
-    private static function parse_size(string $size) : int
+    private static function parse_size(string $configName) : int
     {
+        $size = ini_get($configName);
+        if($size === false) {
+            return 0;
+        }
+
         $unit = preg_replace('/[^bkmgtpezy]/i', '', $size); // Remove the non-unit characters from the size.
         $result = (float)preg_replace('/[^0-9\.]/', '', $size); // Remove the non-numeric characters from the size.
 
