@@ -110,19 +110,19 @@ class ClassHelper
      * not, an exception is thrown.
      *
      * @param class-string $targetClass
-     * @param class-string $instanceClass
+     * @param class-string $expectedClass
      * @return void
      *
      * @throws ClassNotImplementsException
      * @throws ClassNotExistsException
      */
-    public static function requireClassInstanceOf(string $targetClass, string $instanceClass) : void
+    public static function requireClassInstanceOf(string $targetClass, string $expectedClass) : void
     {
-        if(self::isClassInstanceOf($targetClass, $instanceClass)) {
+        if(self::isClassInstanceOf($targetClass, $expectedClass)) {
             return;
         }
 
-        throw new ClassNotImplementsException($instanceClass, $targetClass);
+        throw new ClassNotImplementsException($expectedClass, $targetClass);
     }
 
     /**
