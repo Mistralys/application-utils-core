@@ -412,7 +412,13 @@ class StringHelper
     {
         $subject = self::removeSpecialChars($subject, ' ', $wordChars);
 
-        return preg_split("/ +/", $subject, 0, PREG_SPLIT_NO_EMPTY);
+        $words = preg_split("/ +/", $subject, 0, PREG_SPLIT_NO_EMPTY);
+
+        if($words !== false) {
+            return $words;
+        }
+
+        return null;
     }
 
     /**
