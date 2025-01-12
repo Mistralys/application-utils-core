@@ -293,7 +293,7 @@ class VariableInfo implements OptionableInterface
     }
 
     /**
-     * @param callable|array{0:string,1:string} $callback
+     * @param callable|array{0:string,1:string}|array<mixed> $callback
      * @return string
      * @throws BaseException
      */
@@ -301,7 +301,7 @@ class VariableInfo implements OptionableInterface
     {
         return (new StringRendererCallable(parseVariable($callback)))->render();
     }
-    
+
     protected function createRenderer(string $format) : VariableRenderer
     {
         $name = ucfirst(str_replace(' ', '', $this->type));
