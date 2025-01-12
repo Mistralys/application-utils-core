@@ -2,8 +2,8 @@
 /**
  * File containing the class {@see \AppUtils\FileHelper\FileInfo}.
  *
- * @package Application Utils
- * @subpackage FileHelper
+ * @package FileHelper
+ * @subpackage FileInfo
  * @see \AppUtils\FileHelper\FileInfo
  */
 
@@ -16,6 +16,7 @@ use AppUtils\ClassHelper;
 use AppUtils\ConvertHelper;
 use AppUtils\ConvertHelper_EOL;
 use AppUtils\FileHelper;
+use AppUtils\FileHelper\FileInfo\ExtensionClassRegistry;
 use AppUtils\FileHelper\FileInfo\FileSender;
 use AppUtils\FileHelper\FileInfo\LineReader;
 use AppUtils\FileHelper_Exception;
@@ -36,8 +37,13 @@ use function AppUtils\parseVariable;
  * - {@see SerializedFile}
  * - {@see PHPFile}
  *
- * @package Application Utils
- * @subpackage FileHelper
+ * These each have their own factory method, e.g. {@see JSONFile::factory()}.
+ *
+ * > NOTE: Additional classes can be registered via the
+ * > {@see ExtensionClassRegistry} class.
+ *
+ * @package FileHelper
+ * @subpackage FileInfo
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 class FileInfo extends AbstractPathInfo
@@ -92,14 +98,9 @@ class FileInfo extends AbstractPathInfo
             );
         }
 
-        $class = static::class;
+        $class = ExtensionClassRegistry::getExtensionClass(FileHelper::getExtension($pathString));
 
-        $ext = FileHelper::getExtension($pathString);
-        if(isset(self::EXTENSION_CLASSES[$ext])) {
-            $class = self::EXTENSION_CLASSES[$ext];
-        }
-
-        $key = $pathString.';'.static::class;
+        $key = $pathString.';'.$class;
 
         if(isset(self::$infoCache[$key])) {
             return self::$infoCache[$key];
@@ -122,9 +123,9 @@ class FileInfo extends AbstractPathInfo
      * @var array<string,class-string>
      */
     public const EXTENSION_CLASSES = array(
-        'json' => JSONFile::class,
-        'php' => PHPFile::class,
-        'ser' => SerializedFile::class,
+        JSONFile::EXTENSION => JSONFile::class,
+        PHPFile::EXTENSION => PHPFile::class,
+        SerializedFile::EXTENSION => SerializedFile::class,
     );
 
     /**
