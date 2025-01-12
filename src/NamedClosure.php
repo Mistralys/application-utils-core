@@ -38,6 +38,8 @@ use Closure;
  */
 class NamedClosure
 {
+    public const ERROR_INVALID_CALLBACK_ARRAY = 170501;
+
     /**
      * @var Closure
      */
@@ -132,9 +134,10 @@ class NamedClosure
     }
 
     /**
-     * @param array<int,string|object> $callback
+     * @param array{0:string|object,1:string} $callback
      * @param string|object $origin
      * @return NamedClosure
+     * @throws BaseException
      */
     public static function fromArray(array $callback, $origin='') : NamedClosure
     {
@@ -144,7 +147,15 @@ class NamedClosure
             $origin = get_class($origin);
         }
 
-        return new NamedClosure(Closure::fromCallable($callback), $origin);
+        if(is_callable($callback)) {
+            return new NamedClosure(Closure::fromCallable($callback), $origin);
+        }
+
+        throw new BaseException(
+            'Invalid callback array provided.',
+            '',
+            self::ERROR_INVALID_CALLBACK_ARRAY
+        );
     }
 
     /**
