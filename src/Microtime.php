@@ -256,10 +256,8 @@ class Microtime extends DateTime implements StringableInterface
     }
 
     /**
-     * Gets only the nanoseconds, if any. Add this
-     * to the microseconds to get the full millisecond.
-     *
-     * @return int
+     * Gets the Nanosecond part of the date.
+     * @return int Nine-digit nanoseconds value.
      */
     public function getNanoseconds() : int
     {
@@ -270,7 +268,7 @@ class Microtime extends DateTime implements StringableInterface
      * ISO formatted date with microseconds, in the
      * format `Y-m-d H:i:s.u`.
      *
-     * NOTE: Doesn't preserve nanoseconds.
+     * > NOTE: Doesn't preserve nanoseconds.
      *
      * @param bool $includeTimeZone
      * @return string
@@ -387,7 +385,7 @@ class Microtime extends DateTime implements StringableInterface
         if(strpos($format, DateFormatChars::TIME_NANOSECONDS)) {
             $format = str_replace(
                 DateFormatChars::TIME_NANOSECONDS,
-                sprintf('%03d', $this->getNanoseconds()),
+                sprintf('%03d', substr((string)$this->getNanoseconds(), 6)),
                 $format
             );
         }

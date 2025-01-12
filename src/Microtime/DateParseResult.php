@@ -36,7 +36,7 @@ class DateParseResult implements StringableInterface
     private string $dateTime;
     private DateTimeZone $timeZone;
     private ?TimeZoneInfo $timeZoneOffset = null;
-    private int $milliseconds = 0;
+    private int $nanoseconds = 0;
 
     public function __construct(string $datetime, ?DateTimeZone $timeZone=null)
     {
@@ -60,28 +60,51 @@ class DateParseResult implements StringableInterface
 
     public function getNanoseconds(): int
     {
-        return $this->milliseconds;
+        return $this->nanoseconds;
     }
 
+    /**
+     * Detects microseconds in the date string and adjusts
+     * the string to be PHP DateTime compatible by removing
+     * the nanosecond information, if present.
+     *
+     * Example nanosecond string:
+     *
+     * `22.666777888`
+     *
+     * The following parts are extracted:
+     *
+     * - `22` = Seconds
+     * - `666` = Milliseconds
+     * - `666777` = Microseconds
+     * - `666777888` = Nanoseconds
+     *
+     * @return void
+     */
     private function detectMicroseconds() : void
     {
-        preg_match('/([0-9]{2})\.([0-9]{7,9})/', $this->dateTime, $matches);
+        preg_match('/([0-9]{2})\.([0-9]{6,9})/', $this->dateTime, $matches);
 
         if(empty($matches[0])) {
             return;
         }
 
-        $microseconds = sprintf(
+        $seconds = $matches[1] ?? '';
+        // Account for the possibility of less than 9 digits
+        $nanoseconds = str_pad($matches[2] ?? '', 9, '0', STR_PAD_RIGHT);
+        $microseconds = substr($nanoseconds, 0, 6);
+
+        $adjusted = sprintf(
             '%s.%s',
-            $matches[1],
-            substr($matches[2], 0, 6)
+            $seconds,
+            $microseconds
         );
 
-        $this->milliseconds = (int)substr($matches[2], 6);
+        $this->nanoseconds = (int)$nanoseconds;
 
         $this->dateTime = str_replace(
             $matches[0],
-            $microseconds,
+            $adjusted,
             $this->dateTime
         );
     }
