@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppUtils\FileHelper;
 
-use AppUtils\ConvertHelper;
+use AppUtils\BaseException;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
 use DirectoryIterator;
@@ -16,7 +16,7 @@ use SplFileInfo;
  * @method FolderInfo requireExists(?int $errorCode = null)
  * @method FolderInfo requireWritable(?int $errorCode = null)
  */
-class FolderInfo extends AbstractPathInfo
+class FolderInfo extends AbstractPathInfo implements FolderInfoInterface
 {
     /**
      * @var array<string,FolderInfo>
@@ -129,12 +129,12 @@ class FolderInfo extends AbstractPathInfo
     }
 
     /**
+     * @inheritDoc
      * @return $this
-     *
      * @throws FileHelper_Exception
      * @see FileHelper::ERROR_CANNOT_CREATE_FOLDER
      */
-    public function create() : FolderInfo
+    public function create() : self
     {
         if(is_dir($this->path) || mkdir($this->path, 0777, true) || is_dir($this->path))
         {
@@ -224,26 +224,11 @@ class FolderInfo extends AbstractPathInfo
         return FileHelper::saveFile($this.'/'.$fileName, $content);
     }
 
-    /**
-     * @param array<mixed> $data
-     * @param string $fileName
-     * @param bool $pretty
-     * @return JSONFile
-     * @throws FileHelper_Exception
-     */
     public function saveJSONFile(array $data, string $fileName, bool $pretty=false) : JSONFile
     {
         return FileHelper::saveAsJSON($data, $this.'/'.$fileName, $pretty);
     }
 
-    /**
-     * Helper method that uses the folder finder to
-     * fetch all subfolders of this folder.
-     *
-     * See {@see self::createFolderFinder()}.
-     *
-     * @return FolderInfo[]
-     */
     public function getSubFolders(bool $recursive=false) : array
     {
         return $this->createFolderFinder()
@@ -251,28 +236,11 @@ class FolderInfo extends AbstractPathInfo
             ->getFolderInfos();
     }
 
-    /**
-     * Fetches a file from this folder given the specified filename.
-     *
-     * NOTE: This does not check if the file actually exists.
-     * Use {@see FileInfo::exists()} to check if it does.
-     *
-     * @param string $nameOrRelativePath A filename or relative path from the folder's root.
-     * @return FileInfo
-     * @throws FileHelper_Exception
-     */
     public function getSubFile(string $nameOrRelativePath) : FileInfo
     {
         return FileInfo::factory($this->getPath().'/'.$nameOrRelativePath);
     }
 
-    /**
-     * Checks if the target folder exists and is empty.
-     *
-     * NOTE: A folder that does not exist is considered empty.
-     *
-     * @return bool
-     */
     public function isEmpty() : bool
     {
         if(!$this->exists()) {
@@ -284,10 +252,7 @@ class FolderInfo extends AbstractPathInfo
     }
 
     /**
-     * Creates a file finder instance for this folder,
-     * to find specific subfiles.
-     *
-     * @return FileFinder
+     * @inheritDoc
      * @throws FileHelper_Exception
      */
     public function createFileFinder() : FileFinder
@@ -296,14 +261,9 @@ class FolderInfo extends AbstractPathInfo
     }
 
     /**
-     * Gets all files in the folder (non-recursive),
-     * sorted by file name.
-     *
-     * Use {@see self::createFileFinder()} for more advanced
-     * file finding options.
-     *
-     * @return FileInfo[]
+     * @inheritDoc
      * @throws FileHelper_Exception
+     * @throws BaseException
      */
     public function getSubFiles() : array
     {

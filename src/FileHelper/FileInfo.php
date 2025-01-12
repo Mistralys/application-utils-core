@@ -46,7 +46,7 @@ use function AppUtils\parseVariable;
  * @subpackage FileInfo
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class FileInfo extends AbstractPathInfo
+class FileInfo extends AbstractPathInfo implements FileInfoInterface
 {
     public const ERROR_INVALID_INSTANCE_CREATED = 115601;
 
@@ -301,9 +301,9 @@ class FileInfo extends AbstractPathInfo
                 ->createFolder();
         }
 
-        // The target is a path that can not be recognized as a file,
+        // The target is a path that cannot be recognized as a file,
         // but is not a folder: very likely a file without extension.
-        // In this case we create an empty file to be able to return
+        // In this case, we create an empty file to be able to return
         // a FileInfo instance.
         if($target instanceof IndeterminatePath)
         {
@@ -326,12 +326,6 @@ class FileInfo extends AbstractPathInfo
      */
     private ?LineReader $lineReader = null;
 
-    /**
-     * Gets an instance of the line reader, which can
-     * read contents of the file, line by line.
-     *
-     * @return LineReader
-     */
     public function getLineReader() : LineReader
     {
         if($this->lineReader === null)
@@ -368,12 +362,12 @@ class FileInfo extends AbstractPathInfo
     }
 
     /**
-     * @param string $content
+     * @inheritDoc
      * @return $this
      * @throws FileHelper_Exception
      * @see FileHelper::ERROR_SAVE_FILE_WRITE_FAILED
      */
-    public function putContents(string $content) : FileInfo
+    public function putContents(string $content) : self
     {
         if($this->exists())
         {
@@ -407,7 +401,7 @@ class FileInfo extends AbstractPathInfo
     }
 
     /**
-     * Attempts to create the folder of the file, if it
+     * Attempts to create the folder of the file if it
      * does not exist yet. Use this with files that do
      * not exist in the file system yet.
      *
@@ -426,13 +420,6 @@ class FileInfo extends AbstractPathInfo
         return $this;
     }
 
-    /**
-     * Detects the end of line style used in the target file, if any.
-     * Can be used with large files, because it only reads part of it.
-     *
-     * @return NULL|ConvertHelper_EOL The end of line character information, or NULL if none is found.
-     * @throws FileHelper_Exception
-     */
     public function detectEOLCharacter() : ?ConvertHelper_EOL
     {
         // 20 lines is enough to get a good picture of the newline style in the file.
@@ -451,21 +438,13 @@ class FileInfo extends AbstractPathInfo
         return $this->getLineReader()->getLine($lineNumber);
     }
 
-    /**
-     * Attempts to detect the file's mime type by its extension.
-     * @return string
-     */
     public function getMimeType() : string
     {
         return FileHelper_MimeTypes::getMime($this->getExtension());
     }
 
     /**
-     * Alias for using {@see self::getDownloader()} to send the file,
-     * with the added benefit of being able to chain the method calls.
-     *
-     * @param string $fileName
-     * @param bool|null $asAttachment
+     * @inheritDoc
      * @return $this
      */
     public function send(string $fileName, ?bool $asAttachment=false) : self
