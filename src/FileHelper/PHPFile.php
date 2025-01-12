@@ -28,6 +28,8 @@ use SplFileInfo;
  */
 class PHPFile extends FileInfo
 {
+    public const EXTENSION = 'php';
+
     /**
      * @param string|PathInfoInterface|SplFileInfo $path
      * @return PHPFile

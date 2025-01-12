@@ -28,6 +28,8 @@ use SplFileInfo;
  */
 class SerializedFile extends FileInfo
 {
+    public const EXTENSION = 'ser';
+
     /**
      * @param string|PathInfoInterface|SplFileInfo $path
      * @return SerializedFile

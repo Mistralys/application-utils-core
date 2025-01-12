@@ -27,6 +27,8 @@ use function AppUtils\sb;
  */
 class JSONFile extends FileInfo
 {
+    public const EXTENSION = 'json';
+
     /**
      * @var string
      */
