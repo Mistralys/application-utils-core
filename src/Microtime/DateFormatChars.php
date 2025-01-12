@@ -195,6 +195,10 @@ class DateFormatChars
      */
     public const TIME_MILLISECONDS = 'v';
 
+    /**
+     * 3-digit nanoseconds, zero-based.
+     * Examples: `578`, `001`
+     */
     public const TIME_NANOSECONDS = '_ns';
 
     // endregion
