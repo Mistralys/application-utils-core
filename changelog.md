@@ -1,6 +1,8 @@
 ## v2.3.4 - FileHelper Improvements
 - FileHelper: Added possibility to register custom file type classes with `ExtensionClassRegistry`.
 - FileHelper: Added `EXTENSION` constants for all specialized `FileInfo` classes.
+- FileHelper: Added the interfaces `FileInfoInterface` and `FolderInfoInterface`.
+- Microtime: Fixed incorrect handling of the nanosecond values.
 
 ## v2.3.3 - Code quality
 - Code: PHPStan type fixes, clean up to level 6.
