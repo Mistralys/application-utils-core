@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppUtilsTestClasses;
 
+use AppUtils\FileHelper\FileInfo\ExtensionClassRegistry;
 use AppUtilsTestClasses\BaseTestCase;
 use RuntimeException;
 
@@ -79,8 +80,9 @@ class FileHelperTestCase extends BaseTestCase
         parent::setUp();
 
         $this->registerFilesToDelete();
-
         $this->initAssetsFolder();
+
+        ExtensionClassRegistry::resetExtensions();
     }
 
     protected function tearDown() : void
