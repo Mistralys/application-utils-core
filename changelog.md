@@ -1,3 +1,7 @@
+## v2.3.4 - FileHelper Improvements
+- FileHelper: Added possibility to register custom file type classes with `ExtensionClassRegistry`.
+- FileHelper: Added `EXTENSION` constants for all specialized `FileInfo` classes.
+
 ## v2.3.3 - Code quality
 - Code: PHPStan type fixes, clean up to level 6.
 - HTMLHelper: Added static `formatHTML()`.
