@@ -36,11 +36,11 @@ trait StylableTrait
 
     /**
      * @param string $name
-     * @param string $value
+     * @param string|NULL $value
      * @param bool $important
      * @return $this
      */
-    public function style(string $name, string $value, bool $important) : self
+    public function style(string $name, ?string $value, bool $important) : self
     {
         $this->getStyles()->style($name, $value, $important);
         return $this;
