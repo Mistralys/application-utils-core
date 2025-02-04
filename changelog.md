@@ -1,7 +1,9 @@
 ## v2.3.5 - HTMLTag improvements
-- HTMLTag: Added `style()` to set inline styles.
+- HTMLTag: Added `style()` to set and remove inline styles.
+- HTMLTag: `attr()` now accepts non-string values.
 - HTMLTag: Added `appendContent()` as alias for `addHTML()`.
 - HTMLTag: Added `title()`.
+- StyleCollection: Added possibility to remove styles by setting them to `null`.
 
 ## v2.3.4 - FileHelper Improvements
 - FileHelper: Added possibility to register custom file type classes with `ExtensionClassRegistry`.
