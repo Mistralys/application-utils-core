@@ -124,4 +124,25 @@ final class HTMLTagTest extends BaseTestCase
                 ->setContent('Content')
         );
     }
+
+    public function test_style() : void
+    {
+        $this->assertStringContainsString(
+            'display:block',
+            HTMLTag::create('div')
+                ->style('display', 'block')
+                ->render()
+        );
+    }
+
+    public function test_removeStyleBySettingToNull() : void
+    {
+        $this->assertStringNotContainsString(
+            'display:block',
+            HTMLTag::create('div')
+                ->style('display', 'block')
+                ->style('display', null)
+                ->render()
+        );
+    }
 }

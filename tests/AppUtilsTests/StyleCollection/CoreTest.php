@@ -151,4 +151,37 @@ EOT;
                 ->display()->custom('flex')
         );
     }
+
+    public function test_removeStyleIfNotExists() : void
+    {
+        $styles = StyleCollection::create();
+
+        $this->assertNull($styles->getStyle('display'));
+
+        $styles->remove('display');
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function test_removeStyleIfExists() : void
+    {
+        $styles = StyleCollection::create()->style('display', 'block');
+
+        $this->assertSame('block', $styles->getStyle('display'));
+
+        $styles->remove('display');
+
+        $this->assertNull($styles->getStyle('display'));
+    }
+
+    public function test_removeStyleBySettingToNULL() : void
+    {
+        $styles = StyleCollection::create()->style('display', 'block');
+
+        $this->assertSame('block', $styles->getStyle('display'));
+
+        $styles->style('display', null);
+
+        $this->assertNull($styles->getStyle('display'));
+    }
 }
