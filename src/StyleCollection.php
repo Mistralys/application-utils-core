@@ -29,7 +29,7 @@ class StyleCollection implements StringableInterface
     /**
      * @var array<string,string>
      */
-    private $styles = array();
+    private array $styles = array();
 
     /**
      * @param array<string,string|number|NumberInfo|StringableInterface|NULL> $styles
@@ -61,6 +61,11 @@ class StyleCollection implements StringableInterface
     public function getStyles() : array
     {
         return $this->styles;
+    }
+
+    public function getStyle(string $name) : ?string
+    {
+        return $this->styles[$name] ?? null;
     }
 
     // region: 1) Setting styles
@@ -102,14 +107,15 @@ class StyleCollection implements StringableInterface
      * Sets a style value.
      *
      * @param string $name
-     * @param string $value
+     * @param string|NULL $value
      * @param bool $important
      * @return $this
      */
-    public function style(string $name, string $value, bool $important=false) : StyleCollection
+    public function style(string $name, ?string $value, bool $important=false) : StyleCollection
     {
-        if($value === '')
+        if(empty($value))
         {
+            unset($this->styles[$name]);
             return $this;
         }
 
@@ -191,10 +197,7 @@ class StyleCollection implements StringableInterface
 
     public function remove(string $name) : StyleCollection
     {
-        if(isset($this->styles[$name]))
-        {
-            unset($this->styles[$name]);
-        }
+        unset($this->styles[$name]);
 
         return $this;
     }
