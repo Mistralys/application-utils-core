@@ -200,6 +200,17 @@ class HTMLTag implements StringableInterface, ClassableInterface
         return $this;
     }
 
+    /**
+     * @param string|number|StringableInterface|NULL $content
+     * @return $this
+     * @see self::addText()
+     * @see self::addHTML()
+     */
+    public function appendContent($content) : self
+    {
+        return $this->addHTML($content);
+    }
+
     public function renderContent() : string
     {
         if($this->selfClosing)
@@ -232,6 +243,12 @@ class HTMLTag implements StringableInterface, ClassableInterface
         return $this;
     }
 
+    public function style(string $name, string $value, bool $important=false) : self
+    {
+        $this->attributes->style($name, $value, $important);
+        return $this;
+    }
+
     /**
      * @param string $name
      * @param bool $enabled
@@ -244,6 +261,15 @@ class HTMLTag implements StringableInterface, ClassableInterface
     }
 
     // region: Flavors
+
+    /**
+     * @param string $title
+     * @return $this
+     */
+    public function title(string $title) : self
+    {
+        return $this->attr('title', $title);
+    }
 
     /**
      * @param string $name
