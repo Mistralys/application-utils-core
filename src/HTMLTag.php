@@ -227,12 +227,14 @@ class HTMLTag implements StringableInterface, ClassableInterface
     }
 
     /**
+     * Sets an attribute of the tag.
+     *
      * @param string $name
-     * @param string $value
-     * @param bool $keepIfEmpty
+     * @param string|number|bool|StringableInterface|StringBuilder_Interface|NULL $value
+     * @param bool $keepIfEmpty If `true`, the attribute is kept even if the value is empty (null or empty string).
      * @return $this
      */
-    public function attr(string $name, string $value, bool $keepIfEmpty=false) : self
+    public function attr(string $name, $value, bool $keepIfEmpty=false) : self
     {
         $this->attributes->attr($name, $value);
 
@@ -243,13 +245,23 @@ class HTMLTag implements StringableInterface, ClassableInterface
         return $this;
     }
 
-    public function style(string $name, string $value, bool $important=false) : self
+    /**
+     * Sets or unsets an inline style.
+     *
+     * @param string $name Style name, e.g. `display`.
+     * @param string|null $value Set to `null` to remove the style.
+     * @param bool $important Whether to add the `!important` flag.
+     * @return $this
+     */
+    public function style(string $name, ?string $value, bool $important=false) : self
     {
         $this->attributes->style($name, $value, $important);
         return $this;
     }
 
     /**
+     * Sets or removes a property attribute, e.g. "checked".
+     *
      * @param string $name
      * @param bool $enabled
      * @return $this
