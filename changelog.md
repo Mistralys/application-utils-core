@@ -1,3 +1,8 @@
+## v2.3.5 - HTMLTag improvements
+- HTMLTag: Added `style()` to set inline styles.
+- HTMLTag: Added `appendContent()` as alias for `addHTML()`.
+- HTMLTag: Added `title()`.
+
 ## v2.3.4 - FileHelper Improvements
 - FileHelper: Added possibility to register custom file type classes with `ExtensionClassRegistry`.
 - FileHelper: Added `EXTENSION` constants for all specialized `FileInfo` classes.
