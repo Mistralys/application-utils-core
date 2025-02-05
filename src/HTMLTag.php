@@ -294,10 +294,10 @@ class HTMLTag implements StringableInterface, ClassableInterface
     }
 
     /**
-     * @param string $id
+     * @param string|NULL $id
      * @return $this
      */
-    public function id(string $id) : self
+    public function id(?string $id) : self
     {
         $this->attributes->id($id);
         return $this;

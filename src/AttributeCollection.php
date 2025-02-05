@@ -310,24 +310,24 @@ class AttributeCollection
 
     // region: Flavors
 
-    public function name(string $name) : AttributeCollection
+    public function name(?string $name) : AttributeCollection
     {
         return $this->attr('name', $name);
     }
 
-    public function id(string $id) : AttributeCollection
+    public function id(?string $id) : AttributeCollection
     {
         return $this->attr('id', $id);
     }
 
-    public function href(string $url) : AttributeCollection
+    public function href(?string $url) : AttributeCollection
     {
         return $this->attrURL('href', $url);
     }
 
     public const TARGET_BLANK = '_blank';
 
-    public function target(string $value=self::TARGET_BLANK) : AttributeCollection
+    public function target(?string $value=self::TARGET_BLANK) : AttributeCollection
     {
         return $this->attr('target', $value);
     }
