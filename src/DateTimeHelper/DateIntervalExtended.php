@@ -79,6 +79,31 @@ class DateIntervalExtended
     }
 
     /**
+     * @param int|DateIntervalExtended|DateInterval|string|NULL $duration
+     * @return DateIntervalExtended
+     */
+    public static function fromAuto($duration) : DateIntervalExtended
+    {
+        if(is_int($duration)) {
+            return self::fromSeconds($duration);
+        }
+
+        if($duration instanceof DateIntervalExtended) {
+            return $duration;
+        }
+
+        if($duration instanceof DateInterval) {
+            return self::fromInterval($duration);
+        }
+
+        if(is_string($duration)) {
+            return self::fromDurationString($duration);
+        }
+
+        return self::fromSeconds(0);
+    }
+
+    /**
      * Creates the interval from a specific number of seconds.
      *
      * @param int $seconds
