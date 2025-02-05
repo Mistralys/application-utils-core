@@ -13,6 +13,7 @@ use AppUtils\ConvertHelper_Exception;
 use DateInterval;
 use DateTime;
 use Exception;
+use function AppUtils\parseDurationString;
 
 /**
  * DateInterval wrapper, that makes it much easier to
@@ -78,15 +79,29 @@ class DateIntervalExtended
     }
 
     /**
-     * Creates the interval from a specific amount of seconds.
+     * Creates the interval from a specific number of seconds.
      *
      * @param int $seconds
      * @return DateIntervalExtended
      * @throws ConvertHelper_Exception
      */
-    public static function fromSeconds(int $seconds)
+    public static function fromSeconds(int $seconds) : DateIntervalExtended
     {
         return new DateIntervalExtended($seconds);
+    }
+
+    /**
+     * Creates an interval from a standardized duration string,
+     * e.g. `1h 30m 15s`. See the {@see DurationStringInfo} class
+     * for details.
+     *
+     * @param string|NULL $duration
+     * @return DateIntervalExtended
+     * @throws ConvertHelper_Exception
+     */
+    public static function fromDurationString(?string $duration) : DateIntervalExtended
+    {
+        return self::fromSeconds(parseDurationString($duration)->getTotalSeconds());
     }
     
    /**
@@ -95,7 +110,7 @@ class DateIntervalExtended
     * @param DateInterval $interval
     * @return DateIntervalExtended
     */
-    public static function fromInterval(DateInterval $interval)
+    public static function fromInterval(DateInterval $interval) : DateIntervalExtended
     {
         return self::fromSeconds(ConvertHelper::interval2seconds($interval));
     }
