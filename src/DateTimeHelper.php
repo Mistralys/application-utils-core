@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\DateTimeHelper\DurationStringInfo;
 use AppUtils\DateTimeHelper\IntervalConverter;
 use AppUtils\DateTimeHelper\DateIntervalExtended;
 use AppUtils\DateTimeHelper\DurationConverter;
@@ -13,6 +14,11 @@ use DateTime;
 
 class DateTimeHelper
 {
+    public const SECONDS_PER_MINUTE = 60;
+    public const SECONDS_PER_HOUR = 3600;
+    public const SECONDS_PER_DAY = 86400;
+    public const SECONDS_PER_WEEK = 604800;
+
     /**
      * @var array<int,string[]>
      */
@@ -72,6 +78,20 @@ class DateTimeHelper
     public static function duration2string($datefrom, $dateto = -1) : string
     {
         return DurationConverter::toString($datefrom, $dateto);
+    }
+
+    /**
+     * Converts a standardized duration string (e.g. `1h 30m 14s`)
+     * into a DateInterval object. See the {@see DurationStringInfo}
+     * class for details.
+     *
+     * @param string $durationString
+     * @return DateIntervalExtended
+     * @throws ConvertHelper_Exception
+     */
+    public static function durationString2interval(string $durationString) : DateIntervalExtended
+    {
+        return DateIntervalExtended::fromDurationString($durationString);
     }
 
     /**
@@ -279,7 +299,7 @@ class DateTimeHelper
 
     /**
      * Converts a date interval to a human-readable string with
-     * all necessary time components, e.g. "1 year, 2 months and 4 days".
+     * all necessary time parts, e.g. "1 year, 2 months and 4 days".
      *
      * @param DateInterval $interval
      * @return string
