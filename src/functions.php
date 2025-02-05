@@ -3,6 +3,7 @@
 namespace AppUtils;
 
 use AppUtils\DateTimeHelper\DateIntervalExtended;
+use AppUtils\DateTimeHelper\DaytimeStringInfo;
 use AppUtils\DateTimeHelper\DurationStringInfo;
 use AppUtils\Interfaces\StringableInterface;
 use DateInterval;
@@ -166,12 +167,27 @@ function parseNumberImmutable($value) : NumberInfo_Immutable
  * `1h 30m 15s` and returns a duration info object that can
  * be converted to a date interval and more.
  *
- * @param string|NULL $duration Allowing `NULL` values for convenience.
+ * @param string|integer|DurationStringInfo|DateInterval|DateIntervalExtended|NULL $duration Use `NULL` to create an empty duration.
  * @return DurationStringInfo
  */
-function parseDurationString(?string $duration) : DurationStringInfo
+function parseDurationString($duration) : DurationStringInfo
 {
-    return DurationStringInfo::create($duration);
+    return DurationStringInfo::fromAuto($duration);
+}
+
+/**
+ * Parses a daytime string (e.g. `14:30`) into an object to retrieve
+ * information about it, and to manipulate it.
+ *
+ * @param string|integer|DaytimeStringInfo|null $time String value = time string.
+ *                                                    Integer value = seconds to time.
+ *                                                    `null` = empty 00:00 time.
+ *                                                    Daytime instance = returns the same instance.
+ * @return DaytimeStringInfo
+ */
+function parseDaytimeString($time) : DaytimeStringInfo
+{
+    return DaytimeStringInfo::fromAuto($time);
 }
 
 /**
