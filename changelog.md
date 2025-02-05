@@ -1,9 +1,12 @@
-## v2.3.5 - HTMLTag improvements
+## v2.3.5 - HTMLTag improvements and Duration String
 - HTMLTag: Added `style()` to set and remove inline styles.
 - HTMLTag: `attr()` now accepts non-string values.
 - HTMLTag: Added `appendContent()` as alias for `addHTML()`.
 - HTMLTag: Added `title()`.
 - StyleCollection: Added possibility to remove styles by setting them to `null`.
+- DurationString: Added the duration string parser class `DurationStringInfo`.
+- DurationString: Added the global function `parseDurationString()`.
+- DateIntervalExtended: Added `fromDurationString()`.
 
 ## v2.3.4 - FileHelper Improvements
 - FileHelper: Added possibility to register custom file type classes with `ExtensionClassRegistry`.
