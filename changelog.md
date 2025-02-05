@@ -1,4 +1,4 @@
-## v2.3.5 - HTMLTag improvements and Duration String
+## v2.3.5 - HTMLTag and date time additions
 - HTMLTag: Added `style()` to set and remove inline styles.
 - HTMLTag: `attr()` now accepts non-string values.
 - HTMLTag: Added `appendContent()` as alias for `addHTML()`.
