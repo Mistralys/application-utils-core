@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppUtilsTests\DateTimeHelper;
 
 use AppUtils\DateTimeHelper\DateIntervalExtended;
+use AppUtils\DateTimeHelper\DurationStringInfo;
 use AppUtilsTestClasses\BaseTestCase;
 use function AppUtils\parseDurationString;
 
@@ -86,6 +87,16 @@ final class DurationStringTests extends BaseTestCase
         $this->assertSame(
             (45*60) + 14,
             DateIntervalExtended::fromDurationString('45m 14s')->getTotalSeconds()
+        );
+    }
+
+    public function test_fromSeconds() : void
+    {
+        $info = parseDurationString('3d 6h 42m 12s');
+
+        $this->assertSame(
+            $info->getTotalSeconds(),
+            DurationStringInfo::fromSeconds($info->getTotalSeconds())->getTotalSeconds()
         );
     }
 }
