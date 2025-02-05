@@ -3,6 +3,7 @@
 namespace AppUtils;
 
 use AppUtils\DateTimeHelper\DateIntervalExtended;
+use AppUtils\DateTimeHelper\DurationStringInfo;
 use AppUtils\Interfaces\StringableInterface;
 use DateInterval;
 use Throwable;
@@ -161,8 +162,21 @@ function parseNumberImmutable($value) : NumberInfo_Immutable
 }
 
 /**
+ * Parses a standardized duration string in the format
+ * `1h 30m 15s` and returns a duration info object that can
+ * be converted to a date interval and more.
+ *
+ * @param string|NULL $duration Allowing `NULL` values for convenience.
+ * @return DurationStringInfo
+ */
+function parseDurationString(?string $duration) : DurationStringInfo
+{
+    return DurationStringInfo::create($duration);
+}
+
+/**
  * Initializes the utilities: this is called automatically
- * because this file is included in the files list in the
+ * because this file is included in the file list in the
  * composer.json, guaranteeing it is always loaded.
  */
 function init() : void
