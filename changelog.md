@@ -7,6 +7,11 @@
 - DurationString: Added the duration string parser class `DurationStringInfo`.
 - DurationString: Added the global function `parseDurationString()`.
 - DateIntervalExtended: Added `fromDurationString()`.
+- DateIntervalExtended: Added `fromAuto()`.
+- DaytimeString: Added the daytime string parser class `DaytimeStringInfo`.
+- DaytimeString: Added the global function `parseDaytimeString()`.
+- DateTimeHelper: Added constants for the number of seconds in a minute, hour, day, and week.
+- TimeDurationCalculator: Added the utility class `TimeDurationCalculator`.
 
 ## v2.3.4 - FileHelper Improvements
 - FileHelper: Added possibility to register custom file type classes with `ExtensionClassRegistry`.
