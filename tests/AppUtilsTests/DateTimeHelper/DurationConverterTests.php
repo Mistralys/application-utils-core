@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace AppUtilsTests;
+namespace AppUtilsTests\DateTimeHelper;
 
+use AppUtils\DateTimeHelper\DurationConverter;
 use AppUtilsTestClasses\BaseTestCase;
 use DateInterval;
 use DateTime;
-use AppUtils\DateTimeHelper\DurationConverter;
 
 final class DurationConverterTests extends BaseTestCase
 {
