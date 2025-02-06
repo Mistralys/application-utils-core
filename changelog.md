@@ -2,6 +2,7 @@
 - DaytimeString: Added empty value tracking and `isEmpty()` to recognize empty values.
 - DaytimeString: Added `toReadable()` for pretty empty values.
 - DaytimeString: Added `setEmptyTimeText()` to customize the empty time text.
+- DaytimeString: Seconds are now ignored to support MySQL `TIME` values.
 
 ## v2.3.5 - HTMLTag and date time additions
 - HTMLTag: Added `style()` to set and remove inline styles.
