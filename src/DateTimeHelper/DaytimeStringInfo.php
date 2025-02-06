@@ -128,6 +128,11 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
     {
         $parts = ConvertHelper::explodeTrim(':', $timeString);
 
+        // If seconds are present, ignore them.
+        if(count($parts) === 3) {
+            array_pop($parts);
+        }
+
         if(count($parts) !== 2) {
             $this->checkFormat($parts, $timeString);
             return;
