@@ -1,3 +1,8 @@
+## v2.3.6 - Daytime string improvements
+- DaytimeString: Added empty value tracking and `isEmpty()` to recognize empty values.
+- DaytimeString: Added `toReadable()` for pretty empty values.
+- DaytimeString: Added `setEmptyTimeText()` to customize the empty time text.
+
 ## v2.3.5 - HTMLTag and date time additions
 - HTMLTag: Added `style()` to set and remove inline styles.
 - HTMLTag: `attr()` now accepts non-string values.
