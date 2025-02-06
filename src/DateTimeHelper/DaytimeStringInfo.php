@@ -51,12 +51,20 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
     public const VALIDATION_UNRECOGNIZED_TIME_FORMAT = 171702;
     public const VALIDATION_INVALID_MINUTE = 171703;
 
+    public const DEFAULT_EMPTY_TIME_TEXT = '--:--';
+
     private int $hours = 0;
     private int $minutes = 0;
+    public static string $emptyTimeText = self::DEFAULT_EMPTY_TIME_TEXT;
+    private bool $empty = false;
 
-
-    protected function __construct(string $timeString)
+    protected function __construct(?string $timeString)
     {
+        if(empty($timeString)) {
+            $this->empty = true;
+            $timeString = '00:00';
+        }
+
         $this->parse($timeString);
     }
 
@@ -93,10 +101,6 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
     public static function fromString(?string $timeString) : DaytimeStringInfo
     {
         $timeString = trim((string)$timeString);
-
-        if(empty($timeString)) {
-            $timeString = '00:00';
-        }
 
         return new self($timeString);
     }
@@ -236,8 +240,6 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
         return self::fromString(sprintf('%02d:%02d', $this->hours, $target));
     }
 
-
-
     /**
      * Normalizes the time to a string in the format `HH:MM`.
      * @return string
@@ -245,6 +247,60 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
     public function getNormalized() : string
     {
         return sprintf('%02d:%02d', $this->hours, $this->minutes);
+    }
+
+    /**
+     * Returns the normalized time or the empty time string
+     * if the time value is empty.
+     *
+     * > NOTE: The empty time string used can be customized
+     * > using {@see self::setEmptyTimeText()}.
+     *
+     * @return string
+     */
+    public function toReadable() : string
+    {
+        if(!$this->isEmpty()) {
+            return $this->getNormalized();
+        }
+
+        return self::$emptyTimeText;
+    }
+
+    /**
+     * Sets a custom text to use when using {@see self::toReadable()} with
+     * an empty time value.
+     *
+     * @param string $string
+     * @return void
+     */
+    public static function setEmptyTimeText(string $string) : void
+    {
+        self::$emptyTimeText = $string;
+    }
+
+    /**
+     * Resets the empty time text to the default ({@see self::DEFAULT_EMPTY_TIME_TEXT}).
+     * @return void
+     */
+    public static function resetEmptyTimeText() : void
+    {
+        self::setEmptyTimeText(self::DEFAULT_EMPTY_TIME_TEXT);
+    }
+
+    /**
+     * Checks whether this time was created with an empty
+     * value (an empty string or `NULL`).
+     *
+     * Since an empty value is interpreted as `00:00`, this
+     * makes it possible to distinguish between midnight and
+     * an empty value.
+     *
+     * @return bool
+     */
+    public function isEmpty() : bool
+    {
+        return $this->empty;
     }
 
     public function getHours() : int
