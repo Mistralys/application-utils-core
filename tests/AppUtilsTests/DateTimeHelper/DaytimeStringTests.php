@@ -46,6 +46,27 @@ final class DaytimeStringTests extends BaseTestCase
         $this->assertSame('00:00', parseDaytimeString('something')->getNormalized());
     }
 
+    public function test_emptyIsDifferentFromMidnight() : void
+    {
+        $empty = parseDaytimeString(null);
+        $midnight = parseDaytimeString('00:00');
+
+        $this->assertSame('00:00', $midnight->getNormalized());
+        $this->assertSame('00:00', $empty->getNormalized());
+
+        $this->assertTrue($empty->isEmpty());
+        $this->assertFalse($midnight->isEmpty());
+    }
+
+    public function test_toReadableWithEmptyValue() : void
+    {
+        $empty = parseDaytimeString(null);
+        $midnight = parseDaytimeString('00:00');
+
+        $this->assertSame('--:--', $empty->toReadable());
+        $this->assertSame('00:00', $midnight->toReadable());
+    }
+
     public function test_emptyValueIsValid() : void
     {
         $this->assertIsValid(parseDaytimeString(''));
@@ -188,6 +209,13 @@ final class DaytimeStringTests extends BaseTestCase
     {
         $this->assertFalse($info->isValid());
         $this->assertSame($code, $info->getErrorCode());
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        DaytimeStringInfo::resetEmptyTimeText();
     }
 
     // endregion
