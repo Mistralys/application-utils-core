@@ -19,7 +19,7 @@ final class DaytimeStringTests extends BaseTestCase
     {
         $this->assertHasErrorCode(
             DaytimeStringInfo::VALIDATION_UNRECOGNIZED_TIME_FORMAT,
-            parseDaytimeString('12:34:56')
+            parseDaytimeString('12:34:12:45')
         );
 
         $this->assertHasErrorCode(
@@ -44,6 +44,13 @@ final class DaytimeStringTests extends BaseTestCase
     public function test_invalidValuesHaveDefaultTime() : void
     {
         $this->assertSame('00:00', parseDaytimeString('something')->getNormalized());
+    }
+
+    public function test_secondsAreIgnored() : void
+    {
+        $info = parseDaytimeString('12:34:56');
+        $this->assertTrue($info->isValid());
+        $this->assertSame('12:34', $info->getNormalized());
     }
 
     public function test_emptyIsDifferentFromMidnight() : void
