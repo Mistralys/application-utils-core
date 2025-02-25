@@ -263,6 +263,21 @@ final class ClassHelperTests extends BaseTestCase
         $this->assertClassListContainsClass($classes, FinderImplementsInterface::class);
     }
 
+    public function test_findClassesCached() : void
+    {
+        ClassHelper::setCacheFolder(__DIR__.'/../../assets/ClassHelper/ClassRepository');
+
+        $classes = ClassHelper::findClassesInRepository(
+            FolderInfo::factory(self::FINDER_CLASSES_FOLDER),
+            true,
+            FinderInterface::class
+        )->getClasses();
+
+        $this->assertCount(2, $classes);
+        $this->assertContains(FinderInterface::class, $classes);
+        $this->assertContains(FinderImplementsInterface::class, $classes);
+    }
+
     /**
      * @param FileHelper_PHPClassInfo_Class[] $list
      * @param class-string ...$classes
