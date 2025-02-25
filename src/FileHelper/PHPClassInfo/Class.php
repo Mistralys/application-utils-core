@@ -113,6 +113,11 @@ class FileHelper_PHPClassInfo_Class
         
         return $name;
     }
+
+    public function getNamespace() : string
+    {
+        return $this->info->getNamespace();
+    }
     
    /**
     * Whether it is an abstract class.
