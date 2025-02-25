@@ -12,17 +12,25 @@ namespace AppUtils;
 use AppUtils\ClassHelper\ClassLoaderNotFoundException;
 use AppUtils\ClassHelper\ClassNotExistsException;
 use AppUtils\ClassHelper\ClassNotImplementsException;
-use AppUtils\FileHelper\FileFinder;
+use AppUtils\ClassHelper\Repository\ClassRepository;
+use AppUtils\ClassHelper\Repository\ClassRepositoryException;
+use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
 use AppUtils\FileHelper\FolderInfo;
-use AppUtilsTestClasses\ClassHelper\ReferenceClasses\BaseFooClass;
-use AppUtilsTestClasses\ClassHelper\ReferenceClasses\Foo\Foo;
+use AppUtils\FileHelper\PathInfoInterface;
 use Composer\Autoload\ClassLoader;
+use SplFileInfo;
 use Throwable;
 
 /**
  * Helper class to simplify working with dynamic class loading,
  * in a static analysis-tool-friendly way. PHPStan and co will
  * recognize the correct class types given class strings.
+ *
+ * ## Setup
+ *
+ * Some features require a cache folder to be set using
+ * {@see self::setCacheFolder()}. These methods say so
+ * in their comments.
  *
  * @package Application Utils
  * @subpackage ClassFinder
@@ -34,6 +42,7 @@ class ClassHelper
 
     public const ERROR_CANNOT_RESOLVE_CLASS_NAME = 111001;
     public const ERROR_THROWABLE_GIVEN_AS_OBJECT = 111002;
+    public const ERROR_CACHE_FOLDER_NOT_SET = 111003;
 
     /**
      * Attempts to detect the name of a class, switching between
@@ -64,7 +73,7 @@ class ClassHelper
 
     /**
      * Like {@see ClassHelper::resolveClassName()}, but throws an exception
-     * if the class can not be found.
+     * if the class cannot be found.
      *
      * @param string $legacyName
      * @param string $nsPrefix Optional namespace prefix, if the namespace contains
@@ -146,9 +155,9 @@ class ClassHelper
      * If the target object is not an instance of the target class
      * or interface, throws an exception.
      *
-     * NOTE: If an exception is passed as object, a class helper
-     * exception is thrown with the error code {@see ClassHelper::ERROR_THROWABLE_GIVEN_AS_OBJECT},
-     * and the original exception as previous exception.
+     * > NOTE: If an exception is passed as an object, a class helper
+     * > exception is thrown with the error code {@see ClassHelper::ERROR_THROWABLE_GIVEN_AS_OBJECT},
+     * > and the original exception as previous exception.
      *
      * @template ClassInstanceType
      * @param class-string<ClassInstanceType> $class
@@ -184,12 +193,12 @@ class ClassHelper
     }
 
     /**
-     * Retrieves an instance of the Composer class loader of
+     * Retrieves an instance of the Composer class loader for
      * the current project. This assumes the usual structure
      * with this library being stored in the `vendor` folder.
      *
-     * NOTE: Also works when working on a local copy of the
-     * Git package.
+     * > NOTE: Also works when working on a local copy of the
+     * > Git package.
      *
      * @return ClassLoader
      * @throws ClassLoaderNotFoundException
@@ -317,13 +326,15 @@ class ClassHelper
      * the given class name as reference to build the class names from,
      * inferred from the file names.
      *
-     * NOTE: This is very fast, but relies on all classes in the folder
-     * to use the same namespace and naming convention. Consider the
-     * alternative {@see self::findClassesInFolder()} if this is not the case.
+     * > NOTE: This is very fast, but relies on all classes in the folder
+     * > to use the same namespace and naming convention.
+     * > Consider the alternative {@see self::findClassesInRepository()}
+     * > if this is not the case.
      *
      * @param FolderInfo $folder
      * @param class-string $classReference
      * @return class-string[]
+     *
      * @throws ClassNotExistsException
      * @throws FileHelper_Exception
      */
@@ -349,14 +360,14 @@ class ClassHelper
      * It will return an array of {@see FileHelper_PHPClassInfo_Class}
      * objects.
      *
-     * NOTE: This method is slow, as it looks into each of the PHP files'
-     * source code. It does not load the entire file, but it can still mean
-     * a lot of disk I/O depending on the size of the folder.
+     * > NOTE: This method is slow, as it looks into each of the PHP files' sourcecode.
+     * > Prefer the cached class repository manager, which solves this issue.
+     * > See {@see self::findClassesInRepository()}.
      *
      * It is recommended to cache the results if this is done regularly.
      *
      * @param FolderInfo $folder
-     * @param bool $recursive Whether to recursively go through sub-folders.
+     * @param bool $recursive Whether to recursively go through subfolders.
      * @param class-string|null $instanceOf Is set, only classes that are instances
      *        of the specified class/interface will be returned.
      * @return FileHelper_PHPClassInfo_Class[]
@@ -384,6 +395,30 @@ class ClassHelper
     }
 
     /**
+     * Like {@see self::findClassesInFolder()}, but uses
+     * a cached variant that vastly improves performance.
+     *
+     * **IMPORTANT**: Requires the cache folder to be set
+     * using {@see self::setCacheFolder()}.
+     *
+     * > NOTE: See the {@see ClassRepositoryManager} for
+     * > more information and additional features.
+     *
+     * @requiresCacheFolder
+     *
+     * @param FolderInfo $folder
+     * @param bool $recursive
+     * @param string|null $instanceOf Filter results by class/interface.
+     * @return ClassRepository Use {@see ClassRepository::getClasses()} to retrieve the classes.
+     *
+     * @throws ClassRepositoryException
+     */
+    public static function findClassesInRepository(FolderInfo $folder, bool $recursive=false, ?string $instanceOf=null) : ClassRepository
+    {
+        return self::getRepositoryManager()->findClassesInFolder($folder, $recursive, $instanceOf);
+    }
+
+    /**
      * @param FileHelper_PHPClassInfo_Class[] $classes
      * @param class-string $instanceOf
      * @return FileHelper_PHPClassInfo_Class[]
@@ -394,11 +429,37 @@ class ClassHelper
         $filtered = array();
 
         foreach($classes as $class) {
-            if(ClassHelper::isClassInstanceOf($class->getNameNS(), $instanceOf)) {
+            if(self::isClassInstanceOf($class->getNameNS(), $instanceOf)) {
                 $filtered[] = $class;
             }
         }
 
         return $filtered;
+    }
+
+    private static ?ClassRepositoryManager $classRepository = null;
+
+    /**
+     * @param string|PathInfoInterface|SplFileInfo $folder
+     */
+    public static function setCacheFolder($folder) : void
+    {
+        self::$classRepository = ClassRepositoryManager::create($folder);
+    }
+
+    public static function getRepositoryManager() : ClassRepositoryManager
+    {
+        if(isset(self::$classRepository)) {
+            return self::$classRepository;
+        }
+
+        throw new ClassRepositoryException(
+            'The cache folder has not been set.',
+            sprintf(
+                'Call %s first.',
+                ConvertHelper::callback2string(array(self::class, 'setCacheFolder'))
+            ),
+            self::ERROR_CACHE_FOLDER_NOT_SET
+        );
     }
 }
