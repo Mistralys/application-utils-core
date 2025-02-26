@@ -15,6 +15,7 @@ use AppUtils\FileHelper\PathInfoInterface;
 use AppUtils\FileHelper\PHPFile;
 use AppUtils\FileHelper_Exception;
 use AppUtils\FileHelper_PHPClassInfo_Class;
+use AppUtils\Microtime;
 use AppUtils\VariableInfo;
 use Closure;
 use SplFileInfo;
@@ -363,9 +364,14 @@ class ClassRepositoryManager
 
     private function renderCode() : string
     {
+        $vars = array(
+            '{DATE_GENERATED}' => Microtime::createNow()->getISODate(true),
+            '{REGISTRY}' => var_export($this->index, true)
+        );
+
         return str_replace(
-            '{REGISTRY}',
-            var_export($this->index, true),
+            array_keys($vars),
+            array_values($vars),
             <<<'PHP'
 <?php 
 /**
@@ -374,6 +380,7 @@ class ClassRepositoryManager
  *
  * @package AppUtils
  * @subpackage ClassHelper
+ * @generated {DATE_GENERATED}
  * @see \AppUtils\ClassHelper\Repository\ClassRepositoryManager 
  */
  
