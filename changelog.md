@@ -1,9 +1,7 @@
-## v2.3.7 - ClassHelper improvements
+## v2.3.6 - ClassHelper and DaytimeString improvements
 - ClassHelper: Added `findClassesInRepository()`.
 - ClassHelper: Added the `ClassRepositoryManager` utility class.
 - ClassHelper: Added `setCacheFolder()` to set the cache folder for the class repository.
-
-## v2.3.6 - Daytime string improvements
 - DaytimeString: Added empty value tracking and `isEmpty()` to recognize empty values.
 - DaytimeString: Added `toReadable()` for pretty empty values.
 - DaytimeString: Added `setEmptyTimeText()` to customize the empty time text.
