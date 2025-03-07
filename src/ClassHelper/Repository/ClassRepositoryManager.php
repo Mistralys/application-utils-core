@@ -104,6 +104,11 @@ class ClassRepositoryManager
         register_shutdown_function(Closure::fromCallable(array($this, 'writeCache')));
     }
 
+    public function getCacheFolder() : FolderInfo
+    {
+        return $this->indexFile->getFolder();
+    }
+
     private function loadIndex() : void
     {
         if($this->indexFile->exists()) {
