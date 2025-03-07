@@ -1,3 +1,6 @@
+## v2.3.7 - ClassHelper cache check
+- ClassHelper: Added `getCacheFolder()` to be able to check for its presence.
+
 ## v2.3.6 - ClassHelper and DaytimeString improvements
 - ClassHelper: Added `findClassesInRepository()`.
 - ClassHelper: Added the `ClassRepositoryManager` utility class.
