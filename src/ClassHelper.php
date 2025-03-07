@@ -447,6 +447,15 @@ class ClassHelper
         self::$classRepository = ClassRepositoryManager::create($folder);
     }
 
+    public static function getCacheFolder() : ?FolderInfo
+    {
+        if(isset(self::$classRepository)) {
+            return self::$classRepository->getCacheFolder();
+        }
+
+        return null;
+    }
+
     public static function getRepositoryManager() : ClassRepositoryManager
     {
         if(isset(self::$classRepository)) {
