@@ -278,6 +278,20 @@ final class ClassHelperTests extends BaseTestCase
         $this->assertContains(FinderImplementsInterface::class, $classes);
     }
 
+    public function test_getCacheFolder() : void
+    {
+        $this->assertNull(ClassHelper::getCacheFolder());
+
+        $folder = FolderInfo::factory(__DIR__.'/../../assets/ClassHelper/ClassRepository');
+
+        ClassHelper::setCacheFolder($folder);
+
+        $set = ClassHelper::getCacheFolder();
+
+        $this->assertNotNull($set);
+        $this->assertSame($folder->getPath(), $set->getPath());
+    }
+
     /**
      * @param FileHelper_PHPClassInfo_Class[] $list
      * @param class-string ...$classes
