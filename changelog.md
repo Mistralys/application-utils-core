@@ -1,3 +1,6 @@
+## v2.3.8 - Microtime improvements
+- Microtime: Added `isToday()`.
+
 ## v2.3.7 - ClassHelper cache check
 - ClassHelper: Added `getCacheFolder()` to be able to check for its presence.
 
