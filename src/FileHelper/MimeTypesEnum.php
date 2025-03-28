@@ -69,4 +69,6 @@ class MimeTypesEnum
     public const MIME_VIDEO_QUICKTIME = 'video/quicktime';
     public const MIME_VIDEO_WEBM = 'video/webm';
     public const MIME_VIDEO_WMV = 'video/x-ms-wmv';
+    public const MIME_XLS = 'application/vnd.ms-excel';
+    public const MIME_XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 }
