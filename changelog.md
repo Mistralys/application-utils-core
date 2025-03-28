@@ -1,3 +1,7 @@
+## v2.3.10 - Daytime string improvements
+- DaytimeString: Now accepting an extended list of separator characters when parsing strings.
+- DaytimeString: Added the constant `ALLOWED_SEPARATOR_CHARS`.
+
 ## v2.3.9 - Added file mime types
 - FileHelper: Added XLSX and XLS to the mime types enum.
 
