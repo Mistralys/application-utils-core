@@ -99,6 +99,13 @@ final class DaytimeStringTests extends BaseTestCase
         $this->assertSame(34, $info->getMinutes());
     }
 
+    public function test_allowedSeparators() : void
+    {
+        foreach(DaytimeStringInfo::ALLOWED_SEPARATOR_CHARS as $separator) {
+            $this->assertSame('12:34', parseDaytimeString('12'.$separator.'34')->getNormalized());
+        }
+    }
+
     public function test_nonZeroPaddedValues() : void
     {
         $info = parseDaytimeString('2:5');
