@@ -1,3 +1,6 @@
+## v2.3.9 - Added file mime types
+- FileHelper: Added XLSX and XLS to the mime types enum.
+
 ## v2.3.8 - Microtime improvements
 - Microtime: Added `isToday()`.
 
