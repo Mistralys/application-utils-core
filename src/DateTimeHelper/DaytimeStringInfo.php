@@ -27,6 +27,7 @@ use function AppUtils\t;
  * - The time can be empty, in which case it defaults to `00:00`.
  * - The time can be specified with or without leading zeroes.
  * - Free-spacing: Whitespace-agnostic.
+ * - Free separator choice, see {@see self::ALLOWED_SEPARATOR_CHARS}.
  * - The time can be rounded to the nearest quarter-hour or custom values.
  * - Validation with meaningful error messages.
  *
@@ -52,6 +53,17 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
     public const VALIDATION_INVALID_MINUTE = 171703;
 
     public const DEFAULT_EMPTY_TIME_TEXT = '--:--';
+
+    public const ALLOWED_SEPARATOR_CHARS = array(
+        ':',
+        ' ',
+        '-',
+        '.',
+        '/',
+        '_',
+        ',',
+        '+',
+    );
 
     private int $hours = 0;
     private int $minutes = 0;
@@ -126,7 +138,13 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
 
     private function parse(string $timeString) : void
     {
-        $parts = ConvertHelper::explodeTrim(':', $timeString);
+        $timeString = str_replace(array("\t", "\n", "\r"), ' ', $timeString);
+
+        while (strpos($timeString, '  ') !== false) {
+            $timeString = str_replace('  ', ' ', $timeString);
+        }
+
+        $parts = ConvertHelper::explodeTrim($this->detectSeparator($timeString), $timeString);
 
         // If seconds are present, ignore them.
         if(count($parts) === 3) {
@@ -167,6 +185,17 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
 
         $this->hours = $hour;
         $this->minutes = $minute;
+    }
+
+    private function detectSeparator(string $timeString) : string
+    {
+        foreach(self::ALLOWED_SEPARATOR_CHARS as $separator) {
+            if(strpos($timeString, $separator) !== false) {
+                return $separator;
+            }
+        }
+
+        return ':';
     }
 
     private function checkFormat(array $parts, string $time) : void
