@@ -397,4 +397,21 @@ class Microtime extends DateTime implements StringableInterface
     {
         return $this->parseResult;
     }
+
+    private ?bool $isToday = null;
+
+    /**
+     * Whether this date is the same as today.
+     *
+     * @return bool
+     * @throws Microtime_Exception
+     */
+    public function isToday() : bool
+    {
+        if(!isset($this->isToday)) {
+            $this->isToday = $this->format('Y-m-d') === self::createNow()->format('Y-m-d');
+        }
+
+        return $this->isToday;
+    }
 }
