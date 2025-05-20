@@ -1,3 +1,6 @@
+## v2.3.11 - Class repository tweak
+- ClassHelper: Added `createDefault()` to the class repository manager.
+
 ## v2.3.10 - Daytime string improvements
 - DaytimeString: Now accepting an extended list of separator characters when parsing strings.
 - DaytimeString: Added the constant `ALLOWED_SEPARATOR_CHARS`.
