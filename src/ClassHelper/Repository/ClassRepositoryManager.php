@@ -89,10 +89,28 @@ class ClassRepositoryManager
      *
      * @param string|PathInfoInterface|SplFileInfo $cacheFolder Folder in which to store the cache files.
      * @return ClassRepositoryManager
+     * @see self::createDefault()
      */
     public static function create($cacheFolder): ClassRepositoryManager
     {
         return new ClassRepositoryManager(FolderInfo::factory($cacheFolder));
+    }
+
+    private static ?ClassRepositoryManager $classRepository = null;
+
+    /**
+     * Creates / gets the default instance that uses the main
+     * cache folder for storage as specified via {@see ClassHelper::setCacheFolder()}.
+     *
+     * @return ClassRepositoryManager
+     */
+    public static function createDefault() : ClassRepositoryManager
+    {
+        if(!isset(self::$classRepository)) {
+            self::$classRepository = new self(ClassHelper::getCacheFolder());
+        }
+
+        return self::$classRepository;
     }
 
     protected function __construct(FolderInfo $cacheFolder)
