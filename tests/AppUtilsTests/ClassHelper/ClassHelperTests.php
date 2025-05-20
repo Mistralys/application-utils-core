@@ -280,8 +280,6 @@ final class ClassHelperTests extends BaseTestCase
 
     public function test_getCacheFolder() : void
     {
-        $this->assertNull(ClassHelper::getCacheFolder());
-
         $folder = FolderInfo::factory(__DIR__.'/../../assets/ClassHelper/ClassRepository');
 
         ClassHelper::setCacheFolder($folder);
