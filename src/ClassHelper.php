@@ -437,29 +437,25 @@ class ClassHelper
         return $filtered;
     }
 
-    private static ?ClassRepositoryManager $classRepository = null;
+    private static ?FolderInfo $cacheFolder = null;
 
     /**
      * @param string|PathInfoInterface|SplFileInfo $folder
      */
     public static function setCacheFolder($folder) : void
     {
-        self::$classRepository = ClassRepositoryManager::create($folder);
+        self::$cacheFolder = FolderInfo::factory($folder)->requireExists();
     }
 
     public static function getCacheFolder() : ?FolderInfo
     {
-        if(isset(self::$classRepository)) {
-            return self::$classRepository->getCacheFolder();
-        }
-
-        return null;
+        return self::$cacheFolder ?? null;
     }
 
     public static function getRepositoryManager() : ClassRepositoryManager
     {
-        if(isset(self::$classRepository)) {
-            return self::$classRepository;
+        if(isset(self::$cacheFolder)) {
+            return ClassRepositoryManager::createDefault();
         }
 
         throw new ClassRepositoryException(
