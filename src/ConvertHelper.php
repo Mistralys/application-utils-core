@@ -734,6 +734,50 @@ class ConvertHelper
     }
 
     /**
+     * Converts a value to a string representation, when possible.
+     * Complex types like arrays and objects are converted to an
+     * empty string. NULL is also converted to an empty string,
+     * see {@see self::toStringN()} for a null-aware version.
+     *
+     * @param mixed $value
+     * @return string
+     */
+    public static function toString($value) : string
+    {
+        if($value === null) {
+            return '';
+        }
+
+        if(is_bool($value)) {
+            return self::boolStrict2string($value);
+        }
+
+        if(!is_scalar($value)) {
+            return '';
+        }
+
+        return (string)$value;
+    }
+
+    /**
+     * Converts a value to a string representation, when possible.
+     * Empty values and complex types like arrays and objects are
+     * converted to `NULL`.
+     *
+     * @param mixed $value
+     * @return string|null
+     */
+    public static function toStringN($value) : ?string
+    {
+        $value = self::toString($value);
+        if($value !== '') {
+            return $value;
+        }
+
+        return null;
+    }
+
+    /**
      * Converts any PHP variable to a human-readable
      * string representation, like "object ClassName"
      *
