@@ -105,6 +105,124 @@ final class ConvertHelperTests extends BaseTestCase
         }
     }
 
+    public function test_toString() : void
+    {
+        $tests = array(
+            array(
+                'label' => 'Zero',
+                'value' => 0,
+                'expected' => '0'
+            ),
+            array(
+                'label' => 'String zero',
+                'value' => '0',
+                'expected' => '0'
+            ),
+            array(
+                'label' => 'NULL',
+                'value' => null,
+                'expected' => ''
+            ),
+            array(
+                'label' => 'Empty string',
+                'value' => '',
+                'expected' => ''
+            ),
+            array(
+                'label' => 'String with text',
+                'value' => 'Hello World',
+                'expected' => 'Hello World'
+            ),
+            array(
+                'label' => 'Array',
+                'value' => array('foo', 'bar'),
+                'expected' => ''
+            ),
+            array(
+                'label' => 'Object',
+                'value' => new stdClass(),
+                'expected' => ''
+            ),
+            array(
+                'label' => 'Boolean',
+                'value' => true,
+                'expected' => 'true'
+            ),
+            array(
+                'label' => 'Float value',
+                'value' => 3.14,
+                'expected' => '3.14'
+            )
+        );
+
+        foreach ($tests as $test) {
+            $this->assertSame(
+                $test['expected'],
+                ConvertHelper::toString($test['value']),
+                $test['label']
+            );
+        }
+    }
+
+    public function test_toStringN() : void
+    {
+        $tests = array(
+            array(
+                'label' => 'Zero',
+                'value' => 0,
+                'expected' => '0'
+            ),
+            array(
+                'label' => 'String zero',
+                'value' => '0',
+                'expected' => '0'
+            ),
+            array(
+                'label' => 'NULL',
+                'value' => null,
+                'expected' => null
+            ),
+            array(
+                'label' => 'Empty string',
+                'value' => '',
+                'expected' => null
+            ),
+            array(
+                'label' => 'String with text',
+                'value' => 'Hello World',
+                'expected' => 'Hello World'
+            ),
+            array(
+                'label' => 'Array',
+                'value' => array('foo', 'bar'),
+                'expected' => null
+            ),
+            array(
+                'label' => 'Object',
+                'value' => new stdClass(),
+                'expected' => null
+            ),
+            array(
+                'label' => 'Boolean',
+                'value' => true,
+                'expected' => 'true'
+            ),
+            array(
+                'label' => 'Float value',
+                'value' => 3.14,
+                'expected' => '3.14'
+            )
+        );
+
+        foreach ($tests as $test) {
+            $this->assertSame(
+                $test['expected'],
+                ConvertHelper::toStringN($test['value']),
+                $test['label']
+            );
+        }
+    }
+
     public function test_bool2string(): void
     {
         $tests = array(
