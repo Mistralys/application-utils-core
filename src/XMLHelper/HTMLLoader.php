@@ -185,7 +185,16 @@ class XMLHelper_HTMLLoader
     */
     public function toHTML() : string
     {
-        return $this->dom->saveHTML();
+        $html = $this->dom->saveHTML();
+        if(is_string($html)) {
+            return $html;
+        }
+
+        throw new XMLHelper_Exception(
+            'Failed to convert DOMDocument to HTML',
+            'The DOMDocument could not be converted to a valid HTML string.',
+            XMLHelper_Exception::ERROR_HTML_CONVERSION_FAILED
+        );
     }
     
    /**
@@ -195,7 +204,16 @@ class XMLHelper_HTMLLoader
     */
     public function toXML() : string
     {
-        return $this->dom->saveXML();
+        $xml = $this->dom->saveXML();
+        if(is_string($xml)) {
+            return $xml;
+        }
+
+        throw new XMLHelper_Exception(
+            'Failed to convert DOMDocument to XML',
+            'The DOMDocument could not be converted to a valid XML string.',
+            XMLHelper_Exception::ERROR_XML_CONVERSION_FAILED
+        );
     }
     
    /**
