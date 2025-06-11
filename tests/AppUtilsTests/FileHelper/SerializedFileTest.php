@@ -19,7 +19,9 @@ class SerializedFileTest extends FileHelperTestCase
         $file->putData(array('foo' => 'bar'));
 
         $this->assertFileExists($this->testFileWrite);
-        $this->assertSame(array('foo' => 'bar'), unserialize(file_get_contents($this->testFileWrite)));
+        $content = file_get_contents($this->testFileWrite);
+        $this->assertNotFalse($content);
+        $this->assertSame(array('foo' => 'bar'), unserialize($content));
     }
 
     /**
