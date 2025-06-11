@@ -11,7 +11,7 @@ class ConvertHelper_Array
      * if they exist.
      *
      * @param array<number|string,mixed> $sourceArray
-     * @param string[] $keys
+     * @param array<int,int|string> $keys
      */
     public static function removeKeys(array &$sourceArray, array $keys) : void
     {

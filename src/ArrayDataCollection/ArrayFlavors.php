@@ -32,8 +32,14 @@ use AppUtils\ConvertHelper\JSONConverter\JSONConverterException;
  */
 class ArrayFlavors
 {
+    /**
+     * @var array<int|string,mixed>
+     */
     private array $value;
 
+    /**
+     * @param array<int|string,mixed> $value The array to be processed.
+     */
     public function __construct(array $value)
     {
         $this->value = $value;

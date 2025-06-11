@@ -1307,7 +1307,7 @@ class ConvertHelper
     * if they exist.
     * 
     * @param array<string|int,mixed> $array
-    * @param string[] $keys
+    * @param array<int,int|string> $keys
     */
     public static function arrayRemoveKeys(array &$array, array $keys) : void
     {
