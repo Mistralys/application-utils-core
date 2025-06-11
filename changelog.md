@@ -1,3 +1,8 @@
+## v2.3.12 - ArrayDataCollection improvements
+- ConvertHelper: Added `toString()` and `toStringN()` to convert values to string.
+- ArrayDataCollection: Added `getStringN()` as null-aware string getter.
+- ArrayDataCollection: Added `getArrayFlavored()` for array filtering and conversion options.
+
 ## v2.3.11 - Class repository tweak
 - ClassHelper: Added `createDefault()` to the class repository manager.
 
