@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace AppUtilsTests;
+namespace AppUtilsTests\ArrayDataCollection;
 
 use AppUtils\ArrayDataCollection;
 use AppUtils\BaseException;
 use AppUtils\ConvertHelper\JSONConverter;
 use AppUtils\Microtime;
-use DateTime;
 use AppUtilsTestClasses\BaseTestCase;
+use DateTime;
 use function AppUtils\parseVariable;
 
-class ArrayDataCollectionTest extends BaseTestCase
+class CollectionTests extends BaseTestCase
 {
     // region: _Tests
 
@@ -455,6 +455,23 @@ class ArrayDataCollectionTest extends BaseTestCase
         $this->assertSame(42, $collection->getInt('int'));
         $this->assertSame(14.78, $collection->getFloat('float'));
         $this->assertSame(array('data' => 'here'), $collection->getArray('array'));
+    }
+
+    public function test_getStringN() : void
+    {
+        $collection = ArrayDataCollection::create(array(
+            'null' => null,
+            'empty-string' => '',
+            'zero' => 0,
+            'zero-string' => '0',
+            'array' => array('data' => 'here')
+        ));
+
+        $this->assertSame(null, $collection->getStringN('null'));
+        $this->assertSame(null, $collection->getStringN('empty-string'));
+        $this->assertSame('0', $collection->getStringN('zero'));
+        $this->assertSame('0', $collection->getStringN('zero-string'));
+        $this->assertSame(null, $collection->getStringN('array'));
     }
 
     // endregion
