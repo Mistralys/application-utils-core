@@ -11,4 +11,3 @@ composer.phar
 /tests/phpstan/result.txt
 tests/phpstan/output.txt
 .idea/encodings.xml
-*.php
