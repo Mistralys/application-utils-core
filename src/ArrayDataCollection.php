@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\ArrayDataCollection\ArrayFlavors;
 use AppUtils\ConvertHelper\JSONConverter;
 use AppUtils\ConvertHelper\JSONConverter\JSONConverterException;
 use DateTime;
@@ -167,6 +168,23 @@ class ArrayDataCollection
     }
 
     /**
+     * Like {@see ArrayDataCollection::getString()}, but returns
+     * `null` if the value is empty or `null`.
+     *
+     * @param string $name
+     * @return string|null
+     */
+    public function getStringN(string $name) : ?string
+    {
+        $value = $this->getString($name);
+        if($value !== '') {
+            return $value;
+        }
+
+        return null;
+    }
+
+    /**
      * The stored value can be an integer or float,
      * or a string containing an integer or float.
      * All other types and values return <code>0</code>.
@@ -188,12 +206,12 @@ class ArrayDataCollection
     /**
      * Attempts to decode the stored string as JSON.
      *
-     * NOTE: Only _valid JSON_ that decodes into an array is
-     * accepted. Invalid JSON, booleans or numbers will
-     * return an empty array.
+     * > NOTE: Only _valid JSON_ that decodes into an array is
+     * > accepted. Invalid JSON, booleans or numbers will
+     * > return an empty array.
      *
      * @param string $name
-     * @return array<mixed> The decoded array, or an empty array otherwise.
+     * @return array<int|string,mixed> The decoded array, or an empty array otherwise.
      */
     public function getJSONArray(string $name) : array
     {
@@ -213,7 +231,7 @@ class ArrayDataCollection
 
     /**
      * @param string $name
-     * @return array<mixed>
+     * @return array<int|string,mixed>
      */
     public function getArray(string $name) : array
     {
@@ -224,6 +242,17 @@ class ArrayDataCollection
         }
 
         return array();
+    }
+
+    /**
+     * Gives options to access array values in a strictly typed manner.
+     *
+     * @param string $name
+     * @return ArrayFlavors
+     */
+    public function getArrayFlavored(string $name) : ArrayFlavors
+    {
+        return new ArrayFlavors($this->getArray($name));
     }
 
     public function getBool(string $name) : bool
