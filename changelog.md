@@ -1,3 +1,6 @@
+## v2.3.13 - DurationString improvements
+- DurationString: Added `getXXXDec()` methods to get days, hours and minutes as decimal values.
+
 ## v2.3.12 - ArrayDataCollection improvements
 - ConvertHelper: Added `toString()` and `toStringN()` to convert values to string.
 - ArrayDataCollection: Added `getStringN()` as null-aware string getter.
