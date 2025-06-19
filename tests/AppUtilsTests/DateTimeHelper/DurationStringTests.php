@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppUtilsTests\DateTimeHelper;
 
+use AppUtils\DateTimeHelper;
 use AppUtils\DateTimeHelper\DateIntervalExtended;
 use AppUtils\DateTimeHelper\DurationStringInfo;
 use AppUtilsTestClasses\BaseTestCase;
@@ -22,6 +23,24 @@ final class DurationStringTests extends BaseTestCase
         $this->assertSame(2, $info->getHours());
         $this->assertSame(3, $info->getMinutes());
         $this->assertSame(4, $info->getSeconds());
+
+        $totalSeconds =
+            1 * DateTimeHelper::SECONDS_PER_DAY +
+            2 * DateTimeHelper::SECONDS_PER_HOUR +
+            3 * DateTimeHelper::SECONDS_PER_MINUTE +
+            4 ;
+
+        $this->assertSame($totalSeconds, $info->getTotalSeconds());
+        $this->assertSame((int)($totalSeconds / DateTimeHelper::SECONDS_PER_MINUTE), $info->getTotalMinutes());
+        $this->assertSame((int)($totalSeconds / DateTimeHelper::SECONDS_PER_HOUR), $info->getTotalHours());
+        $this->assertSame((int)($totalSeconds / DateTimeHelper::SECONDS_PER_DAY), $info->getTotalDays());
+    }
+
+    public function test_normalize() : void
+    {
+        $info = parseDurationString('3d 36h 512m 4876s');
+
+        $this->assertSame('4d 21h 53m 16s', $info->getNormalized());
     }
 
     public function test_multipleValuesGetAddedTogether() : void
