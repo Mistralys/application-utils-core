@@ -285,16 +285,52 @@ class DurationStringInfo implements StringableInterface
 
     public function getTotalMinutes() : int
     {
-        return $this->getTotalSeconds() / DateTimeHelper::SECONDS_PER_MINUTE;
+        return (int)$this->getTotalMinutesDec(0);
     }
 
     public function getTotalHours() : int
     {
-        return $this->getTotalSeconds() / DateTimeHelper::SECONDS_PER_HOUR;
+        return (int)$this->getTotalHoursDec(0);
     }
 
+    /**
+     * @return int
+     * @deprecated Use {@see getTotalDays()} instead (typo).
+     */
     public function getTotalDay() : int
     {
-        return $this->getTotalSeconds() / DateTimeHelper::SECONDS_PER_DAY;
+        return (int)$this->getTotalDaysDec(0);
+    }
+
+    public function getTotalDays() : int
+    {
+        return (int)$this->getTotalDaysDec(0);
+    }
+
+    /**
+     * Returns the total hours as a decimal value string.
+     * @return string
+     */
+    public function getTotalHoursDec(int $precision=2) : string
+    {
+        return number_format($this->getTotalSeconds() / DateTimeHelper::SECONDS_PER_HOUR, $precision, '.', '');
+    }
+
+    /**
+     * Returns the total minutes as a decimal value string.
+     * @return string
+     */
+    public function getTotalMinutesDec(int $precision=2) : string
+    {
+        return number_format($this->getTotalSeconds() / DateTimeHelper::SECONDS_PER_MINUTE, $precision, '.', '');
+    }
+
+    /**
+     * Returns the total days as a decimal value string.
+     * @return string
+     */
+    public function getTotalDaysDec(int $precision=2) : string
+    {
+        return number_format($this->getTotalSeconds() / DateTimeHelper::SECONDS_PER_DAY, $precision, '.', '');
     }
 }
