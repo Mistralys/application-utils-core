@@ -866,4 +866,46 @@ class FileHelper
     {
         return new PathsReducer($paths);
     }
+
+    /**
+     * Normalizes a path by removing any dots (`.`) and double dots (`..`)
+     * from the path without accessing the file system.
+     *
+     * @param string $path
+     * @return string
+     */
+    public static function resolvePathDots(string $path): string
+    {
+        $path = FileHelper::normalizePath($path);
+        $drive = '';
+
+        if(substr($path, 1, 1) === ':') {
+            $drive = substr($path, 0, 2);
+            $path = substr($path, 2);
+        }
+
+        $segments = explode('/', $path);
+
+        $parts = array();
+        foreach ($segments as $segment) {
+            if ($segment === '' || $segment === '.') {
+                continue;
+            }
+            if ($segment === '..') {
+                array_pop($parts);
+            } else {
+                $parts[] = $segment;
+            }
+        }
+
+        $normalized = ($path[0] === '/' ? '/' : '');
+        $normalized .= implode('/', $parts);
+
+        // Garde le slash final si présent dans l’original
+        if (substr($path, -1) === '/' && $normalized !== '') {
+            $normalized = rtrim($normalized, '/').'/';
+        }
+
+        return $drive.$normalized;
+    }
 }
