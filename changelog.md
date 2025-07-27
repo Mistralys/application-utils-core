@@ -1,3 +1,7 @@
+## v2.3.14 - FolderInfo improvements
+- FolderInfo: Added `getParentFolder()`.
+- FileHelper: Added `resolvePathDots()` to resolve `.` and `..` in paths.
+
 ## v2.3.13 - DurationString improvements
 - DurationString: Added `getXXXDec()` methods to get days, hours and minutes as decimal values.
 
