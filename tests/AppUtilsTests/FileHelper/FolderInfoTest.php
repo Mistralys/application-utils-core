@@ -142,4 +142,54 @@ class FolderInfoTest extends FileHelperTestCase
 
         $this->assertCount(2, $files);
     }
+
+    public function test_getParentFolder() : void
+    {
+        $tests = array(
+            array(
+                'label' => 'Without trailing slash',
+                'path' => '/path/to/folder',
+                'expected' => '/path/to'
+            ),
+            array(
+                'label' => 'With trailing slash',
+                'path' => '/path/to/folder/',
+                'expected' => '/path/to/'
+            ),
+            array(
+                'label' => 'With trailing slash and dot',
+                'path' => '/path/to/folder/./',
+                'expected' => '/path/to/'
+            ),
+            array(
+                'label' => 'With trailing slash and dot dot',
+                'path' => '/path/to/folder/../',
+                'expected' => '/path/'
+            ),
+            array(
+                'label' => 'With trailing slash and too many dots',
+                'path' => '/path/to/folder/../../../../../../',
+                'expected' => '/'
+            ),
+            array(
+                'label' => 'Windows style with slash and dot dot',
+                'path' => 'c:/Users/username/Documents/Projects/../',
+                'expected' => 'c:/Users/username/'
+            ),
+            array(
+                'label' => 'Windows too many dots',
+                'path' => 'c:/Users/username/Documents/Projects/../../../../../',
+                'expected' => 'c:/'
+            ),
+
+        );
+
+        foreach($tests as $test)
+        {
+            $info = FolderInfo::factory($test['path']);
+            $parent = $info->getParentFolder();
+
+            $this->assertSame($test['expected'], $parent->getPath(), $test['label']);
+        }
+    }
 }

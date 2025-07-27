@@ -72,6 +72,53 @@ final class CoreTest extends FileHelperTestCase
         }
     }
 
+    public function test_resolveFolderDots() : void
+    {
+        $tests = array(
+            array(
+                'label' => 'No dots, without trailing slash',
+                'path' => '/path/to/folder',
+                'expected' => '/path/to/folder'
+            ),
+            array(
+                'label' => 'No dots, with trailing slash',
+                'path' => '/path/to/folder/',
+                'expected' => '/path/to/folder/'
+            ),
+            array(
+                'label' => 'With trailing slash and dot',
+                'path' => '/path/to/folder/./',
+                'expected' => '/path/to/folder/'
+            ),
+            array(
+                'label' => 'With trailing slash and dot dot',
+                'path' => '/path/to/folder/../',
+                'expected' => '/path/to/'
+            ),
+            array(
+                'label' => 'With trailing slash and dot dot',
+                'path' => '/path/to/folder/../../../../../',
+                'expected' => '/'
+            ),
+            array(
+                'label' => 'With trailing slash and dot dot dot',
+                'path' => 'c:\\Users\\username\\Documents\\Projects\\..\\',
+                'expected' => 'c:/Users/username/Documents/'
+            ),
+            array(
+                'label' => 'Too many dots',
+                'path' => 'c:\\Users\\username\\Documents\\Projects\\..\\..\\..\\..\\..\\',
+                'expected' => 'c:/'
+            ),
+        );
+
+        foreach ($tests as $test)
+        {
+            $result = FileHelper::resolvePathDots($test['path']);
+            $this->assertEquals($test['expected'], $result, $test['label']);
+        }
+    }
+
     /**
      * @see FileHelper::relativizePath()
      */
