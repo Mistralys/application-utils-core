@@ -281,4 +281,23 @@ class FolderInfo extends AbstractPathInfo implements FolderInfoInterface
 
         return $files;
     }
+
+    /**
+     * Gets the parent folder of this folder.
+     *
+     * **This does not check if the parent folder exists.**
+     *
+     * @return FolderInfo
+     */
+    public function getParentFolder() : FolderInfo
+    {
+        $path = $this->getPath();
+        $folder = rtrim(dirname(rtrim(FileHelper::resolvePathDots($path), '/')), '/');
+
+        if(substr($path, -1) === '/') {
+            $folder .= '/';
+        }
+
+        return FolderInfo::factory($folder);
+    }
 }
