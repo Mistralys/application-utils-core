@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace AppUtils;
 
 use AppUtils\ArrayDataCollection\ArrayFlavors;
+use AppUtils\ArrayDataCollection\ArraySetters;
 use AppUtils\ConvertHelper\JSONConverter;
 use AppUtils\ConvertHelper\JSONConverter\JSONConverterException;
 use DateTime;
@@ -105,6 +106,16 @@ class ArrayDataCollection
     {
         $this->data[$name] = $value;
         return $this;
+    }
+
+    /**
+     * Gets a helper to set array values in a strictly typed manner.
+     * @param string $name
+     * @return ArraySetters
+     */
+    public function setArray(string $name) : ArraySetters
+    {
+        return new ArraySetters($this, $name);
     }
 
     /**
@@ -428,5 +439,15 @@ class ArrayDataCollection
         }
 
         return 0;
+    }
+
+    /**
+     * Clears all keys from the collection.
+     * @return $this
+     */
+    public function clearKeys() : self
+    {
+        $this->data = array();
+        return $this;
     }
 }
