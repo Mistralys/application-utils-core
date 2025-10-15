@@ -1,3 +1,7 @@
+## v2.3.15 - ArrayDataCollection improvements
+- ArrayDataCollection: Added `setArray()` to access a helper to modify array-based values.
+- ArrayDataCollection: Added `clearKeys()` to clear all stored values.
+
 ## v2.3.14 - FolderInfo improvements
 - FolderInfo: Added `getParentFolder()`.
 - FileHelper: Added `resolvePathDots()` to resolve `.` and `..` in paths.
