@@ -568,7 +568,17 @@ class CollectionTests extends BaseTestCase
         $collection->setArray('items')->unshiftIndexed('zero');
 
         $this->assertSame(array('zero', 'first', 'second', 'third'), $collection->getArray('items'));
+    }
 
+    public function test_setArrayReplacesExistingNonArrayValue() : void
+    {
+        $collection = ArrayDataCollection::create(array(
+            'items' => 'not an array'
+        ));
+
+        $collection->setArray('items')->pushIndexed('first');
+
+        $this->assertSame(array('first'), $collection->getArray('items'));
     }
 
     public function test_clearKeys() : void
