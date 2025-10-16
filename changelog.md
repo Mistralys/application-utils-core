@@ -1,3 +1,6 @@
+## v2.3.16 - ArrayDataCollection improvements
+- ArrayDataCollection: Added `getKeys()` to fetch all key names from the collection.
+
 ## v2.3.15 - ArrayDataCollection improvements
 - ArrayDataCollection: Added `setArray()` to access a helper to modify array-based values.
 - ArrayDataCollection: Added `clearKeys()` to clear all stored values.
