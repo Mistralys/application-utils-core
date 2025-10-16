@@ -596,6 +596,27 @@ class CollectionTests extends BaseTestCase
         $this->assertSame(array(), $collection->getData());
     }
 
+    public function test_getKeys() : void
+    {
+        $collection = ArrayDataCollection::create(array(
+            'foo' => 'bar',
+            'int' => 42
+        ));
+
+        $this->assertSame(array('foo', 'int'), $collection->getKeys(false));
+    }
+
+    public function test_getKeysSorted() : void
+    {
+        $collection = ArrayDataCollection::create(array(
+            'zoo' => 'bar',
+            'int' => 42,
+            'apple' => 'fruit'
+        ));
+
+        $this->assertSame(array('apple', 'int', 'zoo'), $collection->getKeys(true));
+    }
+
     // endregion
 
     // region: Support methods
