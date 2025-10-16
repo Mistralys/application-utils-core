@@ -450,4 +450,31 @@ class ArrayDataCollection
         $this->data = array();
         return $this;
     }
+
+    /**
+     * @return array<int,string|int> All available keys in the collection.
+     * @param bool $sorted Whether to sort the keys alphabetically before returning them.
+     */
+    public function getKeys(bool $sorted) : array
+    {
+        $keys = array_keys($this->data);
+
+        if(!$sorted) {
+            return $keys;
+        }
+
+        usort(
+            $keys,
+            /**
+             * @param string|int $a
+             * @param string|int $b
+             * @return int
+             */
+            static function($a, $b) : int {
+                return strnatcasecmp((string)$a, (string)$b);
+            }
+        );
+
+        return $keys;
+    }
 }
