@@ -1,3 +1,6 @@
+## v2.3.17 - ArrayDataCollection improvements
+- ArrayDataCollection: Added `requireMicrotime()` and `requireDateTime()`.
+
 ## v2.3.16 - ArrayDataCollection improvements
 - ArrayDataCollection: Added `getKeys()` to fetch all key names from the collection.
 
