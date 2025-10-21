@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace AppUtils;
 
+use AppUtils\ArrayDataCollection\ArrayDataCollectionException;
 use AppUtils\ArrayDataCollection\ArrayFlavors;
 use AppUtils\ArrayDataCollection\ArraySetters;
 use AppUtils\ConvertHelper\JSONConverter;
@@ -342,6 +343,8 @@ class ArrayDataCollection
      *
      * @param string $name
      * @return DateTime|null The {@see DateTime} instance, or <code>NULL</code> if empty or invalid.
+     *
+     * @see self::requireDateTime() For an exception-throwing variant with guaranteed return value.
      */
     public function getDateTime(string $name) : ?DateTime
     {
@@ -368,11 +371,41 @@ class ArrayDataCollection
     }
 
     /**
+     * Like {@see self::getDateTime()}, but will throw an exception
+     * if no valid date/time value is found. Use this when you know
+     * that the key must contain a valid date/time value.
+     *
+     * @param string $name
+     * @return DateTime
+     * @throws ArrayDataCollectionException
+     */
+    public function requireDateTime(string $name) : DateTime
+    {
+        $date = $this->getDateTime($name);
+        if($date !== null) {
+            return $date;
+        }
+
+        throw new ArrayDataCollectionException(
+            'No date/time value found for key.',
+            sprintf(
+                'The data key [%s] is empty or does not contain a valid date/time value. '.PHP_EOL.
+                'Current value: [%s]',
+                $name,
+                parseVariable($this->getKey($name))->enableType()->toString()
+            ),
+            ArrayDataCollectionException::CODE_MISSING_DATETIME
+        );
+    }
+
+    /**
      * Restores a {@see Microtime} instance from a key previously
      * set using {@see ArrayDataCollection::setMicrotime()}.
      *
      * @param string $name
      * @return Microtime|null The {@see Microtime} instance, or <code>NULL</code> if empty or invalid.
+     *
+     * @see self::requireMicrotime() For an exception-throwing variant with guaranteed return value.
      */
     public function getMicrotime(string $name) : ?Microtime
     {
@@ -384,6 +417,34 @@ class ArrayDataCollection
         {
             return null;
         }
+    }
+
+    /**
+     * Like {@see self::getMicrotime()}, but will throw an exception
+     * if no valid microtime value is found. Use this when you know
+     * that the key must contain a valid microtime value.
+     *
+     * @param string $name
+     * @return Microtime
+     * @throws ArrayDataCollectionException
+     */
+    public function requireMicrotime(string $name) : Microtime
+    {
+        $time = $this->getMicrotime($name);
+        if($time !== null) {
+            return $time;
+        }
+
+        throw new ArrayDataCollectionException(
+            'No microtime value found for key.',
+            sprintf(
+                'The data key [%s] is empty or does not contain a valid microtime value. '.PHP_EOL.
+                'Current value: [%s]',
+                $name,
+                parseVariable($this->getKey($name))->enableType()->toString()
+            ),
+            ArrayDataCollectionException::CODE_MISSING_MICROTIME
+        );
     }
 
     /**
