@@ -37,7 +37,39 @@ class RegexHelper
     public const REGEX_ALIAS = '/\A[a-z][0-9_a-z-.]{1,80}\Z/';
     
     public const REGEX_ALIAS_CAPITALS = '/\A[a-zA-Z][0-9_a-zA-Z-.]{1,80}\Z/';
-    
+
+    /**
+     * Summary: Matches an entire label made of one or more word/space
+     * characters plus a specific set of punctuation; rejects any character
+     * not in that set. It is case-insensitive and Unicode-aware.
+     *
+     * ## Details
+     *
+     * - Anchors: ^ and $ require the pattern to match the whole string.
+     * - Core: one or more characters from a character class (the allowed set).
+     * - Allowed classes:
+     *   - `\w` — word characters (letters, digits, underscore). With u this includes Unicode letters.
+     *   - `\s` — whitespace (space, tab, newline, etc.).
+     * - A collection of punctuation: apostrophe, asterisk, dot, hyphen, parentheses, square brackets, curly braces, question mark, equals, acute accent (´), backtick (`), dollar, exclamation, percent, plus, hash, underscore, comma, semicolon, colon, pipe.
+     * - Quantifier: `+` — requires at least one allowed character.
+     * - Flags:
+     *   - `i` — case-insensitive (affects letter matching).
+     *   - `u` — PCRE Unicode mode (makes \w/[a-z] Unicode-aware).
+     *
+     * ## Behavior notes
+     *
+     * - Newlines are permitted because of \s.
+     * - Characters not listed (for example <, >, or double quote " ) will cause the match to fail.
+     * - The hyphen and other metacharacters are escaped inside the class to prevent range/metacharacter meaning.
+     *
+     * ## Intended use
+     *
+     * Validate labels/titles that may include letters, numbers, spaces and
+     * common punctuation while excluding potentially dangerous or unwanted
+     * characters.
+     *
+     * @var string
+     */
     public const REGEX_LABEL = '/^[\w\s\'*.\-\(\)\[\]{}?=´`$!%+#_,;:|]+$/iu';
     
     public const REGEX_MD5 = '/^[a-f0-9]{32}$/i';
