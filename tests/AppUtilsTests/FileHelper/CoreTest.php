@@ -196,6 +196,57 @@ final class CoreTest extends FileHelperTestCase
         }
     }
 
+    public function test_addExtension() : void
+    {
+        $tests = array(
+            array(
+                'input' => 'file',
+                'extension' => 'txt',
+                'expected' => 'file.txt'
+            ),
+            array(
+                'input' => 'file.doc',
+                'extension' => 'txt',
+                'expected' => 'file.txt'
+            ),
+            array(
+                'input' => '/path/to/file',
+                'extension' => 'txt',
+                'expected' => '/path/to/file.txt'
+            ),
+            array(
+                'input' => '/path/to/file.doc',
+                'extension' => 'txt',
+                'expected' => '/path/to/file.txt'
+            ),
+            array(
+                'input' => '',
+                'extension' => '.htaccess',
+                'expected' => '.htaccess'
+            ),
+            array(
+                'input' => '.htaccess',
+                'extension' => '.txt',
+                'expected' => '.txt'
+            ),
+            array(
+                'input' => 'file',
+                'extension' => '.tar.gz',
+                'expected' => 'file.tar.gz'
+            ),
+            array(
+                'input' => 'File',
+                'extension' => '.UPPER',
+                'expected' => 'File.UPPER'
+            ),
+        );
+
+        foreach($tests as $test) {
+            $result = FileHelper::addExtension($test['input'], $test['extension']);
+            $this->assertEquals($test['expected'], $result);
+        }
+    }
+
     /**
      * @see FileHelper::detectUTFBom()
      */

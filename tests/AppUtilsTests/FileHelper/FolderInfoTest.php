@@ -10,8 +10,8 @@ use AppUtilsTestClasses\FileHelperTestCase;
 
 class FolderInfoTest extends FileHelperTestCase
 {
-    const PATH_FOLDER_TREE = __DIR__ . '/../../assets/FileHelper/FolderTree';
-    const PATH_FOLDER_WITH_FILES = __DIR__ . '/../../assets/FileHelper/PathInfo/FolderWithFiles';
+    private const string PATH_FOLDER_TREE = __DIR__ . '/../../assets/FileHelper/FolderTree';
+    private const string PATH_FOLDER_WITH_FILES = __DIR__ . '/../../assets/FileHelper/PathInfo/FolderWithFiles';
 
     public function test_isFolderExists() : void
     {
@@ -191,5 +191,52 @@ class FolderInfoTest extends FileHelperTestCase
 
             $this->assertSame($test['expected'], $parent->getPath(), $test['label']);
         }
+    }
+
+    public function test_rename() : void
+    {
+        $source = FolderInfo::factory(__DIR__.'/../../assets/FileHelper/FolderToRename')->create();
+
+        $source->rename('RenamedFolder');
+
+        $this->assertEquals('RenamedFolder', $source->getName());
+
+        $source->delete();
+    }
+
+    public function test_fileCreatorJSON() : void
+    {
+        $folder = FolderInfo::factory(__DIR__.'/../../assets/FileHelper/FileCreator')->create();
+
+        $jsonFile = $folder->addSubFile()->json('TestFile', array('key' => 'value'), true);
+
+        $this->assertFileExists($jsonFile->getPath());
+
+        $jsonFile->delete();
+        $folder->delete();
+    }
+
+    public function test_fileCreatorSerialized() : void
+    {
+        $folder = FolderInfo::factory(__DIR__.'/../../assets/FileHelper/FileCreator')->create();
+
+        $serFile = $folder->addSubFile()->serialized('TestFile', array('key' => 'value'));
+
+        $this->assertFileExists($serFile->getPath());
+
+        $serFile->delete();
+        $folder->delete();
+    }
+
+    public function test_fileCreatorPHP() : void
+    {
+        $folder = FolderInfo::factory(__DIR__.'/../../assets/FileHelper/FileCreator')->create();
+
+        $phpFile = $folder->addSubFile()->php('TestFile', 'echo "Hello, World!";');
+
+        $this->assertFileExists($phpFile->getPath());
+
+        $phpFile->delete();
+        $folder->delete();
     }
 }

@@ -206,6 +206,17 @@ class FileInfoTest extends FileHelperTestCase
         $this->assertSame(42, $info->getSize());
     }
 
+    public function test_rename() : void
+    {
+        $info = FileInfo::factory(__DIR__.'/../../assets/FileHelper/file-to-rename.txt')->putContents('Temporary content');
+
+        $info->rename('renamed-file.txt');
+
+        $this->assertEquals('renamed-file.txt', $info->getName());
+
+        $info->delete();
+    }
+
     // endregion
 
     // region: Support methods

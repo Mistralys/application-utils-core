@@ -5,12 +5,8 @@ declare(strict_types=1);
 namespace AppUtilsTests\ArrayDataCollection;
 
 use AppUtils\ArrayDataCollection;
-use AppUtils\BaseException;
 use AppUtils\ConvertHelper\JSONConverter;
-use AppUtils\Microtime;
 use AppUtilsTestClasses\BaseTestCase;
-use DateTime;
-use function AppUtils\parseVariable;
 
 class ArrayFlavorTests extends BaseTestCase
 {
@@ -350,6 +346,31 @@ class ArrayFlavorTests extends BaseTestCase
         );
     }
 
+    public function test_toDataCollection() : void
+    {
+        $this->assertSame(
+            'test',
+            $this->getFlavored()->toCollection()->getString('string')
+        );
+    }
+
+    public function test_toDataCollectionObservable() : void
+    {
+        $this->assertSame(
+            'test',
+            $this->getFlavored()->toObservableCollection()->getString('string')
+        );
+    }
+
+    public function test_toJSON() : void
+    {
+        $this->assertSame(
+            JSONConverter::var2json(array('foo' => 'bar')),
+            ArrayDataCollection::create(array('json' => array('foo' => 'bar')))->getArrayFlavored('json')->toJSON()
+        );
+
+    }
+
     // endregion
 
     // region: Support methods
@@ -359,7 +380,10 @@ class ArrayFlavorTests extends BaseTestCase
         return ArrayDataCollection::create(self::TEST_ARRAY)->getArrayFlavored('test');
     }
 
-    private const TEST_ARRAY = array(
+    /**
+     * @var array{test:array<string|int,mixed>}
+     */
+    private const array TEST_ARRAY = array(
         'test' => array(
             'array' => array(),
             'empty-string' => '',
