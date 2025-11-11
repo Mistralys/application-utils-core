@@ -17,6 +17,7 @@ use AppUtils\FileHelper_Exception;
 use JsonException;
 use SplFileInfo;
 use function AppUtils\sb;
+use function AppUtils\t;
 
 /**
  * Specialized file handler for JSON encoded files.
@@ -242,5 +243,10 @@ class JSONFile extends FileInfo
                 $e
             );
         }
+    }
+
+    public function getTypeLabel(): string
+    {
+        return t('JSON File');
     }
 }
