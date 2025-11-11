@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace AppUtils\FileHelper;
 
 use AppUtils\FileHelper;
+use AppUtils\FileHelper\FileInfo\FileInfoException;
 use AppUtils\FileHelper_Exception;
 use DateTime;
 use SplFileInfo;
@@ -96,9 +97,9 @@ abstract class AbstractPathInfo implements PathInfoInterface
      * Gets the file name without path, e.g. "filename.txt",
      * or the folder name if it's a folder.
      *
-     * NOTE: This includes the file extension. To get a
-     * file's base name, get a file info instance, and use
-     * {@see FileInfo::getBaseName()}.
+     * > NOTE: This includes the file extension. To get a
+     * > file's base name, get a file info instance, and use
+     * > {@see FileInfo::getBaseName()}.
      *
      * @return string
      */
@@ -282,7 +283,7 @@ abstract class AbstractPathInfo implements PathInfoInterface
      * @param string|PathInfoInterface|SplFileInfo $path
      * @return string
      */
-    public static function type2string($path) : string
+    public static function type2string(string|PathInfoInterface|SplFileInfo $path) : string
     {
         if($path instanceof PathInfoInterface)
         {
@@ -300,8 +301,8 @@ abstract class AbstractPathInfo implements PathInfoInterface
     /**
      * Resolves the type of the target path: file or folder.
      *
-     * NOTE: Requires the file or folder to exist in the
-     * file system, and will throw an exception otherwise.
+     * > NOTE: Requires the file or folder to exist in the
+     * > file system, and will throw an exception otherwise.
      *
      * @param string|PathInfoInterface|SplFileInfo $path
      * @return PathInfoInterface
@@ -309,7 +310,7 @@ abstract class AbstractPathInfo implements PathInfoInterface
      * @throws FileHelper_Exception
      * @see FileHelper::ERROR_PATH_INVALID
      */
-    public static function resolveType($path) : PathInfoInterface
+    public static function resolveType(string|PathInfoInterface|SplFileInfo $path) : PathInfoInterface
     {
         if($path instanceof PathInfoInterface)
         {
@@ -351,7 +352,7 @@ abstract class AbstractPathInfo implements PathInfoInterface
      * @param mixed $value
      * @return $this
      */
-    public function setRuntimeProperty(string $name, $value) : self
+    public function setRuntimeProperty(string $name, mixed $value) : self
     {
         $this->runtimeProperties[$name] = $value;
         return $this;
@@ -363,7 +364,7 @@ abstract class AbstractPathInfo implements PathInfoInterface
      * @param string $name
      * @return mixed|null The stored value, or null if it does not exist (or has a null value).
      */
-    public function getRuntimeProperty(string $name)
+    public function getRuntimeProperty(string $name) : mixed
     {
         return $this->runtimeProperties[$name] ?? null;
     }
@@ -419,5 +420,94 @@ abstract class AbstractPathInfo implements PathInfoInterface
             ),
             FileHelper::ERROR_NO_MODIFIED_DATE_AVAILABLE
         );
+    }
+
+    private ?FolderInfo $parentFolder = null;
+
+    /**
+     * Gets the parent folder of this item.
+     *
+     * **This does not check if the parent folder exists.**
+     *
+     * @return FolderInfo
+     */
+    public function getParentFolder() : FolderInfo
+    {
+        if(isset($this->parentFolder)) {
+            return $this->parentFolder;
+        }
+
+        $path = $this->getFolderPath();
+        $folder = rtrim(dirname(rtrim(FileHelper::resolvePathDots($path), '/')), '/');
+
+        if(str_ends_with($path, '/')) {
+            $folder .= '/';
+        }
+
+        $this->parentFolder = FolderInfo::factory($folder);
+
+        return $this->parentFolder;
+    }
+
+    public function rename(string $name) : self
+    {
+        $name = FileHelper::normalizePath($name);
+        if(str_contains($name, '/')) {
+            throw new FileInfoException(
+                'Renaming failed, invalid name',
+                sprintf(
+                    'Cannot rename %s [%s] to [%s], the new name contains path separators. '.PHP_EOL.
+                    'Please only use a simple name without slashes.'.PHP_EOL.
+                    'Source path: [%s]',
+                    $this->getTypeLabel(),
+                    $this->getName(),
+                    $name,
+                    $this->getPath()
+                ),
+                FileInfoException::ERROR_CANNOT_RENAME_WITH_PATH
+            );
+        }
+
+        $target = AbstractPathInfo::resolveType($this->getParentFolder()->getPath() . '/' . $name);
+
+        if($target->exists()) {
+            throw new FileInfoException(
+                'Renaming failed, target exists',
+                sprintf(
+                    'Cannot rename %s [%s] to [%s], the target folder already exists. '.PHP_EOL.
+                    'Source path: [%s]'.PHP_EOL.
+                    'Target path: [%s]',
+                    $this->getTypeLabel(),
+                    $this->getName(),
+                    $target->getName(),
+                    $this->getPath(),
+                    $target->getPath()
+                ),
+                FileInfoException::ERROR_CANNOT_RENAME_TARGET_EXISTS
+            );
+        }
+
+        if(rename($this->getPath(), $target->getPath()) === false) {
+            throw new FileHelper_Exception(
+                'Renaming failed',
+                sprintf(
+                    'The %s [%s] could not be renamed to [%s], an error was returned by [rename()]. '.PHP_EOL.
+                    'Insufficient permissions or invalid path? '.PHP_EOL.
+                    'Source path: [%s]'.PHP_EOL.
+                    'Target path: [%s]',
+                    $this->getTypeLabel(),
+                    $this->getName(),
+                    $target->getName(),
+                    $this->getPath(),
+                    $target->getPath()
+                ),
+                FileInfoException::ERROR_FAILED_TO_RENAME_PATH
+            );
+        }
+
+        $this->path = $target->getPath();
+        $this->parentFolder = null;
+
+        return $this;
     }
 }
