@@ -10,12 +10,13 @@ declare(strict_types=1);
 namespace AppUtils;
 
 use AppUtils\ArrayDataCollection\ArrayDataCollectionException;
+use AppUtils\ArrayDataCollection\ArrayDataObservable;
 use AppUtils\ArrayDataCollection\ArrayFlavors;
 use AppUtils\ArrayDataCollection\ArraySetters;
 use AppUtils\ConvertHelper\JSONConverter;
 use AppUtils\ConvertHelper\JSONConverter\JSONConverterException;
 use DateTime;
-use Exception;
+use Throwable;
 
 /**
  * Collection class used to work with associative arrays used to
@@ -31,6 +32,12 @@ use Exception;
  * data, this is the purview of the host class. The utility
  * methods will only return values that match the expected type.
  * Invalid data is ignored, and a matching default value returned.
+ *
+ * ## Observing changes to the collection
+ *
+ * Use the {@see ArrayDataObservable} class to monitor changes
+ * to the collection. This allows you to automatically react
+ * to changes in the data.
  *
  * @package Application Utils
  * @subpackage Collections
@@ -55,13 +62,17 @@ class ArrayDataCollection
      * @param ArrayDataCollection|array<string|int,mixed>|NULL $data
      * @return ArrayDataCollection
      */
-    public static function create($data=array()) : ArrayDataCollection
+    public static function create(ArrayDataCollection|array|null $data=array()) : self
     {
+        if($data instanceof ArrayDataObservable) {
+            $data = $data->getData();
+        }
+
         if($data instanceof self) {
             return $data;
         }
 
-        return new ArrayDataCollection($data);
+        return new self((array)$data);
     }
 
     /**
@@ -103,7 +114,7 @@ class ArrayDataCollection
      * @param mixed|NULL $value
      * @return $this
      */
-    public function setKey(string $name, $value) : self
+    public function setKey(string $name, mixed $value) : self
     {
         $this->data[$name] = $value;
         return $this;
@@ -151,7 +162,7 @@ class ArrayDataCollection
      * @param string $name
      * @return mixed|null
      */
-    public function getKey(string $name)
+    public function getKey(string $name) : mixed
     {
         return $this->data[$name] ?? null;
     }
@@ -364,7 +375,7 @@ class ArrayDataCollection
         {
             return new DateTime($value);
         }
-        catch (Exception $e)
+        catch (Throwable)
         {
             return null;
         }
@@ -413,7 +424,7 @@ class ArrayDataCollection
         {
             return Microtime::createFromString($this->getString($name));
         }
-        catch (Exception $e)
+        catch (Throwable)
         {
             return null;
         }
@@ -531,7 +542,7 @@ class ArrayDataCollection
              * @param string|int $b
              * @return int
              */
-            static function($a, $b) : int {
+            static function(string|int $a, string|int $b) : int {
                 return strnatcasecmp((string)$a, (string)$b);
             }
         );
