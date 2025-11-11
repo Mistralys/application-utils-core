@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace AppUtils\ArrayDataCollection;
 
+use AppUtils\ArrayDataCollection;
 use AppUtils\ConvertHelper;
 use AppUtils\ConvertHelper\JSONConverter;
 use AppUtils\ConvertHelper\JSONConverter\JSONConverterException;
@@ -289,6 +290,24 @@ class ArrayFlavors
     public function toJSON() : string
     {
         return JSONConverter::var2json($this->value);
+    }
+
+    /**
+     * Gets the array as an {@see ArrayDataCollection} instance.
+     * @return ArrayDataCollection
+     */
+    public function toCollection() : ArrayDataCollection
+    {
+        return ArrayDataCollection::create($this->value);
+    }
+
+    /**
+     * Gets the array as an {@see ArrayDataObservable} instance.
+     * @return ArrayDataObservable
+     */
+    public function toObservableCollection() : ArrayDataObservable
+    {
+        return ArrayDataObservable::create($this->value);
     }
 
     /**
