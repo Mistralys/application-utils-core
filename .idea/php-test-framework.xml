@@ -5,11 +5,7 @@
       <tool tool_name="PHPUnit">
         <cache>
           <versions>
-            <info id="Local/Users/smordziol/Webserver/libraries/application-utils-core/vendor/autoload.php" version="9.6.13" />
-            <info id="Local/vendor/autoload.php" version="9.6.19" />
-            <info id="LocalF:\EasyPHP\eds-www\tools\application-utils-core\vendor\autoload.php" version="9.6.13" />
-            <info id="LocalF:\Webserver\htdocs\tools\application-utils-core\vendor\autoload.php" version="9.6.13" />
-            <info id="Local\vendor/autoload.php" version="9.6.19" />
+            <info id="Local\vendor/autoload.php" version="12.4.2" />
           </versions>
         </cache>
       </tool>
