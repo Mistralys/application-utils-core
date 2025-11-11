@@ -29,7 +29,7 @@ interface FileInfoInterface extends PathInfoInterface
      * @return FileInfo
      * @throws FileHelper_Exception
      */
-    public function copyTo($targetPath) : FileInfo;
+    public function copyTo(string|PathInfoInterface|SplFileInfo $targetPath) : FileInfo;
 
     /**
      * Gets an instance of the line reader, which can
