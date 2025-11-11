@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppUtils\FileHelper;
 
+use AppUtils\FileHelper\FolderInfo\FileCreator;
 use AppUtils\FileHelper_Exception;
 use DirectoryIterator;
 
@@ -18,7 +19,6 @@ interface FolderInfoInterface extends PathInfoInterface
     public function create() : self;
 
     public function getRelativeTo(FolderInfo $folder) : string;
-
     public function createFolderFinder() : FolderFinder;
 
     public function getIterator() : DirectoryIterator;
@@ -29,6 +29,7 @@ interface FolderInfoInterface extends PathInfoInterface
     public function getSize(bool $recursive=true): int;
 
     public function createSubFolder(string $name) : FolderInfo;
+    public function addSubFile() : FileCreator;
 
     public function saveFile(string $fileName, string $content='') : FileInfo;
 
@@ -36,11 +37,12 @@ interface FolderInfoInterface extends PathInfoInterface
      * Creates a new JSON file, or overwrites an existing file in the
      * folder, using the specified data.
      *
-     * @param array<mixed> $data
+     * @param array<int|string,mixed> $data
      * @param string $fileName
      * @param bool $pretty
      * @return JSONFile
      * @throws FileHelper_Exception
+     * @deprecated Use {@see self::addSubFile()} instead.
      */
     public function saveJSONFile(array $data, string $fileName, bool $pretty=false) : JSONFile;
 
