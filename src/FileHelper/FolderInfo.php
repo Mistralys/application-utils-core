@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace AppUtils\FileHelper;
 
 use AppUtils\BaseException;
+use AppUtils\ClassHelper;
 use AppUtils\FileHelper;
+use AppUtils\FileHelper\FolderInfo\FileCreator;
 use AppUtils\FileHelper_Exception;
 use DirectoryIterator;
 use FilesystemIterator;
 use SplFileInfo;
+use function AppUtils\t;
 
 /**
  * @method FolderInfo requireReadable(?int $errorCode = null)
@@ -28,7 +31,7 @@ class FolderInfo extends AbstractPathInfo implements FolderInfoInterface
      * @return FolderInfo
      * @throws FileHelper_Exception
      */
-    public static function factory($path) : FolderInfo
+    public static function factory(string|PathInfoInterface|SplFileInfo $path) : FolderInfo
     {
         $pathString = AbstractPathInfo::type2string($path);
 
@@ -71,6 +74,12 @@ class FolderInfo extends AbstractPathInfo implements FolderInfoInterface
     {
         self::$infoCache = array();
     }
+
+    public function getTypeLabel(): string
+    {
+        return t('Folder');
+    }
+
 
     /**
      * Detects if the target path is a folder.
@@ -219,6 +228,11 @@ class FolderInfo extends AbstractPathInfo implements FolderInfoInterface
         return FileHelper::createFolder($this->getPath().'/'.$name);
     }
 
+    public function addSubFile(): FileCreator
+    {
+        return new FileCreator($this);
+    }
+
     public function saveFile(string $fileName, string $content='') : FileInfo
     {
         return FileHelper::saveFile($this.'/'.$fileName, $content);
@@ -283,21 +297,20 @@ class FolderInfo extends AbstractPathInfo implements FolderInfoInterface
     }
 
     /**
-     * Gets the parent folder of this folder.
+     * Uses the default class repository manager to find all PHP classes
+     * in this folder.
      *
-     * **This does not check if the parent folder exists.**
+     * > NOTE: Requires the cache folder to be set prior to calling the method.
+     * > This can be done with {@see ClassHelper::setCacheFolder()}.
      *
-     * @return FolderInfo
+     * @param bool $recursive Whether to search recursively in subfolders.
+     * @param class-string|null $instanceOf If provided, only classes that are instances of this class/interface will be returned.
+     * @return class-string[]
      */
-    public function getParentFolder() : FolderInfo
+    public function findPHPClasses(bool $recursive=false, ?string $instanceOf=null) : array
     {
-        $path = $this->getPath();
-        $folder = rtrim(dirname(rtrim(FileHelper::resolvePathDots($path), '/')), '/');
-
-        if(substr($path, -1) === '/') {
-            $folder .= '/';
-        }
-
-        return FolderInfo::factory($folder);
+        return ClassHelper::getRepositoryManager()
+            ->findClassesInFolder($this, $recursive, $instanceOf)
+            ->getClasses();
     }
 }
