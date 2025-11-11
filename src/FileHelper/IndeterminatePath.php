@@ -6,6 +6,7 @@ namespace AppUtils\FileHelper;
 
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
+use function AppUtils\t;
 
 /**
  * An indeterminate path is a special case, where
@@ -17,10 +18,10 @@ use AppUtils\FileHelper_Exception;
  */
 class IndeterminatePath extends AbstractPathInfo
 {
-    public const ERROR_INVALID_CONVERSION_TYPE = 115501;
+    public const int ERROR_INVALID_CONVERSION_TYPE = 115501;
 
-    public const CONVERT_TYPE_FILE = 'file';
-    public const CONVERT_TYPE_FOLDER = 'folder';
+    public const string CONVERT_TYPE_FILE = 'file';
+    public const string CONVERT_TYPE_FOLDER = 'folder';
 
     public function getExtension(bool $lowercase = true) : string
     {
@@ -93,5 +94,10 @@ class IndeterminatePath extends AbstractPathInfo
             ),
             self::ERROR_INVALID_CONVERSION_TYPE
         );
+    }
+
+    public function getTypeLabel(): string
+    {
+        return t('Indeterminate Path');
     }
 }
