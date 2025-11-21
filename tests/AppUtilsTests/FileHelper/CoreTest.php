@@ -14,12 +14,7 @@ use function AppUtils\sb;
 
 final class CoreTest extends FileHelperTestCase
 {
-    protected const SAVE_TEST_FILE = 'savetest.txt';
-
-    protected function registerFilesToDelete() : void
-    {
-        $this->registerFileToDelete(self::SAVE_TEST_FILE);
-    }
+    // region: _Tests
 
     public function test_relativizePathByDepth() : void
     {
@@ -718,4 +713,61 @@ final class CoreTest extends FileHelperTestCase
         $this->assertFalse(FileHelper::isPHPFile('bar.txt'));
         $this->assertFalse(FileHelper::isPHPFile('/path/to/folder'));
     }
+
+    public function test_detectWindowsDriveLetter() : void
+    {
+        $tests = array(
+            'C:\\path\to\file.txt' => 'c',
+            'D:/another/path/' => 'd',
+            'E:' => 'e',
+            'F:/' => 'f',
+            '   e:/path   ' => 'e',
+            '/no/drive/letter/' => null,
+            'relative/path/file.ext' => null,
+            'justafile.ext' => null,
+            '' => null
+        );
+
+        foreach ($tests as $path => $expected)
+        {
+            $result = FileHelper::detectWindowsDriveLetter($path);
+
+            $this->assertEquals($expected, $result, 'Path: ' . $path);
+        }
+    }
+
+    public function test_removeWindowsDriveLetter() : void
+    {
+        $tests = array(
+            'C:\\path\to\file.txt' => '/path/to/file.txt',
+            'D:/another/path/' => '/another/path/',
+            'E:' => '',
+            'F:/' => '/',
+            '   e:/path   ' => '/path',
+            '/no/drive/letter/' => '/no/drive/letter/',
+            'relative/path/file.ext' => 'relative/path/file.ext',
+            'justafile.ext' => 'justafile.ext',
+            '' => ''
+        );
+
+        foreach ($tests as $path => $expected)
+        {
+            $result = FileHelper::removeWindowsDriveLetter($path);
+
+            $this->assertEquals($expected, $result, 'Path: ' . $path);
+        }
+    }
+
+    // endregion
+
+    // region: Support methods
+
+    protected const string SAVE_TEST_FILE = 'savetest.txt';
+
+    protected function registerFilesToDelete() : void
+    {
+        $this->registerFileToDelete(self::SAVE_TEST_FILE);
+    }
+
+    // endregion
 }

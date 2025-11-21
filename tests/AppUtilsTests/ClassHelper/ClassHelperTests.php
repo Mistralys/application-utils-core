@@ -9,6 +9,7 @@ use AppUtils\ClassHelper\BaseClassHelperException;
 use AppUtils\ClassHelper\ClassNotExistsException;
 use AppUtils\ClassHelper\ClassNotImplementsException;
 use AppUtils\FileHelper;
+use AppUtils\FileHelper\FileInfo;
 use AppUtils\FileHelper\FolderInfo;
 use AppUtils\FileHelper_PHPClassInfo_Class;
 use AppUtilsTestClasses\BaseTestCase;
@@ -23,6 +24,7 @@ use AppUtilsTestClasses\ClassHelper\ReferenceClasses\Foo\Argh;
 use AppUtilsTestClasses\ClassHelper\ReferenceClasses\Foo\Bar;
 use AppUtilsTestClasses\ClassHelper\ReferenceClasses\Foo\Foo;
 use AppUtilsTestClasses\ClassHelper\ReferenceClasses\Foo\SillyName;
+use AppUtilsTestClasses\ClassHelper\TestClassFile;
 use stdClass;
 use AppUtilsTestClasses\ClassHelper\TestStubClassInstanceOf;
 use AppUtilsTestClasses\ClassHelper\Namespaced\TestStubNamespacedClass;
@@ -30,8 +32,7 @@ use AppUtilsTestClasses_ClassHelper_LegacyNaming_TestStubLegacyNamedClass;
 
 final class ClassHelperTests extends BaseTestCase
 {
-    private const PATH_REFERENCE_CLASSES = __DIR__ . '/../../AppUtilsTestClasses/ClassHelper/ReferenceClasses/Foo';
-    private const FINDER_CLASSES_FOLDER = __DIR__ . '/../../AppUtilsTestClasses/ClassHelper/ClassFinder';
+    // region: _Tests
 
     public function test_getAutoLoader() : void
     {
@@ -290,6 +291,32 @@ final class ClassHelperTests extends BaseTestCase
         $this->assertSame($folder->getPath(), $set->getPath());
     }
 
+    public function test_getClassSourceFileWithInternalClassReturnsNULL() : void
+    {
+        $this->assertNull(
+            ClassHelper::getClassSourceFile(stdClass::class)
+        );
+    }
+
+    public function test_getClassSourceFileWithKnownClass() : void
+    {
+        $file = ClassHelper::getClassSourceFile(TestClassFile::class);
+
+        $this->assertNotNull($file);
+        $this->assertSame(
+            FileInfo::factory(self::PATH_ASSETS_FOLDER . '/TestClassFile.php')->getRealPath(),
+            $file->getRealPath()
+        );
+    }
+
+    // endregion
+
+    // region: Support methods
+
+    private const string PATH_ASSETS_FOLDER = __DIR__ . '/../../AppUtilsTestClasses/ClassHelper';
+    private const string PATH_REFERENCE_CLASSES = self::PATH_ASSETS_FOLDER.'/ReferenceClasses/Foo';
+    private const string FINDER_CLASSES_FOLDER = self::PATH_ASSETS_FOLDER.'/ClassFinder';
+
     /**
      * @param FileHelper_PHPClassInfo_Class[] $list
      * @param class-string ...$classes
@@ -327,4 +354,6 @@ final class ClassHelperTests extends BaseTestCase
             implode(PHP_EOL.'- ', $names)
         ));
     }
+
+    // endregion
 }
