@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the interface {@see \AppUtils\FileHelper\PathInfoInterface}.
- *
  * @package Application Utils
  * @subpackage FileHelper
- * @see \AppUtils\FileHelper\PathInfoInterface
  */
 
 declare(strict_types=1);
@@ -28,8 +25,33 @@ interface PathInfoInterface extends StringableInterface
     public function getName() : string;
     public function getExtension(bool $lowercase=true) : string;
     public function getPath() : string;
+
+    /**
+     * Gets the path of the folder containing this item.
+     *
+     * - Files: The folder containing the file.
+     * - Folders: The folder's path as returned by {@see FolderInfo::getPath()}.
+     *
+     * @return string
+     */
     public function getFolderPath() : string;
 
+    /**
+     * Gets the parent folder of this item.
+     *
+     * - Files: The folder above the one containing the file.
+     * - Folders: The folder containing the folder.
+     *
+     * **This does not check if the parent folder exists.**
+     *
+     * @return FolderInfo
+     */
+    public function getParentFolder() : FolderInfo;
+
+    /**
+     * @return $this
+     */
+    public function rename(string $name) : self;
     /**
      * @return int The size on disk, in bytes.
      */
@@ -103,4 +125,6 @@ interface PathInfoInterface extends StringableInterface
      * @throws FileHelper_Exception
      */
     public function delete() : self;
+
+    public function getTypeLabel() : string;
 }

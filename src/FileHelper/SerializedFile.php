@@ -15,6 +15,7 @@ use AppUtils\ClassHelper\ClassNotImplementsException;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
 use SplFileInfo;
+use function AppUtils\t;
 
 /**
  * Handles files containing data serialized with the
@@ -98,5 +99,10 @@ class SerializedFile extends FileInfo
         $serialized = @serialize($data);
 
         return $this->putContents($serialized);
+    }
+
+    public function getTypeLabel(): string
+    {
+        return t('Serialized File');
     }
 }

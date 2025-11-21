@@ -1,3 +1,14 @@
+## v2.4.0 - PHP8.4 and ArrayDataCollection improvements (Deprecation)
+- Increased minimum PHP version to PHP8.4.
+- ArrayDataCollection: Added an observable collection variant to react to value changes.
+- FolderInfo: Added `findPHPClasses()` that uses the ClassHelper to find the classes.
+- FolderInfo: Added `addSubFile()` to create new files.
+- PHPFile: Added `putStatements()` to write PHP statements into a file.
+
+### Deprecations
+
+- Deprecated `FileHelper::saveJSON()` in favor of `FolderInfo::addSubFile()`.
+
 ## v2.3.17 - ArrayDataCollection improvements
 - ArrayDataCollection: Added `requireMicrotime()` and `requireDateTime()`.
 

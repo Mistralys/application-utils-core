@@ -15,7 +15,9 @@ use AppUtils\ClassHelper\ClassNotImplementsException;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
 use AppUtils\FileHelper_PHPClassInfo;
+use AppUtils\Interfaces\StringableInterface;
 use SplFileInfo;
+use function AppUtils\t;
 
 /**
  * Specialized file information class for PHP files.
@@ -28,7 +30,7 @@ use SplFileInfo;
  */
 class PHPFile extends FileInfo
 {
-    public const EXTENSION = 'php';
+    public const string EXTENSION = 'php';
 
     /**
      * @param string|PathInfoInterface|SplFileInfo $path
@@ -49,14 +51,14 @@ class PHPFile extends FileInfo
     /**
      * Validates a PHP file's syntax.
      *
-     * NOTE: This will fail silently if the PHP command line
-     * is not available. Use {@link FileHelper::canMakePHPCalls()}
-     * to check this beforehand as needed.
+     * > NOTE: This will fail silently if the PHP command line
+     * > is not available. Use {@link FileHelper::canMakePHPCalls()}
+     * > to check this beforehand as needed.
      *
-     * @return boolean|string[] A boolean true if the file is valid, an array with validation messages otherwise.
+     * @return true|string[] A boolean true if the file is valid, an array with validation messages otherwise.
      * @throws FileHelper_Exception
      */
-    public function checkSyntax()
+    public function checkSyntax() : true|array
     {
         if(!FileHelper::canMakePHPCalls())
         {
@@ -83,5 +85,44 @@ class PHPFile extends FileInfo
     public function findClasses() : FileHelper_PHPClassInfo
     {
         return new FileHelper_PHPClassInfo($this);
+    }
+
+    public function getTypeLabel(): string
+    {
+        return t('PHP File');
+    }
+
+    /**
+     * Saves the provided PHP statements into the file,
+     * wrapping them in PHP tags, and optionally adding
+     * strict typing declaration and a namespace.
+     *
+     * @param string|StringableInterface|string[] $phpCode PHP statements to write. In the case of an array,
+     *              each entry is treated as a separate line. Ensure that semicolons and other syntax elements
+     *              are included as needed.
+     * @param bool $strictTyping
+     * @param string|null $namespace
+     * @return PHPFile
+     * @throws FileHelper_Exception
+     */
+    public function putStatements(string|StringableInterface|array $phpCode, bool $strictTyping=true, ?string $namespace=null) : PHPFile
+    {
+        $content = '<'.'?'.'php'.PHP_EOL.PHP_EOL;
+
+        if($strictTyping) {
+            $content .= 'declare(strict_types=1);'.PHP_EOL.PHP_EOL;
+        }
+
+        if($namespace !== null) {
+            $content .= 'namespace '.$namespace.';'.PHP_EOL.PHP_EOL;
+        }
+
+        if(is_array($phpCode)) {
+            $phpCode = implode(PHP_EOL, $phpCode);
+        }
+
+        $content .= $phpCode.PHP_EOL;
+
+        return $this->putContents($content);
     }
 }

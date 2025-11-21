@@ -23,6 +23,7 @@ use AppUtils\FileHelper_Exception;
 use AppUtils\FileHelper_MimeTypes;
 use SplFileInfo;
 use function AppUtils\parseVariable;
+use function AppUtils\t;
 
 /**
  * Specialized class used to access information on a file path,
@@ -48,8 +49,6 @@ use function AppUtils\parseVariable;
  */
 class FileInfo extends AbstractPathInfo implements FileInfoInterface
 {
-    public const ERROR_INVALID_INSTANCE_CREATED = 115601;
-
     /**
      * @var array<string,FileInfo>
      */
@@ -451,5 +450,10 @@ class FileInfo extends AbstractPathInfo implements FileInfoInterface
     {
         $this->getDownloader()->send($fileName, $asAttachment);
         return $this;
+    }
+
+    public function getTypeLabel(): string
+    {
+        return t('File');
     }
 }

@@ -25,7 +25,6 @@
       <path value="$PROJECT_DIR$/vendor/sebastian/global-state" />
       <path value="$PROJECT_DIR$/vendor/sebastian/object-enumerator" />
       <path value="$PROJECT_DIR$/vendor/sebastian/comparator" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit-reverse-lookup" />
       <path value="$PROJECT_DIR$/vendor/sebastian/diff" />
       <path value="$PROJECT_DIR$/vendor/sebastian/object-reflector" />
       <path value="$PROJECT_DIR$/vendor/sebastian/complexity" />
@@ -36,7 +35,6 @@
       <path value="$PROJECT_DIR$/vendor/sebastian/environment" />
       <path value="$PROJECT_DIR$/vendor/sebastian/exporter" />
       <path value="$PROJECT_DIR$/vendor/sebastian/cli-parser" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit" />
       <path value="$PROJECT_DIR$/vendor/composer" />
       <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
       <path value="$PROJECT_DIR$/vendor/phar-io/version" />
@@ -54,8 +52,6 @@
       <path value="$PROJECT_DIR$/vendor/geshi/geshi" />
       <path value="$PROJECT_DIR$/vendor/neitanod/forceutf8" />
       <path value="$PROJECT_DIR$/vendor/phpstan/phpstan-phpunit" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/resource-operations" />
       <path value="$PROJECT_DIR$/localization/vendor/symfony/polyfill-php80" />
       <path value="$PROJECT_DIR$/localization/vendor/geshi/geshi" />
       <path value="$PROJECT_DIR$/localization/vendor/mistralys/version-parser" />
@@ -72,14 +68,16 @@
       <path value="$PROJECT_DIR$/localization/vendor/mistralys/jtokenizer" />
       <path value="$PROJECT_DIR$/localization/vendor/mistralys/application-utils-collections" />
       <path value="$PROJECT_DIR$/localization/vendor/mistralys/application-utils-core" />
+      <path value="$PROJECT_DIR$/vendor/staabm/side-effects-detector" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="7.4">
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.4">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>
   <component name="PhpStan">
     <PhpStan_settings>
       <PhpStanConfiguration tool_path="$PROJECT_DIR$/vendor/bin/phpstan" />
+      <phpstan_by_interpreter asDefaultInterpreter="true" interpreter_id="542bb7b4-54c6-4067-b98f-eb428e53bcb8" tool_path="F:\Webserver\www\htdocs\tools\application-utils-core\vendor\bin\phpstan" timeout="60000" />
     </PhpStan_settings>
   </component>
   <component name="PhpStanOptionsConfiguration">
@@ -90,6 +88,11 @@
       <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/localization/vendor/autoload.php" />
       <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/vendor/autoload.php" phpunit_phar_path="" />
     </phpunit_settings>
+  </component>
+  <component name="Psalm">
+    <Psalm_settings>
+      <psalm_fixer_by_interpreter asDefaultInterpreter="true" interpreter_id="542bb7b4-54c6-4067-b98f-eb428e53bcb8" timeout="60000" />
+    </Psalm_settings>
   </component>
   <component name="PsalmOptionsConfiguration">
     <option name="transferred" value="true" />

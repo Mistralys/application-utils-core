@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppUtilsTests\ClassHelper;
 
+use AppUtils\ClassHelper;
 use AppUtils\ClassHelper\Repository\ClassRepository;
 use AppUtils\ClassHelper\Repository\ClassRepositoryException;
 use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
@@ -120,6 +121,15 @@ final class ClassRepositoryTests extends BaseTestCase
         $manager->clearID($id);
 
         $this->assertFalse($manager->idExists($id));
+    }
+
+    public function test_folderInfoVariant() : void
+    {
+        ClassHelper::setCacheFolder($this->cacheFolder);
+
+        $classes = $this->classesFolder->findPHPClasses(false, FinderInterface::class);
+
+        $this->assertContains(FinderImplementsInterface::class, $classes);
     }
 
     // endregion
