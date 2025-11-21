@@ -17,7 +17,10 @@ use AppUtils\ClassHelper\Repository\ClassRepositoryException;
 use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
 use AppUtils\FileHelper\FolderInfo;
 use AppUtils\FileHelper\PathInfoInterface;
+use AppUtils\FileHelper\PHPFile;
 use Composer\Autoload\ClassLoader;
+use ReflectionClass;
+use ReflectionException;
 use SplFileInfo;
 use Throwable;
 
@@ -40,9 +43,9 @@ class ClassHelper
 {
     private static ?ClassLoader $classLoader = null;
 
-    public const ERROR_CANNOT_RESOLVE_CLASS_NAME = 111001;
-    public const ERROR_THROWABLE_GIVEN_AS_OBJECT = 111002;
-    public const ERROR_CACHE_FOLDER_NOT_SET = 111003;
+    public const int ERROR_CANNOT_RESOLVE_CLASS_NAME = 111001;
+    public const int ERROR_THROWABLE_GIVEN_AS_OBJECT = 111002;
+    public const int ERROR_CACHE_FOLDER_NOT_SET = 111003;
 
     /**
      * Attempts to detect the name of a class, switching between
@@ -466,5 +469,48 @@ class ClassHelper
             ),
             self::ERROR_CACHE_FOLDER_NOT_SET
         );
+    }
+
+    /**
+     * Get the source PHP file for a class/interface/trait or
+     * object.
+     *
+     * Returns `null` if not found or if it is internal/evaluated.
+     * For example, calling this with `DateTime` will return `null`.
+     *
+     * > NOTE: This method uses reflection, which may have performance
+     * > implications if used in large loops.
+     *
+     * @param class-string|object $class
+     * @return PHPFile|null The PHP file, or `NULL` if not found or unavailable (internal classes).
+     */
+    public static function getClassSourceFile(string|object $class) : ?PHPFile
+    {
+        if(is_object($class)) {
+            $class = get_class($class);
+        } else if (
+            !class_exists($class)
+            &&
+            !interface_exists($class)
+            &&
+            !trait_exists($class)
+        ) {
+            return null;
+        }
+
+        try
+        {
+            $r = new ReflectionClass($class);
+            $file = $r->getFileName();
+            if($file === false) {
+                return null;
+            }
+
+            return PHPFile::factory($file);
+        }
+        catch (ReflectionException)
+        {
+            return null;
+        }
     }
 }
