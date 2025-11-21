@@ -438,10 +438,22 @@ abstract class AbstractPathInfo implements PathInfoInterface
         }
 
         $path = $this->getFolderPath();
+
+        $drive = FileHelper::detectWindowsDriveLetter($path);
+        if($drive !== null) {
+            $path = FileHelper::removeWindowsDriveLetter($path, $drive);
+        }
+
         $folder = rtrim(dirname(rtrim(FileHelper::resolvePathDots($path), '/')), '/');
 
+        // Add the ending slash if the original path had one.
         if(str_ends_with($path, '/')) {
             $folder .= '/';
+        }
+
+        // Re-add the drive letter if applicable.
+        if($drive !== null) {
+            $folder = $drive . ':' . $folder;
         }
 
         $this->parentFolder = FolderInfo::factory($folder);
