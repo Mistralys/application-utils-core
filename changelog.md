@@ -2,8 +2,12 @@
 - Increased minimum PHP version to PHP8.4.
 - ArrayDataCollection: Added an observable collection variant to react to value changes.
 - FolderInfo: Added `findPHPClasses()` that uses the ClassHelper to find the classes.
-- FolderInfo: Added `addSubFile()` to create new files.
+- FolderInfo: Added `addSubFile()` to create new files (multiple format choices).
+- FileHelper: Added `detectWindowsDriveLetter()`.
+- FileHelper: Added `removeWindowsDriveLetter()`.
 - PHPFile: Added `putStatements()` to write PHP statements into a file.
+- ClassHelper: Added `getClassSourceFile()` to get the file path of a class or object.
+- RegexHelper: Added documentation for some of the regexes in the PHPDocs.
 
 ### Deprecations
 
