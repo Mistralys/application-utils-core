@@ -13,5 +13,5 @@ use AppUtils\BaseException;
  */
 class URLException extends BaseException
 {
-
+    public const int ERROR_EMPTY_URL = 187201;
 }

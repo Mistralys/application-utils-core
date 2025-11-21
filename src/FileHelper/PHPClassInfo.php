@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the {@link FileHelper_PHPClassInfo} class.
- * 
  * @package Application Utils
  * @subpackage FileHelper
- * @see FileHelper_PHPClassInfo
  */
 
 declare(strict_types=1);

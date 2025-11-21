@@ -83,16 +83,29 @@ class URIConnectionTester implements OptionableInterface
     }
     
    /**
-    * @param resource|CurlHandle $ch
+    * @param CurlHandle $ch
     */
-    private function configureOptions($ch) : void
+    private function configureOptions(CurlHandle $ch) : void
     {
+
+
         if($this->isVerboseModeEnabled())
         {
             curl_setopt($ch, CURLOPT_VERBOSE, true);
         }
+
+        $url = $this->url->getNormalized();
+
+        if(empty($url))
+        {
+            throw new URLException(
+                'The URL is empty and cannot be tested for connectivity.',
+                '',
+                URLException::ERROR_EMPTY_URL
+            );
+        }
         
-        curl_setopt($ch, CURLOPT_URL, $this->url->getNormalized());
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->getTimeout());
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -102,11 +115,15 @@ class URIConnectionTester implements OptionableInterface
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         }
-        
-        if($this->url->hasUsername())
-        {
-            curl_setopt($ch, CURLOPT_USERNAME, $this->url->getUsername());
-            curl_setopt($ch, CURLOPT_PASSWORD, $this->url->getPassword());
+
+        $username = $this->url->getUsername();
+        if(!empty($username)) {
+            curl_setopt($ch, CURLOPT_USERNAME, $username);
+
+            $password = $this->url->getPassword();
+            if (!empty($password)) {
+                curl_setopt($ch, CURLOPT_PASSWORD, $password);
+            }
         }
     }
         

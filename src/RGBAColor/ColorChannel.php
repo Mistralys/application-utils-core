@@ -144,10 +144,10 @@ abstract class ColorChannel
     }
 
     /**
-     * @param float|AlphaChannel|NULL $alpha 0.0 to 1.0
+     * @param int|float|AlphaChannel|NULL $alpha 0.0 to 1.0
      * @return AlphaChannel
      */
-    public static function alpha($alpha) : AlphaChannel
+    public static function alpha(int|float|AlphaChannel|NULL $alpha) : AlphaChannel
     {
         if($alpha instanceof AlphaChannel) {
             return $alpha;
@@ -157,7 +157,7 @@ abstract class ColorChannel
             $alpha = 0.0;
         }
 
-        return new AlphaChannel($alpha);
+        return new AlphaChannel((float)$alpha);
     }
 
     /**

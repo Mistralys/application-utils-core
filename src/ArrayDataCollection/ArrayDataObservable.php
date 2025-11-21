@@ -31,7 +31,7 @@ use AppUtils\ArrayDataCollection;
 class ArrayDataObservable extends ArrayDataCollection
 {
     /**
-     * @param array<string,mixed>|ArrayDataCollection|ArrayDataObservable $data
+     * @param array<int|string,mixed>|ArrayDataCollection|ArrayDataObservable $data
      * @return ArrayDataObservable
      */
     public static function create($data=array()) : self
@@ -56,7 +56,7 @@ class ArrayDataObservable extends ArrayDataCollection
         $this->multiRemoval = true;
 
         foreach ($this->getKeys(false) as $key) {
-            $this->removeKey($key);
+            $this->removeKey((string)$key);
         }
 
         $this->multiRemoval = false;
@@ -138,10 +138,26 @@ class ArrayDataObservable extends ArrayDataCollection
 
     // region: Observers
 
+    /**
+     * @var array<int, callable(ArrayDataObservable) : void>
+     */
     private array $dataObservers = array();
+
+    /**
+     * @var array<int, callable(ArrayDataObservable, string, mixed, mixed) : void>
+     */
     private array $keyObservers = array();
+
+    /**
+     * @var array<int, callable(ArrayDataObservable, string, mixed) : void>
+     */
     private array $removeObservers = array();
+
+    /**
+     * @var array<int, callable(ArrayDataObservable, string, mixed) : void>
+     */
     private array $addObservers = array();
+
     private int $observerCounter = 0;
 
     /**
@@ -202,7 +218,7 @@ class ArrayDataObservable extends ArrayDataCollection
         return $this->observerCounter;
     }
 
-    private function triggerKeyAdded(string $name, $value): void
+    private function triggerKeyAdded(string $name, mixed $value): void
     {
         foreach ($this->addObservers as $observer) {
             $observer($this, $name, $value);
@@ -211,7 +227,7 @@ class ArrayDataObservable extends ArrayDataCollection
         $this->triggerKeyChanged($name, null, $value);
     }
 
-    private function triggerKeyChanged(string $name, $oldValue, $newValue): void
+    private function triggerKeyChanged(string $name, mixed $oldValue, mixed $newValue): void
     {
         foreach ($this->keyObservers as $observer) {
             $observer($this, $name, $oldValue, $newValue);
@@ -222,7 +238,7 @@ class ArrayDataObservable extends ArrayDataCollection
         }
     }
 
-    private function triggerKeyRemoved(string $name, $oldValue): void
+    private function triggerKeyRemoved(string $name, mixed $oldValue): void
     {
         foreach ($this->removeObservers as $observer) {
             $observer($this, $name, $oldValue);
@@ -249,10 +265,13 @@ class ArrayDataObservable extends ArrayDataCollection
      */
     public function removeObserver(int $observerID): self
     {
-        unset($this->keyObservers[$observerID]);
-        unset($this->dataObservers[$observerID]);
-        unset($this->removeObservers[$observerID]);
-        unset($this->addObservers[$observerID]);
+        unset(
+            $this->keyObservers[$observerID],
+            $this->dataObservers[$observerID],
+            $this->removeObservers[$observerID],
+            $this->addObservers[$observerID]
+        );
+
         return $this;
     }
 

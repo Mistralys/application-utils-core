@@ -411,7 +411,7 @@ class ClassHelper
      *
      * @param FolderInfo $folder
      * @param bool $recursive
-     * @param string|null $instanceOf Filter results by class/interface.
+     * @param class-string|null $instanceOf Filter results by class/interface.
      * @return ClassRepository Use {@see ClassRepository::getClasses()} to retrieve the classes.
      *
      * @throws ClassRepositoryException

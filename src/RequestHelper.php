@@ -21,19 +21,20 @@ use CurlHandle;
  */
 class RequestHelper
 {
-    public const FILETYPE_TEXT = 'text/plain';
-    public const FILETYPE_XML = 'text/xml';
-    public const FILETYPE_HTML = 'text/html';
+    public const string FILETYPE_TEXT = 'text/plain';
+    public const string FILETYPE_XML = 'text/xml';
+    public const string FILETYPE_HTML = 'text/html';
 
-    public const ENCODING_UTF8 = 'UTF-8';
+    public const string ENCODING_UTF8 = 'UTF-8';
 
-    public const TRANSFER_ENCODING_BASE64 = 'BASE64';
-    public const TRANSFER_ENCODING_8BIT = '8BIT';
-    public const TRANSFER_ENCODING_BINARY = 'BINARY';
+    public const string TRANSFER_ENCODING_BASE64 = 'BASE64';
+    public const string TRANSFER_ENCODING_8BIT = '8BIT';
+    public const string TRANSFER_ENCODING_BINARY = 'BINARY';
     
-    public const ERROR_REQUEST_FAILED = 17902;
-    public const ERROR_CURL_INIT_FAILED = 17903;
-    public const ERROR_CANNOT_OPEN_LOGFILE = 17904;
+    public const int ERROR_REQUEST_FAILED = 17902;
+    public const int ERROR_CURL_INIT_FAILED = 17903;
+    public const int ERROR_CANNOT_OPEN_LOGFILE = 17904;
+    public const int ERROR_EMPTY_OR_INVALID_URL = 17905;
 
     protected string $eol = "\r\n";
     protected string $mimeBoundary;
@@ -254,14 +255,14 @@ class RequestHelper
      * Creates a new CURL resource configured according to the
      * request's settings.
      *
-     * @return resource|CurlHandle
+     * @return CurlHandle
      * @throws RequestHelper_Exception
      */
-    public static function createCURL()
+    public static function createCURL() : CurlHandle
     {
         $ch = curl_init();
 
-        if($ch instanceof CurlHandle || is_resource($ch))
+        if($ch instanceof CurlHandle)
         {
             return $ch;
         }
@@ -269,7 +270,7 @@ class RequestHelper
         throw new RequestHelper_Exception(
             'Could not initialize a new cURL instance.',
             sprintf(
-                'Calling curl_init failed to return a valid resource or instance. Given: [%s].',
+                'Calling curl_init failed to return a valid instance. Given: [%s].',
                 parseVariable($ch)->enableType()->toString()
             ),
             self::ERROR_CURL_INIT_FAILED
@@ -282,17 +283,26 @@ class RequestHelper
     * 
     * @param URLInfo $url
     * @throws RequestHelper_Exception
-    * @return resource
+    * @return CurlHandle
     */
-    protected function configureCURL(URLInfo $url)
+    protected function configureCURL(URLInfo $url) : CurlHandle
     {
         $ch = self::createCURL();
 
         $this->setHeader('Content-Length', (string)$this->boundaries->getContentLength());
         $this->setHeader('Content-Type', 'multipart/form-data; boundary=' . $this->mimeBoundary);
 
+        $target = $url->getNormalizedWithoutAuth();
+        if(empty($target) || !$url->isValid()) {
+            throw new RequestHelper_Exception(
+                'The destination URL is invalid or empty.',
+                'The provided URL could not be parsed correctly.',
+                self::ERROR_EMPTY_OR_INVALID_URL
+            );
+        }
+
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_URL, $url->getNormalizedWithoutAuth());
+        curl_setopt($ch, CURLOPT_URL, $target);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -312,22 +322,27 @@ class RequestHelper
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         }
-        
-        if($url->hasUsername())
+
+        $username = $url->getUsername();
+        if(!empty($username))
         {
-            curl_setopt($ch, CURLOPT_USERNAME, $url->getUsername());
-            curl_setopt($ch, CURLOPT_PASSWORD, $url->getPassword());
+            curl_setopt($ch, CURLOPT_USERNAME, $username);
+
+            $password = $url->getPassword();
+            if(!empty($password)) {
+                curl_setopt($ch, CURLOPT_PASSWORD, $password);
+            }
         }
         
         return $ch;
     }
 
     /**
-     * @param resource $ch
+     * @param CurlHandle $ch
      * @return bool Whether logging is enabled.
      * @throws RequestHelper_Exception
      */
-    protected function configureLogging($ch) : bool
+    protected function configureLogging(CurlHandle $ch) : bool
     {
         if(empty($this->logfile))
         {

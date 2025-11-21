@@ -169,10 +169,10 @@ class HTMLTag implements StringableInterface, ClassableInterface
     /**
      * Adds a bit of text to the content (with an automatic space at the end).
      *
-     * @param string|number|StringBuilder_Interface|NULL $content
+     * @param string|int|float|StringBuilder_Interface|NULL $content
      * @return $this
      */
-    public function addText($content) : self
+    public function addText(string|int|float|StringableInterface|NULL $content) : self
     {
         $this->content->add($content);
         return $this;
@@ -181,32 +181,32 @@ class HTMLTag implements StringableInterface, ClassableInterface
     /**
      * Adds a bit of HTML at the end of the content.
      *
-     * @param string|number|StringBuilder_Interface|NULL $content
+     * @param string|int|float|StringableInterface|NULL $content
      * @return $this
      */
-    public function addHTML($content) : self
+    public function addHTML(string|int|float|StringableInterface|NULL $content) : self
     {
         $this->content->html($content);
         return $this;
     }
 
     /**
-     * @param string|number|StringableInterface|NULL $content
+     * @param string|int|float|StringableInterface|NULL $content
      * @return $this
      */
-    public function setContent($content) : self
+    public function setContent(string|int|float|StringableInterface|NULL $content) : self
     {
         $this->content = sb()->add($content);
         return $this;
     }
 
     /**
-     * @param string|number|StringableInterface|NULL $content
+     * @param string|int|float|StringableInterface|NULL $content
      * @return $this
      * @see self::addText()
      * @see self::addHTML()
      */
-    public function appendContent($content) : self
+    public function appendContent(string|int|float|StringableInterface|NULL $content) : self
     {
         return $this->addHTML($content);
     }
@@ -230,11 +230,11 @@ class HTMLTag implements StringableInterface, ClassableInterface
      * Sets an attribute of the tag.
      *
      * @param string $name
-     * @param string|number|bool|StringableInterface|StringBuilder_Interface|NULL $value
+     * @param string|int|float|bool|StringableInterface|NULL $value
      * @param bool $keepIfEmpty If `true`, the attribute is kept even if the value is empty (null or empty string).
      * @return $this
      */
-    public function attr(string $name, $value, bool $keepIfEmpty=false) : self
+    public function attr(string $name, string|int|float|bool|StringableInterface|NULL $value, bool $keepIfEmpty=false) : self
     {
         $this->attributes->attr($name, $value);
 

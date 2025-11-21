@@ -7,6 +7,8 @@ namespace AppUtils\FileHelper;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
 use AppUtils\RequestHelper;
+use AppUtils\RequestHelper_Exception;
+use CurlHandle;
 
 class FileDownloader
 {
@@ -91,11 +93,20 @@ class FileDownloader
     }
 
     /**
-     * @return resource
-     * @throws FileHelper_Exception
+     * @return CurlHandle
+     * @throws RequestHelper_Exception
      */
-    private function initCurl()
+    private function initCurl() : CurlHandle
     {
+        if(empty($this->url))
+        {
+            throw new FileHelper_Exception(
+                'URL not specified',
+                'Cannot initialize cURL request: the URL is empty.',
+                FileHelper::ERROR_URL_NOT_SPECIFIED
+            );
+        }
+
         $ch = RequestHelper::createCURL();
 
         curl_setopt($ch, CURLOPT_URL, $this->url);

@@ -48,13 +48,13 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
 {
     use SimpleErrorStateTrait;
 
-    public const VALIDATION_INVALID_HOUR = 171701;
-    public const VALIDATION_UNRECOGNIZED_TIME_FORMAT = 171702;
-    public const VALIDATION_INVALID_MINUTE = 171703;
+    public const int VALIDATION_INVALID_HOUR = 171701;
+    public const int VALIDATION_UNRECOGNIZED_TIME_FORMAT = 171702;
+    public const int VALIDATION_INVALID_MINUTE = 171703;
 
-    public const DEFAULT_EMPTY_TIME_TEXT = '--:--';
+    public const string DEFAULT_EMPTY_TIME_TEXT = '--:--';
 
-    public const ALLOWED_SEPARATOR_CHARS = array(
+    public const array ALLOWED_SEPARATOR_CHARS = array(
         ':',
         ' ',
         '-',
@@ -91,7 +91,7 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
      *                                                Daytime instance = returns the same instance.
      * @return DaytimeStringInfo
      */
-    public static function fromAuto($time) : DaytimeStringInfo
+    public static function fromAuto(string|int|DaytimeStringInfo|NULL $time) : DaytimeStringInfo
     {
         if($time instanceof self) {
             return $time;
@@ -140,7 +140,7 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
     {
         $timeString = str_replace(array("\t", "\n", "\r"), ' ', $timeString);
 
-        while (strpos($timeString, '  ') !== false) {
+        while (str_contains($timeString, '  ')) {
             $timeString = str_replace('  ', ' ', $timeString);
         }
 
@@ -190,7 +190,7 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
     private function detectSeparator(string $timeString) : string
     {
         foreach(self::ALLOWED_SEPARATOR_CHARS as $separator) {
-            if(strpos($timeString, $separator) !== false) {
+            if(str_contains($timeString, $separator)) {
                 return $separator;
             }
         }
@@ -198,9 +198,14 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
         return ':';
     }
 
+    /**
+     * @param string[] $parts
+     * @param string $time
+     * @return void
+     */
     private function checkFormat(array $parts, string $time) : void
     {
-        if(strpos($time, ':') === false) {
+        if(!str_contains($time, ':')) {
             $this->setError(
                 t('The time string must contain a colon separator, e.g. %1$s.', '`09:45`'),
                 self::VALIDATION_UNRECOGNIZED_TIME_FORMAT
@@ -443,7 +448,7 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
      * @param string|int|DaytimeStringInfo|NULL $time
      * @return bool
      */
-    public function isAfter($time) : bool
+    public function isAfter(string|int|DaytimeStringInfo|NULL $time) : bool
     {
         return $this->getTotalSeconds() > self::fromAuto($time)->getTotalSeconds();
     }
@@ -453,7 +458,7 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
      * @param string|int|DaytimeStringInfo|NULL $time
      * @return bool
      */
-    public function isBefore($time) : bool
+    public function isBefore(string|int|DaytimeStringInfo|NULL $time) : bool
     {
         return $this->getTotalSeconds() < self::fromAuto($time)->getTotalSeconds();
     }
@@ -464,7 +469,7 @@ class DaytimeStringInfo implements SimpleErrorStateInterface
      * @param string|int|DaytimeStringInfo|NULL $time
      * @return int Seconds difference: Positive or negative value, depending on whether the specified time is earlier or later than this time.
      */
-    public function getTimeDifference($time) : int
+    public function getTimeDifference(string|int|DaytimeStringInfo|NULL $time) : int
     {
         return self::fromAuto($time)->getTotalSeconds() - $this->getTotalSeconds();
     }

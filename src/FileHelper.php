@@ -74,6 +74,7 @@ class FileHelper
     public const int ERROR_CANNOT_COPY_FILE_TO_FOLDER = 340041;
     public const int ERROR_CANNOT_GET_SIZE = 340042;
     public const int ERROR_NO_MODIFIED_DATE_AVAILABLE = 340043;
+    public const int ERROR_URL_NOT_SPECIFIED = 340044;
 
     /**
     * Opens a serialized file and returns the unserialized data.

@@ -46,6 +46,12 @@ class ArraySetters
         return $this->setValue(array());
     }
 
+    /**
+     * Sets the array value.
+     *
+     * @param array<int|string,mixed> $value
+     * @return ArrayDataCollection
+     */
     private function setValue(array $value) : ArrayDataCollection
     {
         $this->collection->setKey($this->key, $value);

@@ -139,10 +139,10 @@ class AttributeCollection
 
     /**
      * @param string $name
-     * @param string|number|bool|StringableInterface|StringBuilder_Interface|NULL $value
+     * @param string|int|float|bool|StringableInterface|NULL $value
      * @return $this
      */
-    public function attr(string $name, $value) : AttributeCollection
+    public function attr(string $name, string|int|float|bool|StringableInterface|NULL $value) : AttributeCollection
     {
         $string = Filtering::value2string($value);
 

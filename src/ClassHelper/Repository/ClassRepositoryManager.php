@@ -91,7 +91,7 @@ class ClassRepositoryManager
      * @return ClassRepositoryManager
      * @see self::createDefault()
      */
-    public static function create($cacheFolder): ClassRepositoryManager
+    public static function create(string|PathInfoInterface|SplFileInfo $cacheFolder): ClassRepositoryManager
     {
         return new ClassRepositoryManager(FolderInfo::factory($cacheFolder));
     }
@@ -140,7 +140,7 @@ class ClassRepositoryManager
      *
      * @param FolderInfo $folder
      * @param bool $recursive Whether to search recursively in subfolders.
-     * @param string|null $instanceOf Optional interface or class name to
+     * @param class-string|null $instanceOf Optional interface or class name to
      *                filter the results.
      * @param string|null $id Optional ID to identify this class cache and
      *                get it later using {@see self::getByID()}. If not provided,
@@ -161,7 +161,7 @@ class ClassRepositoryManager
      * Fetches an existing repository by its ID if it exists.
      *
      * @param string $id
-     * @return class-string[]|null
+     * @return ClassRepository|null
      */
     public function getByID(string $id) : ?ClassRepository
     {

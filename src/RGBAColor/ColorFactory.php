@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the class {@see ColorFactory}.
- *
- * @see ColorFactory
- *@subpackage RGBAColor
  * @package AppUtils
+ * @subpackage RGBAColor
  */
 
 declare(strict_types=1);
@@ -18,6 +15,7 @@ use AppUtils\RGBAColor\ColorChannel\BrightnessChannel;
 use AppUtils\RGBAColor\ColorChannel\HueChannel;
 use AppUtils\RGBAColor\ColorChannel\SaturationChannel;
 use AppUtils\RGBAColor\ColorPresets\CannedColors;
+use GdImage;
 use JsonException;
 
 /**
@@ -31,8 +29,8 @@ use JsonException;
  */
 class ColorFactory
 {
-    public const ERROR_INVALID_GD_ERROR_CODE = 113801;
-    public const ERROR_INVALID_HSV_COLOR_ARRAY = 113802;
+    public const int ERROR_INVALID_GD_ERROR_CODE = 113801;
+    public const int ERROR_INVALID_HSV_COLOR_ARRAY = 113802;
 
     /**
      * @var PresetsManager|null
@@ -148,7 +146,7 @@ class ColorFactory
      * ));
      * </pre>
      *
-     * @param array<string|int,int> $color
+     * @param array<string|int,int|float> $color
      * @return RGBAColor
      *
      * @throws ColorException
@@ -288,12 +286,12 @@ class ColorFactory
     }
 
     /**
-     * @param resource $img
+     * @param GdImage $img
      * @param int $colorIndex
      * @return RGBAColor
      * @throws ColorException
      */
-    public static function createFromIndex($img, int $colorIndex) : RGBAColor
+    public static function createFromIndex(GdImage $img, int $colorIndex) : RGBAColor
     {
         $color = imagecolorsforindex($img, $colorIndex);
 
@@ -355,10 +353,10 @@ class ColorFactory
      */
     public static function createHSVFromArray(array $hsv) : HSVColor
     {
-        $hue = $hsv['hue'] ?? $hsv[0] ?? null;
-        $saturation = $hsv['saturation'] ?? $hsv[1] ?? null;
-        $brightness = $hsv['brightness'] ?? $hsv[2] ?? null;
-        $alpha = $hsv['alpha'] ?? $hsv[3] ?? null;
+        $hue = self::val2hue($hsv['hue'] ?? $hsv[0] ?? null);
+        $saturation = self::val2saturation($hsv['saturation'] ?? $hsv[1] ?? null);
+        $brightness = self::val2brightness($hsv['brightness'] ?? $hsv[2] ?? null);
+        $alpha = self::val2alpha($hsv['alpha'] ?? $hsv[3] ?? null);
 
         if($hue !== null && $saturation !== null && $brightness !== null) {
             return self::createHSV(
@@ -379,5 +377,57 @@ class ColorFactory
             ),
             self::ERROR_INVALID_HSV_COLOR_ARRAY
         );
+    }
+
+    private static function val2hue(int|float|ColorChannel|NULL $value) : ?HueChannel
+    {
+        if(is_numeric($value)) {
+            return ColorChannel::hue($value);
+        }
+
+        if($value instanceof HueChannel) {
+            return $value;
+        }
+
+        return null;
+    }
+
+    private static function val2saturation(int|float|ColorChannel|NULL $value) : ?SaturationChannel
+    {
+        if(is_numeric($value)) {
+            return ColorChannel::saturation($value);
+        }
+
+        if($value instanceof SaturationChannel) {
+            return $value;
+        }
+
+        return null;
+    }
+
+    private static function val2brightness(int|float|ColorChannel|NULL $value) : ?BrightnessChannel
+    {
+        if(is_numeric($value)) {
+            return ColorChannel::brightness($value);
+        }
+
+        if($value instanceof BrightnessChannel) {
+            return $value;
+        }
+
+        return null;
+    }
+
+    private static function val2alpha(int|float|ColorChannel|NULL $value) : ?AlphaChannel
+    {
+        if(is_numeric($value)) {
+            return ColorChannel::alpha($value);
+        }
+
+        if($value instanceof AlphaChannel) {
+            return $value;
+        }
+
+        return null;
     }
 }

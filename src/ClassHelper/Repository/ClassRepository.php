@@ -18,6 +18,10 @@ namespace AppUtils\ClassHelper\Repository;
 class ClassRepository
 {
     private string $id;
+
+    /**
+     * @var class-string[]
+     */
     private array $classes;
 
     /**
