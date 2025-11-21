@@ -6,11 +6,18 @@ interconnected and cannot be separated into their own packages.
 
 The larger project is [mistralys/application-utils](https://github.com/Mistralys/application-utils).
 
+## Requirements
+
+- PHP 8.4 or higher.
+- [Composer](https://getcomposer.org/) for installation and autoloading.
+- Extensions: `json`, `mbstring`, `curl`, `ctype`, `libxml`, `dom`, `gd`.
+
 ## Components
 
 ### PHP classes
 
 - `ClassHelper` - Static methods for class checking, loading and filtering.
+  - `ClassRepository` - Dynamic class loading and caching.
 - `PHPClassInfo` - Information about a PHP class without using reflection.
 
 ### File system
@@ -31,6 +38,7 @@ The larger project is [mistralys/application-utils](https://github.com/Mistralys
 ### Data structures
 
 - `ArrayDataCollection` - Type-safe associative array handling.
+  - `ArrayDataObservable` - Observable version of `ArrayDataCollection` to track changes.
 - `NumberInfo` - Parse numbers, access and manipulate their parts.
 - `URLInfo` - Parse and manipulate URLs.
 - `ThrowableInfo` - Extended `Throwable` information with serialization and unserialization.
@@ -77,6 +85,20 @@ The larger project is [mistralys/application-utils](https://github.com/Mistralys
 
 - `RGBAColor` - Class for RGB and alpha color handling and manipulation.
 - `HSVColor` - Class for HSV-based color handling and manipulation.
+
+## Companion libraries
+
+This package is part of a larger ecology of libraries, of which it is the core component.
+The following companion libraries are available:
+
+- [application-utils](https://github.com/Mistralys/application-utils) - The main package with the full feature set.
+- [application-utils-collections](https://github.com/Mistralys/application-utils-collections) - Interfaces, traits and classes for handling item collections or enums.
+- [application-utils-events](https://github.com/Mistralys/application-utils-events) - Library with event handling classes, interfaces and traits.
+- [application-utils-image](https://github.com/Mistralys/application-utils-image) - Image manipulation library for basic image operations and color management.
+- [application-utils-result-handling](https://github.com/Mistralys/application-utils-result-handling) - Classes used to store information on the results of application operations.
+- [application-framework](https://github.com/Mistralys/application-framework) - Application framework for building web applications.
+- [application-localization](https://github.com/Mistralys/application-localization) - Localization and internationalization library.
+- [application-datagrids](https://github.com/Mistralys/application-datagrids) - Object-oriented HTML table abstraction.
 
 ## Documentation
 
