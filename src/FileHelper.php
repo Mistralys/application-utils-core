@@ -891,20 +891,24 @@ class FileHelper
     }
 
     /**
-     * Normalizes a path by removing any dots (`.`) and double dots (`..`)
-     * from the path without accessing the file system.
+     * Normalizes a path by resolving dots (`.`) and double dots (`..`)
+     * in the path, without accessing the file system.
+     *
+     * > NOTE: Check if the target folder exists.
      *
      * @param string $path
      * @return string
      */
     public static function resolvePathDots(string $path): string
     {
-        $path = FileHelper::normalizePath($path);
-        $drive = '';
+        if(empty($path)) {
+            return '';
+        }
 
-        if(substr($path, 1, 1) === ':') {
-            $drive = substr($path, 0, 2);
-            $path = substr($path, 2);
+        $path = self::normalizePath($path);
+        $drive = self::detectWindowsDriveLetter($path);
+        if($drive !== null) {
+            $path = self::removeWindowsDriveLetter($path, $drive);
         }
 
         $segments = explode('/', $path);
@@ -924,11 +928,53 @@ class FileHelper
         $normalized = ($path[0] === '/' ? '/' : '');
         $normalized .= implode('/', $parts);
 
-        // Garde le slash final si présent dans l’original
-        if (str_ends_with($path, '/') && $normalized !== '') {
+        // Keep the ending slash if there was one
+        if ($normalized !== '' && str_ends_with($path, '/')) {
             $normalized = rtrim($normalized, '/').'/';
         }
 
-        return $drive.$normalized;
+        if($drive !== null) {
+            $normalized = $drive.':'.$normalized;
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * @param string|PathInfoInterface|SplFileInfo $path
+     * @return string|null
+     */
+    public static function detectWindowsDriveLetter(string|PathInfoInterface|SplFileInfo $path) : ?string
+    {
+        $path = (string)$path;
+
+        if(!str_contains($path, ':')) {
+            return null;
+        }
+
+        $parts = ConvertHelper::explodeTrim(':', $path);
+
+        $drive = strtolower(array_shift($parts));
+        if(strlen($drive) === 1 && ctype_alpha($drive)) {
+            return $drive;
+        }
+
+        return null;
+    }
+
+    public static function removeWindowsDriveLetter(string|PathInfoInterface|SplFileInfo $path, ?string $driveLetter=null) : string
+    {
+        if($driveLetter === null) {
+            $driveLetter = self::detectWindowsDriveLetter($path);
+        }
+
+        if ($driveLetter === null) {
+            return (string)$path;
+        }
+
+        $pathString = self::normalizePath(trim((string)$path));
+
+        // Account for the drive letter being lower- or uppercase
+        return substr($pathString, 2);
     }
 }
