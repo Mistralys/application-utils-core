@@ -436,4 +436,80 @@ class RequestHelper
     {
         return $this->headers[$name] ?? '';
     }
+
+    private static ?string $cachedBearerToken = null;
+
+    /**
+     * Checks the current request for a Bearer token
+     * in the Authorization header, and returns it
+     * if found.
+     *
+     * @return string|null
+     */
+    public static function getBearerToken() : ?string
+    {
+        if(!isset(self::$cachedBearerToken)) {
+            self::$cachedBearerToken = (string)self::detectBearerToken();
+        }
+
+        if(self::$cachedBearerToken !== '') {
+            return self::$cachedBearerToken;
+        }
+
+        return null;
+    }
+
+    private static function detectBearerToken() : ?string
+    {
+        // Try common ways to obtain request headers
+        $headers = [];
+
+        if (function_exists('getallheaders')) {
+            $headers = getallheaders();
+        } elseif (function_exists('apache_request_headers')) {
+            $headers = apache_request_headers();
+        }
+
+        $authHeader = null;
+
+        if (!empty($headers) && is_array($headers)) {
+            foreach ($headers as $name => $value) {
+                if (strtolower($name) === 'authorization') {
+                    $authHeader = $value;
+                    break;
+                }
+            }
+        }
+
+        // Fallback to server superglobal entries that may contain the header
+        if ($authHeader === null) {
+            $serverKeys = [
+                'HTTP_AUTHORIZATION',
+                'REDIRECT_HTTP_AUTHORIZATION',
+                'Authorization',
+            ];
+
+            foreach ($serverKeys as $key) {
+                if (!empty($_SERVER[$key])) {
+                    $authHeader = $_SERVER[$key];
+                    break;
+                }
+            }
+        }
+
+        if ($authHeader === null) {
+            return null;
+        }
+
+        // Expect a Bearer token: "Bearer <token>"
+        if (preg_match('/^\s*Bearer\s+(.+)$/i', $authHeader, $matches)) {
+            return trim($matches[1]);
+        }
+
+        return null;
+    }
+    public static function clearCache() : void
+    {
+        self::$cachedBearerToken = null;
+    }
 }
