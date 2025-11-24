@@ -1,3 +1,6 @@
+## v2.4.1 - RequestHelper improvement
+- RequestHelper: Added static `getBearerToken()` to fetch the bearer token from the request headers.
+
 ## v2.4.0 - PHP8.4 and ArrayDataCollection improvements (Deprecation)
 - Increased minimum PHP version to PHP8.4.
 - ArrayDataCollection: Added an observable collection variant to react to value changes.
