@@ -1,3 +1,6 @@
+## v2.4.2 - ArrayDataCollection improvements
+- ArrayDataCollection: Added more utility methods to `setArray()`.
+
 ## v2.4.1 - RequestHelper improvement
 - RequestHelper: Added static `getBearerToken()` to fetch the bearer token from the request headers.
 
