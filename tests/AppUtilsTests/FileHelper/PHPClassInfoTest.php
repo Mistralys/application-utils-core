@@ -224,13 +224,15 @@ final class PHPClassInfoTest extends TestCase
             return;
         }
 
-        $this->assetsFolder = realpath(__DIR__.'/../../assets/FileHelper/PHPClassInfo');
+        $folder = realpath(__DIR__.'/../../assets/FileHelper/PHPClassInfo');
 
-        if($this->assetsFolder === false) {
+        if($folder === false) {
             throw new InvalidArgumentException(
                 'The file helper assets folder could not be found.'
             );
         }
+
+        $this->assetsFolder = $folder;
     }
 
     /**

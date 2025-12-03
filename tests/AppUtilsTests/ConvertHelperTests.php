@@ -890,6 +890,9 @@ final class ConvertHelperTests extends BaseTestCase
     public function test_date2timestamp(): void
     {
         $timestamp = mktime(10, 15, 0, 2, 2, 2006);
+
+        $this->assertNotFalse($timestamp);
+
         $date = ConvertHelper::timestamp2date($timestamp);
 
         $back = ConvertHelper::date2timestamp($date);
@@ -1552,6 +1555,8 @@ final class ConvertHelperTests extends BaseTestCase
     {
         $string = file_get_contents($this->assetsFolder . '/ControlCharacters.txt');
 
+        $this->assertNotFalse($string);
+
         $result = ConvertHelper::stripControlCharacters($string);
 
         $this->assertEquals('SOHACKBELL', $result);
@@ -1563,6 +1568,8 @@ final class ConvertHelperTests extends BaseTestCase
     public function test_stripControlChars_brokenUTF8(): void
     {
         $string = file_get_contents($this->assetsFolder . '/ControlCharactersBrokenUTF8.txt');
+
+        $this->assertNotFalse($string);
 
         $result = ConvertHelper::stripControlCharacters($string);
 

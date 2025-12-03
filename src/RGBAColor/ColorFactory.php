@@ -29,7 +29,6 @@ use JsonException;
  */
 class ColorFactory
 {
-    public const int ERROR_INVALID_GD_ERROR_CODE = 113801;
     public const int ERROR_INVALID_HSV_COLOR_ARRAY = 113802;
 
     /**
@@ -289,26 +288,16 @@ class ColorFactory
      * @param GdImage $img
      * @param int $colorIndex
      * @return RGBAColor
-     * @throws ColorException
      */
     public static function createFromIndex(GdImage $img, int $colorIndex) : RGBAColor
     {
         $color = imagecolorsforindex($img, $colorIndex);
 
-        // it seems imagecolorsforindex() may return false (undocumented, unproven)
-        if(is_array($color)) {
-            return self::create(
-                ColorChannel::eightBit($color['red']),
-                ColorChannel::eightBit($color['green']),
-                ColorChannel::eightBit($color['blue']),
-                ColorChannel::sevenBit($color['alpha'])
-            );
-        }
-
-        throw new ColorException(
-            'Invalid color index',
-            '',
-            self::ERROR_INVALID_GD_ERROR_CODE
+        return self::create(
+            ColorChannel::eightBit($color['red']),
+            ColorChannel::eightBit($color['green']),
+            ColorChannel::eightBit($color['blue']),
+            ColorChannel::sevenBit($color['alpha'])
         );
     }
 

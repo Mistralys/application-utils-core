@@ -52,12 +52,12 @@ class DateTimeHelper
      * a human-readable string split in months, weeks,
      * days, hours, minutes and seconds.
      *
-     * @param float|int $seconds
+     * @param float|int|string $seconds
      * @return string
      */
-    public static function time2string($seconds) : string
+    public static function time2string(float|int|string $seconds) : string
     {
-        return (new TimeConverter($seconds))->toString();
+        return new TimeConverter($seconds)->toString();
     }
 
     /**

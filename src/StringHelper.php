@@ -237,7 +237,7 @@ class StringHelper
      *
      * @param string $str
      * @param int $width
-     * @param string $break
+     * @param non-empty-string $break
      * @param bool $cut
      * @return string
      */

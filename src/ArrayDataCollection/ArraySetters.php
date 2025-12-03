@@ -77,6 +77,10 @@ class ArraySetters
         return $this->setValue($array);
     }
 
+    /**
+     * @param array<int|string,mixed> $values
+     * @return ArrayDataCollection
+     */
     public function mergeWith(array $values) : ArrayDataCollection
     {
         return $this->setValue(array_merge(
@@ -85,6 +89,10 @@ class ArraySetters
         ));
     }
 
+    /**
+     * @param array<int|string,mixed> $values
+     * @return ArrayDataCollection
+     */
     public function replaceWith(array $values) : ArrayDataCollection
     {
         return $this->setValue($values);

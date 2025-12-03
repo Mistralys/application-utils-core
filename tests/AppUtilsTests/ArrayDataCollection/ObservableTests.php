@@ -217,9 +217,21 @@ final class ObservableTests extends BaseTestCase
 
     // region: Support methods
 
+    /**
+     * @var string[]
+     */
     private array $removedKeys = array();
+
+    /**
+     * @var string[]
+     */
     private array $addedKeys = array();
+
+    /**
+     * @var array<string,array{old: mixed, new: mixed}>
+     */
     private array $changedKeys = array();
+
     private bool $collectionChanged = false;
 
     private function callback_keyRemoved(ArrayDataObservable $collection, string $name) : void
@@ -227,12 +239,12 @@ final class ObservableTests extends BaseTestCase
         $this->removedKeys[] = $name;
     }
 
-    private function callback_keyAdded(ArrayDataObservable $collection, string $name, $value) : void
+    private function callback_keyAdded(ArrayDataObservable $collection, string $name, mixed $value) : void
     {
         $this->addedKeys[$name] = $value;
     }
 
-    private function callback_keyChanged(ArrayDataObservable $collection, string $name, $oldValue, $newValue) : void
+    private function callback_keyChanged(ArrayDataObservable $collection, string $name, mixed $oldValue, mixed $newValue) : void
     {
         $this->changedKeys[$name] = array(
             'old' => $oldValue,
@@ -263,7 +275,7 @@ final class ObservableTests extends BaseTestCase
         ));
     }
 
-    private function assertKeyChangeTriggered(string $name, $oldValue, $newValue) : void
+    private function assertKeyChangeTriggered(string $name, mixed $oldValue, mixed $newValue) : void
     {
         $this->assertArrayHasKey($name, $this->changedKeys, sprintf(
             'The key [%s] was not changed as expected.',
@@ -281,7 +293,7 @@ final class ObservableTests extends BaseTestCase
         ));
     }
 
-    private function assertKeyAddedTriggered(string $name, $value) : void
+    private function assertKeyAddedTriggered(string $name, mixed $value) : void
     {
         $this->assertArrayHasKey($name, $this->addedKeys, sprintf(
             'The key [%s] was not added as expected.',
@@ -310,6 +322,10 @@ final class ObservableTests extends BaseTestCase
         ));
     }
 
+    /**
+     * @param string[] $names
+     * @return void
+     */
     private function assertKeysRemovedTriggered(array $names) : void
     {
         foreach($names as $name) {
@@ -317,6 +333,10 @@ final class ObservableTests extends BaseTestCase
         }
     }
 
+    /**
+     * @param array<int|string,mixed> $data
+     * @return ArrayDataObservable
+     */
     private function createCollection(array $data=array()) : ArrayDataObservable
     {
         $collection = new ArrayDataObservable($data);

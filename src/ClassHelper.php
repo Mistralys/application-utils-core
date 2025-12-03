@@ -102,7 +102,7 @@ class ClassHelper
     /**
      * Throws an exception if the target class cannot be found.
      *
-     * @param class-string $className
+     * @param class-string|string $className
      * @return void
      * @throws ClassNotExistsException
      */

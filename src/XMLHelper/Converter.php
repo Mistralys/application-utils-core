@@ -1,11 +1,10 @@
 <?php
 /**
- * File containing the {@link XMLHelper_Converter} class.
- * 
  * @package Application Utils
  * @subpackage XMLHelper
- * @see XMLHelper_Converter
  */
+
+declare(strict_types=1);
 
 namespace AppUtils;
 
@@ -45,16 +44,12 @@ use SimpleXMLElement;
  */
 class XMLHelper_Converter
 {
-    public const ERROR_FAILED_CONVERTING_TO_JSON = 37901;
-    public const ERROR_CANNOT_CREATE_ELEMENT_FROM_STRING = 37902;
-    public const ERROR_FAILED_CONVERTING_TO_ARRAY = 37902;
+    public const int ERROR_FAILED_CONVERTING_TO_JSON = 37901;
+    public const int ERROR_CANNOT_CREATE_ELEMENT_FROM_STRING = 37902;
+    public const int ERROR_FAILED_CONVERTING_TO_ARRAY = 37902;
     
-    protected SimpleXMLElement $xml;
-    
-   /**
-    * @var string|NULL
-    */
-    protected ?string $json;
+    private SimpleXMLElement $xml;
+    private ?string $json = null;
     
     protected function __construct(SimpleXMLElement $element)
     {
@@ -152,7 +147,7 @@ class XMLHelper_Converter
                     '-----------------------------------------------------------'.
                     '%s'.PHP_EOL.
                     '-----------------------------------------------------------',
-                    ConvertHelper::text_cut($this->xml, 300)
+                    ConvertHelper::text_cut((string)$this->xml, 300)
                 ),
                 self::ERROR_FAILED_CONVERTING_TO_JSON,
                 $e
@@ -162,7 +157,7 @@ class XMLHelper_Converter
 
     /**
      * Converts the XML to an associative array.
-     * @return array<mixed>
+     * @return array<int|string,mixed>
      *
      * @throws XMLHelper_Exception
      */

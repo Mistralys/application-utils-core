@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the class {@see FormatsConverter}.
- *
- * @see FormatsConverter
- *@subpackage RGBAColor
  * @package AppUtils
+ * @subpackage RGBAColor
  */
 
 declare(strict_types=1);
@@ -25,7 +22,7 @@ use function AppUtils\parseVariable;
  */
 class FormatsConverter
 {
-    public const ERROR_INVALID_COLOR_ARRAY = 99701;
+    public const int ERROR_INVALID_COLOR_ARRAY = 99701;
 
     private static ?HEXParser $hexParser = null;
 
@@ -89,7 +86,7 @@ class FormatsConverter
     /**
      * Checks if the array is a valid color array with
      * all expected color keys present. The `alpha` key
-     * is optional. If it's not valid, throws an exception.
+     * is optional. If it's not valid, an exception is thrown.
      *
      * @param array<string|int,int|float> $color
      * @throws ColorException
@@ -129,15 +126,7 @@ class FormatsConverter
             RGBAColor::CHANNEL_BLUE
         );
 
-        foreach($keys as $key)
-        {
-            if(!isset($color[$key]))
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return array_all($keys, fn($key) => isset($color[$key]));
     }
 
     /**
@@ -225,14 +214,19 @@ class FormatsConverter
      * array. Works with indexed color arrays, as well
      * as arrays that are already associative.
      *
-     * Expects the color values to always be in the same order:
+     * In the case of an indexed array, it expects the
+     * color values to always be in the same order:
      *
-     * - red
-     * - green
-     * - blue
-     * - alpha (optional)
+     * 1. red
+     * 2. green
+     * 3. blue
+     * 4. alpha (optional)
      *
-     * @param array<int|string,int|float> $color
+     * > NOTE: Associative keys will be reordered
+     * > systematically to guarantee the same order
+     * > every time.
+     *
+     * @param array<int|string,int|float|string> $color
      * @return array<string,int|float>
      *
      * @throws ColorException
@@ -240,21 +234,14 @@ class FormatsConverter
      */
     public static function array2associative(array $color) : array
     {
-        // If one associative key is present, we assume
-        // that the color array is already correct.
-        if(isset($color[RGBAColor::CHANNEL_RED]))
-        {
-            return $color;
-        }
-
-        $values = array_values($color);
+        $values = self::array2indexed($color);
         $result = array();
 
         foreach(self::$keys as $idx => $def)
         {
             if(isset($values[$idx]))
             {
-                $result[$def['key']] = $values[$idx];
+                $result[(string)$def['key']] = $values[$idx];
                 continue;
             }
 
@@ -275,6 +262,53 @@ class FormatsConverter
         }
 
         return $result;
+    }
+
+    /**
+     * Converts a color array to an indexed color array.
+     * Works with associative color arrays, as well
+     * as arrays that are already indexed.
+     *
+     * It expects the color values to always be in the
+     * same order:
+     *
+     *  1. red
+     *  2. green
+     *  3. blue
+     *  4. alpha (optional)
+     *
+     * > NOTE: If the array contains a mix of both indexed
+     * > and associative keys, the values found under
+     * > associative keys take precedence.
+     *
+     * @param array<int|string,float|int|string> $color
+     * @return array<int,int|float>
+     */
+    public static function array2indexed(array $color) : array
+    {
+        $values = array();
+
+        foreach(self::$keys as $idx => $def)
+        {
+            $value = 0;
+
+            if(isset($color[$def['key']])) {
+                $value = $color[$def['key']];
+            }
+            else if(isset($color[$idx])) {
+                $value = $color[$idx];
+            }
+
+            if(is_numeric($value)) {
+                $value = $value * 1;
+            } else {
+                $value = 0;
+            }
+
+            $values[$idx] = $value;
+        }
+
+        return $values;
     }
 
     /**
@@ -306,7 +340,7 @@ class FormatsConverter
         // Special case if hueless (equal parts RGB make black, white, or grays)
         // Note that Hue is technically undefined when chroma is zero, as
         // attempting to calculate it would cause division by zero (see
-        // below), so most applications simply substitute a Hue of zero.
+        // below). Due to this, most applications simply substitute a Hue of zero.
         // Saturation will always be zero in this case, see below for details.
         if ($chroma <= 0)
         {

@@ -16,5 +16,6 @@ use AppUtils\BaseException;
  */
 class DateTimeException extends BaseException
 {
-    public const ERROR_OPERATION_DENIED_ON_INVALID_DAYTIME = 171801;
+    public const int ERROR_OPERATION_DENIED_ON_INVALID_DAYTIME = 171801;
+    public const int ERROR_INVALID_STRING_TIME_VALUE = 171802;
 }

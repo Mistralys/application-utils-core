@@ -9,6 +9,7 @@ namespace AppUtils\Traits;
 
 use AppUtils\Interfaces\OptionableInterface;
 use AppUtils\Traits\OptionableTrait\ArrayAdvancedOption;
+use AppUtils\Traits\OptionableTrait\OptionableException;
 
 /**
  * Trait for adding options to a class: allows setting
@@ -99,6 +100,34 @@ trait OptionableTrait
         }
 
         return $default;
+    }
+
+    /**
+     * Like {@see self::getStringOption()}, but guarantees
+     * that the returned string is non-empty. An exception
+     * is thrown if the option is empty or invalid.
+     *
+     * @param string $name
+     * @param string $default
+     * @return non-empty-string
+     *
+     * @throws OptionableException {@see OptionableException::ERROR_INVALID_OPTION_VALUE}
+     */
+    public function getStringOptionNE(string $name, string $default='') : string
+    {
+        $value = $this->getStringOption($name, $default);
+        if(!empty($value)) {
+            return $value;
+        }
+
+        throw new OptionableException(
+            'Option must be a non-empty string.',
+            sprintf(
+                'The option "%s" is not a non-empty string.',
+                $name
+            ),
+            OptionableException::ERROR_INVALID_OPTION_VALUE
+        );
     }
 
     /**

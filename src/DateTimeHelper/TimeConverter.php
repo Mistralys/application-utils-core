@@ -33,10 +33,21 @@ class TimeConverter
     private static ?array $units = null;
     
    /**
-    * @param float|int $seconds
+    * @param float|int|string $seconds
     */
-    public function __construct($seconds)
+    public function __construct(float|int|string $seconds)
     {
+        if(!is_numeric($seconds)) {
+            throw new DateTimeException(
+                'Invalid time value.',
+                sprintf(
+                    'The string [%s] is not a valid numeric value.',
+                    $seconds
+                ),
+                DateTimeException::ERROR_INVALID_STRING_TIME_VALUE
+            );
+        }
+
         $this->seconds = (float)$seconds;
         
         $this->initUnits();
@@ -130,7 +141,7 @@ class TimeConverter
                 continue;
             }
             
-            $item = strval($unitValue) . ' ';
+            $item = $unitValue . ' ';
             
             if(abs($unitValue) > 1)
             {

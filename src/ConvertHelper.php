@@ -13,7 +13,6 @@ use AppUtils\StringHelper\WordSplitter;
 use AppUtils\DateTimeHelper\IntervalConverter;
 use AppUtils\DateTimeHelper\DateIntervalExtended;
 use AppUtils\DateTimeHelper\DurationConverter;
-use AppUtils\DateTimeHelper\TimeConverter;
 use AppUtils\StringHelper\TextComparer;
 use AppUtils\StringHelper\StringMatch;
 use DateInterval;
@@ -31,12 +30,12 @@ use Throwable;
  */
 class ConvertHelper
 {
-    public const ERROR_MONTHTOSTRING_NOT_VALID_MONTH_NUMBER = 23303;
-    public const ERROR_CANNOT_NORMALIZE_NON_SCALAR_VALUE = 23304;
-    public const ERROR_JSON_ENCODE_FAILED = 23305;
-    public const ERROR_JSON_DECODE_FAILED = 23307;
-    public const ERROR_JSON_UNEXPECTED_DECODED_TYPE = 23308;
-    public const ERROR_INVALID_BOOLEAN_STRING = 23306;
+    public const int ERROR_MONTHTOSTRING_NOT_VALID_MONTH_NUMBER = 23303;
+    public const int ERROR_CANNOT_NORMALIZE_NON_SCALAR_VALUE = 23304;
+    public const int ERROR_JSON_ENCODE_FAILED = 23305;
+    public const int ERROR_JSON_DECODE_FAILED = 23307;
+    public const int ERROR_JSON_UNEXPECTED_DECODED_TYPE = 23308;
+    public const int ERROR_INVALID_BOOLEAN_STRING = 23306;
 
     /**
      * @deprecated Use {@see DateIntervalExtended::INTERVAL_DAYS} instead.
@@ -114,10 +113,10 @@ class ConvertHelper
     * a human-readable string split in months, weeks,
     * days, hours, minutes and seconds.
     *
-    * @param float|int $seconds
+    * @param float|int|string $seconds
     * @return string
     */
-    public static function time2string($seconds) : string
+    public static function time2string(float|int|string $seconds) : string
     {
         return DateTimeHelper::time2string($seconds);
     }
@@ -1036,12 +1035,12 @@ class ConvertHelper
     
    /**
     * UTF8-safe wordwrap method: works like the regular wordwrap
-    * PHP function but compatible with UTF8. Otherwise the lengths
+    * PHP function but compatible with UTF8. Otherwise, the lengths
     * are not calculated correctly.
     * 
     * @param string $str
     * @param int $width
-    * @param string $break
+    * @param non-empty-string $break
     * @param bool $cut
     * @return string
     */

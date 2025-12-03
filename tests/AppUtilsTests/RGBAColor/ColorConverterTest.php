@@ -6,6 +6,7 @@ namespace AppUtilsTests\RGBAColor;
 
 use AppUtils\RGBAColor;
 use AppUtils\RGBAColor\ColorFactory;
+use AppUtils\RGBAColor\FormatsConverter;
 use AppUtils\RGBAColor\UnitsConverter;
 use AppUtilsTestClasses\BaseTestCase;
 
@@ -85,5 +86,67 @@ class ColorConverterTest extends BaseTestCase
         $this->assertSame(127, UnitsConverter::alpha2IntSevenBit(1));
         $this->assertSame(0, UnitsConverter::alpha2IntSevenBit(0));
         $this->assertSame(64, UnitsConverter::alpha2IntSevenBit(0.5));
+    }
+
+    public function test_array2associativeFromIndexedColorArray() : void
+    {
+        $this->assertSame(
+            array(
+                'red' => 204,
+                'green' => 204,
+                'blue' => 204,
+                'alpha' => 1.0,
+            ),
+            FormatsConverter::array2associative(
+                array(
+                    204,
+                    204,
+                    204,
+                    1.0
+                )
+            )
+        );
+    }
+
+    public function test_array2associativeFromAssociativeArray() : void
+    {
+        $this->assertSame(
+            array(
+                'red' => 204,
+                'green' => 204,
+                'blue' => 204,
+                'alpha' => 1.0,
+            ),
+            FormatsConverter::array2associative(
+                array(
+                    'alpha' => 1.0,
+                    'blue' => 204,
+                    'red' => 204,
+                    'green' => 204,
+                )
+            ),
+            'The array keys should be present and reordered correctly.'
+        );
+    }
+
+    public function test_array2associativeFromStringValuesArray() : void
+    {
+        $this->assertSame(
+            array(
+                'red' => 204,
+                'green' => 204,
+                'blue' => 204,
+                'alpha' => 0.48,
+            ),
+            FormatsConverter::array2associative(
+                array(
+                    '204',
+                    '204',
+                    '204',
+                    '0.48'
+                )
+            ),
+            'The string values should be converted to proper types.'
+        );
     }
 }

@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the {@see \AppUtils\StringHelper\WordWrapper} class.
- * 
  * @package Application Utils
  * @subpackage StringHelper
- * @see \AppUtils\StringHelper\WordWrapper
  */
 
 declare(strict_types=1);
@@ -39,7 +36,7 @@ class WordWrapper implements OptionableInterface
         );
     }
     
-    public function setLineWidth(int $width) : WordWrapper
+    public function setLineWidth(int $width) : self
     {
         $this->setOption('width', $width);
         return $this;
@@ -49,16 +46,32 @@ class WordWrapper implements OptionableInterface
     {
         return $this->getIntOption('width');
     }
-    
-    public function setBreakCharacter(string $char) : WordWrapper
+
+    /**
+     * @param non-empty-string $char Must be a non-empty string.
+     * @return $this
+     * @throws StringHelperException {@see StringHelperException::ERROR_INVALID_BREAK_CHARACTER}
+     */
+    public function setBreakCharacter(string $char) : self
     {
+        if(empty($char)) {
+            throw new StringHelperException(
+                'The break character cannot be an empty string.',
+                '',
+                StringHelperException::ERROR_INVALID_BREAK_CHARACTER
+            );
+        }
+
         $this->setOption('break', $char);
         return $this;
     }
-    
+
+    /**
+     * @return non-empty-string
+     */
     public function getBreakCharacter() : string
     {
-        return $this->getStringOption('break');
+        return $this->getStringOptionNE('break');
     }
     
     public function isCuttingEnabled() : bool
@@ -66,7 +79,7 @@ class WordWrapper implements OptionableInterface
         return $this->getBoolOption('cut');
     }
     
-    public function setCuttingEnabled(bool $enabled=true) : WordWrapper
+    public function setCuttingEnabled(bool $enabled=true) : self
     {
         $this->setOption('cut', $enabled);
         return $this;
