@@ -4,7 +4,7 @@ Core classes and interfaces for the Application Utils ecology of libraries.
 This package contains all most low-level classes and interfaces that are
 interconnected and cannot be separated into their own packages.
 
-The larger project is [mistralys/application-utils](https://github.com/Mistralys/application-utils).
+See [companion libraries](#companion-libraries) for related tools.
 
 ## Requirements
 
@@ -39,7 +39,7 @@ The larger project is [mistralys/application-utils](https://github.com/Mistralys
 
 - `ArrayDataCollection` - Type-safe associative array handling.
   - `ArrayDataObservable` - Observable version of `ArrayDataCollection` to track changes.
-- `NumberInfo` - Parse numbers, access and manipulate their parts.
+- `NumberInfo` - Parse numbers, access and manipulate units and component parts.
 - `URLInfo` - Parse and manipulate URLs.
 - `ThrowableInfo` - Extended `Throwable` information with serialization and unserialization.
 - `VariableInfo` - Extended information on any PHP variable.
