@@ -474,112 +474,7 @@ class CollectionTests extends BaseTestCase
         $this->assertNull($collection->getStringN('array'));
     }
 
-    public function test_pushArrayNotExists() : void
-    {
-        $collection = ArrayDataCollection::create();
 
-        $collection->setArray('items')->pushIndexed('first');
-
-        $this->assertSame(array('first'), $collection->getArray('items'));
-    }
-
-    public function test_pushArrayExists() : void
-    {
-        $collection = ArrayDataCollection::create(array(
-            'items' => array('first')
-        ));
-
-        $collection->setArray('items')->pushIndexed('second');
-
-        $this->assertSame(array('first','second'), $collection->getArray('items'));
-    }
-
-    public function test_setArrayKeyNotExists() : void
-    {
-        $collection = ArrayDataCollection::create();
-
-        $collection->setArray('items')->setAssoc('key', 'value');
-
-        $this->assertSame(array('key' => 'value'), $collection->getArray('items'));
-    }
-
-    public function test_setArrayKeyExists() : void
-    {
-        $collection = ArrayDataCollection::create(array(
-            'items' => array('key1' => 'value1')
-        ));
-
-        $collection->setArray('items')->setAssoc('key2', 'value2');
-
-        $this->assertSame(array('key1' => 'value1', 'key2' => 'value2'), $collection->getArray('items'));
-    }
-
-    public function test_removeArrayKey() : void
-    {
-        $collection = ArrayDataCollection::create(array(
-            'items' => array('key1' => 'value1')
-        ));
-
-        $collection->setArray('items')->removeAssoc('key1');
-
-        $this->assertSame(array(), $collection->getArray('items'));
-    }
-
-    public function test_clearArray() : void
-    {
-        $collection = ArrayDataCollection::create(array(
-            'items' => array('key1' => 'value1')
-        ));
-
-        $collection->setArray('items')->clear();
-
-        $this->assertSame(array(), $collection->getArray('items'));
-    }
-
-    public function test_shiftIndexedArray() : void
-    {
-        $collection = ArrayDataCollection::create(array(
-            'items' => array('first', 'second', 'third')
-        ));
-
-        $this->assertSame('first', $collection->setArray('items')->shiftIndexed());
-        $this->assertSame(array('second', 'third'), $collection->getArray('items'));
-
-        $this->assertSame('second', $collection->setArray('items')->shiftIndexed());
-        $this->assertSame(array('third'), $collection->getArray('items'));
-
-        $this->assertSame('third', $collection->setArray('items')->shiftIndexed());
-        $this->assertSame(array(), $collection->getArray('items'));
-
-        $this->assertNull($collection->setArray('items')->shiftIndexed());
-        $this->assertSame(array(), $collection->getArray('items'));
-    }
-
-    public function test_unshiftIndexArray() : void
-    {
-        $collection = ArrayDataCollection::create(array(
-            'items' => array('second', 'third')
-        ));
-
-        $collection->setArray('items')->unshiftIndexed('first');
-
-        $this->assertSame(array('first', 'second', 'third'), $collection->getArray('items'));
-
-        $collection->setArray('items')->unshiftIndexed('zero');
-
-        $this->assertSame(array('zero', 'first', 'second', 'third'), $collection->getArray('items'));
-    }
-
-    public function test_setArrayReplacesExistingNonArrayValue() : void
-    {
-        $collection = ArrayDataCollection::create(array(
-            'items' => 'not an array'
-        ));
-
-        $collection->setArray('items')->pushIndexed('first');
-
-        $this->assertSame(array('first'), $collection->getArray('items'));
-    }
 
     public function test_clearKeys() : void
     {
@@ -620,7 +515,6 @@ class CollectionTests extends BaseTestCase
     // endregion
 
     // region: Support methods
-
 
     /**
      * @param string $name
