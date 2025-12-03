@@ -62,17 +62,39 @@ class ArraySetters
      * Pushes an entry to the end of the array.
      *
      * > WARNING: Does not check the type of the
-     * > array. Assumes that the target array is
-     * > an indexed array.
+     * > array. It is assumed that the target array
+     * > is an indexed array.
      *
-     * @param string|int|float|bool|array<int|string,mixed>|NULL $value
+     * @param mixed $value
      * @return ArrayDataCollection
      */
-    public function pushIndexed($value) : ArrayDataCollection
+    public function pushIndexed(mixed $value) : ArrayDataCollection
     {
         $array = $this->getArray();
 
         $array[] = $value;
+
+        return $this->setValue($array);
+    }
+
+    public function mergeWith(array $values) : ArrayDataCollection
+    {
+        return $this->setValue(array_merge(
+            $this->getArray(),
+            $values
+        ));
+    }
+
+    public function replaceWith(array $values) : ArrayDataCollection
+    {
+        return $this->setValue($values);
+    }
+
+    public function setIndex(int $index, mixed $value) : ArrayDataCollection
+    {
+        $array = $this->getArray();
+
+        $array[$index] = $value;
 
         return $this->setValue($array);
     }
@@ -83,12 +105,12 @@ class ArraySetters
      * Has no effect if the array is empty.
      *
      * > WARNING: Does not check the type of the
-     * > array. Assumes that the target array is
-     * > an indexed array.
+     * > array. It is assumed that the target array
+     * > is an indexed array.
      *
      * @return mixed
      */
-    public function shiftIndexed()
+    public function shiftIndexed() : mixed
     {
         $array = $this->getArray();
         $return = null;
@@ -105,13 +127,13 @@ class ArraySetters
      * Prepends an entry to the start of the array.
      *
      * > WARNING: Does not check the type of the
-     * > array. Assumes that the target array is
-     * > an indexed array.
+     * > array. It is assumed that the target array
+     * > is an indexed array.
      *
-     * @param string|int|float|bool|array<int|string,mixed>|NULL $value
+     * @param mixed $value
      * @return ArrayDataCollection
      */
-    public function unshiftIndexed($value) : ArrayDataCollection
+    public function unshiftIndexed(mixed $value) : ArrayDataCollection
     {
         $array = $this->getArray();
 
@@ -124,10 +146,10 @@ class ArraySetters
      * Sets an associative array value of an array key.
      *
      * @param string $key The array key to set.
-     * @param string|int|float|bool|array<int|string,mixed>|NULL $value
+     * @param mixed $value
      * @return ArrayDataCollection
      */
-    public function setAssoc(string $key, $value) : ArrayDataCollection
+    public function setAssoc(string $key, mixed $value) : ArrayDataCollection
     {
         $array = $this->getArray();
         $array[$key] = $value;
@@ -143,7 +165,30 @@ class ArraySetters
     public function removeAssoc(string $key) : ArrayDataCollection
     {
         $array = $this->getArray();
-        unset($array[$key]);
+
+        if(array_key_exists($key, $array)) {
+            unset($array[$key]);
+            $this->setValue($array);
+        }
+
+        return $this->collection;
+    }
+
+    public function sortKeys(?callable $sortCallback=null) : ArrayDataCollection
+    {
+        $array = $this->getArray();
+
+        if($sortCallback !== null) {
+            uksort($array, $sortCallback);
+        } else {
+            ksort($array);
+        }
+
         return $this->setValue($array);
+    }
+
+    public function sortKeysNatCase() : ArrayDataCollection
+    {
+        return $this->sortKeys('strnatcasecmp');
     }
 }
