@@ -41,7 +41,8 @@
     "ext-ctype": "*",
     "ext-libxml": "*",
     "ext-dom": "*",
-    "ext-gd": "*"
+    "ext-gd": "*",
+    "ext-simplexml": "*"
   },
   "require-dev" :
   {
