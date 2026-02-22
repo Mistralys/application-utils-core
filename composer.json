@@ -53,5 +53,10 @@
   "suggest" :
   {
     "mistralys/application-localization" : "Required to translate available texts, from date related methods or file size labels for example."
+  },
+  "scripts" :
+  {
+    "analyze" : "phpstan analyse -c tests/phpstan/phpstan.neon",
+    "test" : "phpunit --configuration phpunit.xml"
   }
 }

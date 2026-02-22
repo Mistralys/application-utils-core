@@ -1,6 +1,7 @@
 parameters:
     bootstrapFiles:
         - ./constants.php
+    level: 7
     dynamicConstantNames:
         - APP_UTILS_TESTSUITE
     paths:
