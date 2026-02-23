@@ -8,4 +8,5 @@ use AppUtils\BaseException;
 
 class HighlighterException extends BaseException
 {
+    public const ERROR_UNKNOWN_LANGUAGE = 145001;
 }
