@@ -31,63 +31,45 @@ application-utils-core/
 │   │                           parseInterval(), sb(), attr(), t(),
 │   │                           array_remove_values(), init()
 │   │
-│   ├── BaseException.php       Base exception class for the whole library
-│   ├── ClassHelper.php         Static class reflection and loading utilities
-│   ├── ConvertHelper.php       Static string/data conversion utilities (legacy facade)
-│   ├── DateTimeHelper.php      Static date/time utilities
-│   ├── FileHelper.php          Static file system utilities (facade over FileInfo/FolderInfo)
-│   ├── Highlighter.php         GeSHi-backed syntax highlighter
-│   ├── HTMLHelper.php          Static HTML markup utilities
-│   ├── HTMLTag.php             OO HTML tag builder
-│   ├── HSVColor.php            HSV color value object
-│   ├── JSHelper.php            JavaScript generation utilities
-│   ├── Microtime.php           DateTime subclass with microsecond/nanosecond precision
-│   ├── NamedClosure.php        Closure wrapper with a human-readable name
-│   ├── NumberInfo.php          Mutable number+unit value object
-│   ├── OutputBuffering.php     Static OO wrapper around PHP output buffering
-│   ├── RegexHelper.php         Regex utility methods and pattern constants
-│   ├── RequestHelper.php       HTTP multipart POST request builder/sender via cURL
-│   ├── RGBAColor.php           RGBA color value object
-│   ├── StringBuilder.php       Fluent string building with HTML helpers
-│   ├── StringHelper.php        Static string manipulation utilities
-│   ├── StyleCollection.php     OO CSS inline-style builder (fluent)
-│   ├── AttributeCollection.php OO HTML attribute builder (fluent)
-│   ├── ThrowableInfo.php       Extended Throwable wrapper with serialization
-│   ├── Transliteration.php     ASCII transliteration for strings
-│   ├── URLInfo.php             URL parser and inspector value object
-│   ├── VariableInfo.php        PHP variable introspection value object
-│   ├── XMLHelper.php           XML formatting and conversion utilities
-│   │
-│   ├── ArrayDataCollection/    Support classes for ArrayDataCollection
+│   ├── ArrayDataCollection/    ArrayDataCollection module
+│   │   ├── ArrayDataCollection.php       Type-safe associative array collection
 │   │   ├── ArrayDataCollectionException.php
-│   │   ├── ArrayDataObservable.php   Observable variant (change listeners)
-│   │   ├── ArrayFlavors.php          Array filtering/conversion options builder
-│   │   └── ArraySetters.php          Helper for modifying array-type keys
-│   ├── ArrayDataCollection.php       Type-safe associative array collection
+│   │   ├── ArrayDataObservable.php       Observable variant (change listeners)
+│   │   ├── ArrayFlavors.php              Array filtering/conversion options builder
+│   │   └── ArraySetters.php              Helper for modifying array-type keys
 │   │
-│   ├── AttributeCollection/    (reserved for future AttributeCollection sub-classes)
+│   ├── AttributeCollection/    HTML attribute builder module
+│   │   ├── AttributeCollection.php   OO HTML attribute builder (fluent)
+│   │   ├── AttributesRenderer.php
+│   │   └── Filtering.php
 │   │
-│   ├── ClassHelper/            ClassHelper support classes
+│   ├── ClassHelper/            ClassHelper module (static class reflection and loading)
+│   │   ├── ClassHelper.php         Static class reflection and loading utilities
 │   │   ├── BaseClassHelperException.php
 │   │   ├── ClassLoaderNotFoundException.php
 │   │   ├── ClassNotExistsException.php
 │   │   ├── ClassNotImplementsException.php
-│   │   └── Repository/         ClassRepository and ClassRepositoryManager
+│   │   └── Repository/             ClassRepository and ClassRepositoryManager
 │   │
-│   ├── ConvertHelper/          ConvertHelper sub-utilities
-│   │   ├── Array.php           Array conversion helpers
-│   │   ├── Bool.php            Boolean conversion helpers
-│   │   ├── ByteConverter.php   Byte ↔ human-readable size conversion
-│   │   ├── Comparator.php      String comparison
-│   │   ├── ControlCharacters.php  Control character utilities
-│   │   ├── EOL.php             End-of-line detection and normalization
+│   ├── ConvertHelper/          String/data conversion utilities
+│   │   ├── ConvertHelper.php       Static string/data conversion utilities (legacy facade)
+│   │   ├── Array.php               Array conversion helpers
+│   │   ├── Bool.php                Boolean conversion helpers
+│   │   ├── ByteConverter.php       Byte ↔ human-readable size conversion
+│   │   ├── Comparator.php          String comparison
+│   │   ├── ControlCharacters.php   Control character utilities
+│   │   ├── EOL.php                 End-of-line detection and normalization
 │   │   ├── Exception.php
-│   │   ├── JSONConverter/      JSON encode/decode helpers
-│   │   ├── SizeNotation.php    Human-readable size notation parser
-│   │   ├── StorageSizeEnum/    Storage size unit enumeration
-│   │   └── URLFinder/          URL detection in plain text
+│   │   ├── JSONConverter.php
+│   │   ├── JSONConverter/          JSON encode/decode helpers
+│   │   ├── SizeNotation.php        Human-readable size notation parser
+│   │   ├── StorageSizeEnum.php
+│   │   ├── StorageSizeEnum/        Storage size unit enumeration
+│   │   ├── URLFinder.php
+│   │   └── URLFinder/              URL detection in plain text
 │   │
-│   ├── DateTimeHelper/         DateTime sub-utilities
+│   ├── DateTimeHelper/         DateTime utilities module
+│   │   ├── DateTimeHelper.php      Static date/time utilities
 │   │   ├── DateIntervalExtended.php  QoL wrapper for DateInterval
 │   │   ├── DateTimeException.php
 │   │   ├── DaytimeStringInfo.php     Parses/validates "HH:MM" daytime strings
@@ -97,39 +79,55 @@ application-utils-core/
 │   │   ├── TimeConverter.php         Time unit conversion
 │   │   └── TimeDurationCalculator.php  Start/end/duration calculator
 │   │
-│   ├── FileHelper/             File system sub-classes
-│   │   ├── AbstractPathInfo.php      Shared base for FileInfo / FolderInfo
-│   │   ├── CLICommandChecker.php     CLI tool availability check
-│   │   ├── Exception.php
-│   │   ├── FileDownloader.php        HTTP file download helper
-│   │   ├── FileFinder/               File search/filter engine
-│   │   ├── FileFinder.php
-│   │   ├── FileInfo/                 FileInfo sub-classes (LineReader, FileSender, etc.)
-│   │   ├── FileInfo.php              File information and manipulation object
-│   │   ├── FileInfoInterface.php
-│   │   ├── FolderFinder.php          Folder search/filter engine
-│   │   ├── FolderInfo/               FolderInfo sub-classes (FileCreator, etc.)
-│   │   ├── FolderInfo.php            Folder information and manipulation object
-│   │   ├── FolderInfoInterface.php
-│   │   ├── FolderTree.php            Whole folder-tree manipulation (copy, delete)
-│   │   ├── IndeterminatePath.php     Path that may be a file or folder
-│   │   ├── JSONFile/                 JSON file sub-classes
-│   │   ├── JSONFile.php              Specialized JSON file handler
-│   │   ├── MimeTypes.php             MIME type database and helpers
-│   │   ├── MimeTypesEnum.php         Enum of known MIME types
-│   │   ├── PathInfoInterface.php     Common interface for path info objects
-│   │   ├── PathRelativizer.php       Relativize two paths against each other
-│   │   ├── PathsReducer.php          Reduce a list of paths to shortest form
-│   │   ├── PHPClassInfo/             PHP class metadata parsing (no reflection)
-│   │   ├── PHPClassInfo.php
-│   │   ├── PHPFile.php               Specialized PHP file handler
-│   │   ├── SerializedFile.php        Specialized serialize()-based file handler
-│   │   ├── UnicodeHandling.php       Unicode file content helpers
-│   │   └── UploadFileSizeInfo.php    PHP upload limits helper
+│   ├── Exceptions/             Shared exception base classes
+│   │   └── BaseException.php       Base exception class for the whole library
 │   │
-│   ├── Highlighter/            Highlighter support (language configs, etc.)
-│   ├── HTMLHelper/             HTMLHelper support classes
-│   ├── HTMLTag/                HTMLTag sub-classes (GlobalOptions, etc.)
+│   ├── FileHelper/             File system utilities module
+│   │   ├── FileHelper.php          Static file system utilities (facade over FileInfo/FolderInfo)
+│   │   ├── AbstractPathInfo.php    Shared base for FileInfo / FolderInfo
+│   │   ├── CLICommandChecker.php   CLI tool availability check
+│   │   ├── Exception.php
+│   │   ├── FileDownloader.php      HTTP file download helper
+│   │   ├── FileFinder.php
+│   │   ├── FileFinder/             File search/filter engine
+│   │   │   └── FileCollector.php
+│   │   ├── FileInfo.php            File information and manipulation object
+│   │   ├── FileInfo/               FileInfo sub-classes (LineReader, FileSender, etc.)
+│   │   ├── FileInfoInterface.php
+│   │   ├── FolderFinder.php        Folder search/filter engine
+│   │   ├── FolderInfo.php          Folder information and manipulation object
+│   │   ├── FolderInfo/             FolderInfo sub-classes (FileCreator, etc.)
+│   │   ├── FolderInfoInterface.php
+│   │   ├── FolderTree.php          Whole folder-tree manipulation (copy, delete)
+│   │   ├── IndeterminatePath.php   Path that may be a file or folder
+│   │   ├── JSONFile.php            Specialized JSON file handler
+│   │   ├── JSONFile/               JSON file sub-classes
+│   │   ├── MimeTypes.php           MIME type database and helpers
+│   │   ├── MimeTypesEnum.php       Enum of known MIME types
+│   │   ├── PathInfoInterface.php   Common interface for path info objects
+│   │   ├── PathRelativizer.php     Relativize two paths against each other
+│   │   ├── PathsReducer.php        Reduce a list of paths to shortest form
+│   │   ├── PHPClassInfo.php
+│   │   ├── PHPClassInfo/           PHP class metadata parsing (no reflection)
+│   │   ├── PHPFile.php             Specialized PHP file handler
+│   │   ├── SerializedFile.php      Specialized serialize()-based file handler
+│   │   ├── UnicodeHandling.php     Unicode file content helpers
+│   │   └── UploadFileSizeInfo.php  PHP upload limits helper
+│   │
+│   ├── Highlighter/            Syntax highlighter module
+│   │   ├── Highlighter.php         highlight.php-backed syntax highlighter (themes, inline styles)
+│   │   ├── HighlighterException.php
+│   │   └── StyleInliner.php
+│   │
+│   ├── HTMLHelper/             HTML markup utilities module
+│   │   ├── HTMLHelper.php          Static HTML markup utilities
+│   │   └── HTMLHelperException.php
+│   │
+│   ├── HTMLTag/                OO HTML tag builder module
+│   │   ├── HTMLTag.php             OO HTML tag builder
+│   │   ├── CannedTags.php
+│   │   └── GlobalOptions.php
+│   │
 │   ├── Interfaces/             Pure interfaces (no implementation)
 │   │   ├── AttributableInterface.php
 │   │   ├── ClassableAttributeInterface.php
@@ -140,27 +138,68 @@ application-utils-core/
 │   │   ├── StringableInterface.php
 │   │   └── StylableInterface.php
 │   │
-│   ├── JSHelper/               JSHelper sub-classes
-│   ├── Microtime/              Microtime sub-classes (TimeZoneInfo, etc.)
-│   ├── NumberInfo/             NumberInfo sub-classes (NumberInfo_Immutable, etc.)
-│   ├── OutputBuffering/        OutputBuffering sub-classes
-│   ├── RequestHelper/          RequestHelper sub-classes (Response, etc.)
-│   ├── RGBAColor/              RGBAColor sub-classes
+│   ├── JSHelper/               JavaScript generation utilities module
+│   │   ├── JSHelper.php            JavaScript generation utilities
+│   │   ├── JSHelperException.php
+│   │   └── QuoteConverter.php
+│   │
+│   ├── Microtime/              Microsecond-precision DateTime module
+│   │   ├── Microtime.php           DateTime subclass with microsecond/nanosecond precision
+│   │   ├── DateFormatChars.php
+│   │   ├── DateParseResult.php
+│   │   ├── Exception.php
+│   │   └── TimeZones/              Timezone info sub-classes
+│   │       ├── NamedTimeZoneInfo.php
+│   │       ├── OffsetParser.php
+│   │       └── TimeZoneInfo.php
+│   │
+│   ├── NamedClosure/           Closure wrapper module
+│   │   └── NamedClosure.php        Closure wrapper with a human-readable name
+│   │
+│   ├── NumberInfo/             Number+unit value object module
+│   │   ├── NumberInfo.php          Mutable number+unit value object
+│   │   ├── Comparer.php
+│   │   └── Immutable.php           Immutable variant (NumberInfo_Immutable)
+│   │
+│   ├── OutputBuffering/        PHP output buffering wrapper module
+│   │   ├── OutputBuffering.php     Static OO wrapper around PHP output buffering
+│   │   └── Exception.php
+│   │
+│   ├── RegexHelper/            Regex utilities module
+│   │   └── RegexHelper.php         Regex utility methods and pattern constants
+│   │
+│   ├── RequestHelper/          HTTP multipart POST module
+│   │   ├── RequestHelper.php       HTTP multipart POST request builder/sender via cURL
+│   │   ├── Boundaries.php
+│   │   ├── Boundaries/
+│   │   │   └── Boundary.php
+│   │   ├── CURL.php
+│   │   ├── Exception.php
+│   │   └── Response.php
+│   │
+│   ├── RGBAColor/              RGBA/HSV color value object module
+│   │   ├── RGBAColor.php           RGBA color value object
+│   │   ├── HSVColor.php            HSV color value object
 │   │   ├── ArrayConverter.php
-│   │   ├── ColorChannel/       ColorChannel value object
 │   │   ├── ColorChannel.php
+│   │   ├── ColorChannel/           ColorChannel value object
 │   │   ├── ColorComparator.php
 │   │   ├── ColorException.php
-│   │   ├── ColorFactory.php    Named constructor entry point for creating RGBAColor
+│   │   ├── ColorFactory.php        Named constructor entry point for creating RGBAColor
+│   │   ├── ColorPresets.php        Named color preset registry
 │   │   ├── ColorPresets/
-│   │   ├── ColorPresets.php    Named color preset registry
-│   │   ├── FormatsConverter/   Color format conversion (HEX, CSS, array, HSV)
 │   │   ├── FormatsConverter.php
+│   │   ├── FormatsConverter/       Color format conversion (HEX, CSS, array, HSV)
 │   │   ├── PresetsManager.php
 │   │   └── UnitsConverter.php
 │   │
-│   ├── StringBuilder/          StringBuilder sub-classes (Interface, Exception)
-│   ├── StringHelper/           StringHelper sub-classes
+│   ├── StringBuilder/          Fluent string building module
+│   │   ├── StringBuilder.php       Fluent string building with HTML helpers
+│   │   ├── Exception.php
+│   │   └── Interface.php
+│   │
+│   ├── StringHelper/           Static string manipulation module
+│   │   ├── StringHelper.php        Static string manipulation utilities
 │   │   ├── HiddenConverter.php     Invisible character visualization
 │   │   ├── QueryParser.php         parse_str() replacement with safe key handling
 │   │   ├── StringHelperException.php
@@ -170,14 +209,26 @@ application-utils-core/
 │   │   ├── WordSplitter.php        Word splitting
 │   │   └── WordWrapper.php         Word wrapping
 │   │
-│   ├── StyleCollection/        StyleCollection sub-classes
-│   ├── ThrowableInfo/          ThrowableInfo sub-classes (ThrowableCall, etc.)
+│   ├── StyleCollection/        CSS inline-style builder module
+│   │   ├── StyleCollection.php     OO CSS inline-style builder (fluent)
+│   │   ├── StyleBuilder.php
+│   │   ├── StyleBuilder/           Style property builder sub-classes (Flavors, containers)
+│   │   ├── StyleOptions.php
+│   │   └── StylesRenderer.php
+│   │
+│   ├── ThrowableInfo/          Throwable wrapper module
+│   │   ├── ThrowableInfo.php       Extended Throwable wrapper with serialization
+│   │   ├── ThrowableCall.php
+│   │   ├── ThrowableMessageRenderer.php
+│   │   ├── ThrowableSerializer.php
+│   │   └── ThrowableStringConverter.php
+│   │
 │   ├── Traits/                 Concrete trait implementations
 │   │   ├── AttributableTrait.php
 │   │   ├── ClassableAttributeTrait.php
 │   │   ├── ClassableTrait.php
-│   │   ├── OptionableTrait/
 │   │   ├── OptionableTrait.php
+│   │   ├── OptionableTrait/
 │   │   ├── RenderableBufferedTrait.php
 │   │   ├── RenderableTrait.php
 │   │   ├── RuntimePropertizableTrait.php
@@ -185,12 +236,16 @@ application-utils-core/
 │   │   ├── SimpleErrorStateTrait.php
 │   │   └── StylableTrait.php
 │   │
+│   ├── Transliteration/        ASCII transliteration module
+│   │   └── Transliteration.php     ASCII transliteration for strings
+│   │
 │   ├── TypeFilter/             Type-safe value filtering
 │   │   ├── BaseTypeFilter.php
 │   │   ├── LenientType.php     Lenient (coercive) type filter
 │   │   └── StrictType.php      Strict type filter
 │   │
-│   ├── URLInfo/                URLInfo sub-classes
+│   ├── URLInfo/                URL parser module
+│   │   ├── URLInfo.php             URL parser and inspector value object
 │   │   ├── Parser/             URL tokenizer / parser internals
 │   │   ├── URIConnectionTester.php
 │   │   ├── URIFilter.php
@@ -202,8 +257,23 @@ application-utils-core/
 │   │   ├── URLHosts.php
 │   │   └── URLInfoTrait.php
 │   │
-│   ├── VariableInfo/           VariableInfo sub-classes
-│   ├── XMLHelper/              XMLHelper sub-classes
+│   ├── VariableInfo/           Variable introspection module
+│   │   ├── VariableInfo.php        PHP variable introspection value object
+│   │   ├── VariableRenderer.php
+│   │   └── Renderer/               HTML and string renderers for each PHP type
+│   │
+│   ├── XMLHelper/              XML formatting module
+│   │   ├── XMLHelper.php           XML formatting and conversion utilities
+│   │   ├── Converter.php
+│   │   ├── Converter/
+│   │   ├── DOMErrors.php
+│   │   ├── DOMErrors/
+│   │   ├── Exception.php
+│   │   ├── HTMLLoader.php
+│   │   ├── LibXML.php
+│   │   ├── SimpleXML.php
+│   │   └── SimpleXML/
+│   │
 │   └── _deprecated/            Kept for backwards compatibility; do not use in new code
 │       ├── ClassableInterface.php
 │       ├── ClassableTrait.php

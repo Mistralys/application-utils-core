@@ -26,7 +26,7 @@
 
 | Package | Version | Usage |
 |---|---|---|
-| `geshi/geshi` | `>=1.0` | Syntax highlighting (`Highlighter`, `ConvertHelper::highlight_*`) |
+| `scrivo/highlight.php` | `^9.18` | Syntax highlighting (`Highlighter`) — a PHP port of highlight.js; supports 185 languages; uses CSS class-based styling (`hljs` classes) instead of inline styles. |
 | `neitanod/forceutf8` | `>=2.0.4` | UTF-8 normalization (`StringHelper::toUtf8`) |
 
 ## Development Dependencies

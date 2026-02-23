@@ -23,7 +23,7 @@ Rules, established patterns, and non-obvious gotchas found in `application-utils
 | Sub-utility classes inside a module folder are prefixed with their parent's short name and an underscore | `ConvertHelper_ByteConverter`, `ConvertHelper_StorageSizeEnum`, `RequestHelper_Response` |
 | Interface files live in `src/Interfaces/` and are named `*Interface.php` | `RenderableInterface`, `StringableInterface`, `OptionableInterface` |
 | Trait files live in `src/Traits/` and are named `*Trait.php` | `RenderableTrait`, `OptionableTrait`, `ClassableTrait` |
-| Exception classes per module are named `Exception.php` inside their folder OR `*Exception.php` at the root level | `src/FileHelper/Exception.php`, `src/URLInfo/URLException.php`, `src/BaseException.php` |
+| Exception classes per module are named `Exception.php` inside their folder OR `*Exception.php` at the root level | `src/FileHelper/Exception.php`, `src/URLInfo/URLException.php`, `src/Exceptions/BaseException.php` |
 | Deprecated classes live in `src/_deprecated/` | Do not use or reference them in new code. They are kept solely for backwards compatibility. |
 
 ---

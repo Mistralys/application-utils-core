@@ -32,7 +32,7 @@
   "prefer-stable" : true,
   "require" :
   {
-    "geshi/geshi" : ">=1.0",
+    "scrivo/highlight.php" : "^9.18",
     "neitanod/forceutf8" : ">=2.0.4",
     "php": ">=8.4",
     "ext-json": "*",

@@ -1076,13 +1076,68 @@ trait SimpleErrorStateTrait
 
 ### `Highlighter`
 
+Uses `scrivo/highlight.php` (a PHP port of highlight.js). Output is wrapped in
+`<pre><code class="hljs {language}">...</code></pre>` and requires a highlight.js
+CSS stylesheet for colours (or enable inline-style mode for self-contained HTML).
+
 ```php
 class Highlighter
 {
+    public const DEFAULT_THEME = 'github';
+
+    // Theme configuration
+    public static function setDefaultTheme(string $themeName) : void
+    public static function getDefaultTheme() : string
+    public static function getAvailableThemes() : array  // string[]
+
+    // Inline-style mode
+    public static function setUseInlineStyles(bool $enabled) : void
+    public static function isUseInlineStyles() : bool
+
+    // Stylesheet helpers
+    public static function getStyleTag() : string   // <style>...</style>
+    public static function getStyleCSS() : string    // raw CSS string
+
+    // Core highlighting — returns the raw result object from highlight.php
+    public static function fromString(string $sourceCode, string $language) : object
+    public static function fromFile(string $path, string $language) : object
+
+    // Returns a fully rendered HTML snippet
+    public static function parseString(string $sourceCode, string $language) : string
+    public static function parseFile(string $path, string $language) : string
+
+    // Convenience wrappers — call parseString() with a fixed language
     public static function sql(string $sql) : string
     public static function xml(string $xml, bool $formatSource=false) : string
-    public static function php(string $code) : string
-    public static function json(string $json) : string
+    public static function html(string $html, bool $formatSource=false) : string
+    public static function php(string $phpCode) : string
+    public static function json(array|object|string $subject) : string
+    public static function url(string $url) : string
+
+    // Test teardown: resets theme, inline-style, and cached inliner
+    public static function resetConfig() : void
+}
+```
+
+### `HighlighterException` (`src/Highlighter/HighlighterException.php`)
+
+```php
+class HighlighterException extends BaseException
+{
+    public const ERROR_UNKNOWN_LANGUAGE = 145001;
+}
+```
+
+### `StyleInliner` (`src/Highlighter/StyleInliner.php`)
+
+Converts class-based highlight.php output to inline-styled HTML by parsing
+a highlight.js theme CSS and injecting `style` attributes on each `<span>`.
+
+```php
+class StyleInliner
+{
+    public function __construct(string $themeName)
+    public function apply(string $html, string $language) : string
 }
 ```
 
