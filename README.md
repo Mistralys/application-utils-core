@@ -47,6 +47,7 @@ See [companion libraries](#companion-libraries) for related tools.
 ### Strings
 
 - `HiddenConverter` - Debug pesky invisible characters.
+- [Highlighter](/src/Highlighter/README.md) - Syntax highlighting utility.
 - `OutputBuffering` - Object-oriented output buffering with exception error handling.
 - `QueryParser` - Query string parser that eliminates the `parse_str` pitfalls.
 - `StringBuilder` - Concatenate strings and HTML tags in many ways.
