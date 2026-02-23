@@ -1,3 +1,14 @@
+## v2.5.0 - Geshi Replacement (Breaking-XS)
+- Highlighter: Swapped deprecated GeShi with Highlight.php.
+- Highlighter: Preserved fire-and-forget mode with inlined styles.
+- Docs: Added agentic coding support with manifest and `AGENTS.md`.
+- Docs: GeShi has been removed, MIT license is now fully valid ([#11](https://github.com/Mistralys/application-utils/issues/11)).
+- Code: Moved classes for a more modularized structure.
+
+### Breaking Changes
+
+This update swaps the deprecated GeShi library for syntax highlighting with the highlight.php library. There API of the `Highlighter` class stays the same. If you have not used the GeShi instances that were returned by some methods, you have nothing to update. Otherwise, you will have to adjust your logic to work with Highlight.
+
 ## v2.4.2 - ArrayDataCollection improvements
 - ArrayDataCollection: Added more utility methods to `setArray()`.
 - RGBAColor: Improved `FormatsConverter` for color array to support string values.
