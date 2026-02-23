@@ -217,7 +217,7 @@ class ClassHelper
         // composer, or a local installation of the git package.
         $paths = array(
             __DIR__.'/../../../autoload.php',
-            __DIR__.'/../vendor/autoload.php'
+            __DIR__.'/../../vendor/autoload.php'
         );
 
         $autoloadFile = null;
