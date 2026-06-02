@@ -1,3 +1,9 @@
+# AppUtils Core Changelog
+
+## v2.5.1 - RGBAColor dark/light overrides
+- RGBAColor: Added `setForceDark()` and `setForceLight()` to override luma detection.
+- RGBAColor: Added companion methods to remove and reset luma overrides.
+
 ## v2.5.0 - Geshi Replacement (Breaking-XS)
 - Highlighter: Swapped deprecated GeShi with Highlight.php.
 - Highlighter: Preserved fire-and-forget mode with inlined styles.
