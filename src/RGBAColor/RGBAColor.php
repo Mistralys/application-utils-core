@@ -46,6 +46,7 @@ class RGBAColor implements ArrayAccess, StringableInterface
     public const ERROR_INVALID_HEX_LENGTH = 93505;
     public const ERROR_UNKNOWN_COLOR_PRESET = 93507;
     public const ERROR_INVALID_COLOR_ARRAY = 93508;
+    public const ERROR_DARK_OVERRIDE_CONFLICT = 93509;
 
     public const CHANNEL_RED = 'red';
     public const CHANNEL_GREEN = 'green';
@@ -78,6 +79,14 @@ class RGBAColor implements ArrayAccess, StringableInterface
 
     private string $name;
     private static ?float $lumaThreshold = null;
+
+    /**
+     * Global registry of forced dark/light overrides, keyed by 6-char uppercase HEX.
+     * `true` = force dark, `false` = force light.
+     *
+     * @var array<string,bool>
+     */
+    private static array $lumaOverrides = [];
 
     /**
      * @param ColorChannel $red
@@ -575,6 +584,92 @@ class RGBAColor implements ArrayAccess, StringableInterface
     }
 
     /**
+     * Normalizes a color (HEX string or RGBAColor instance) to a 6-character
+     * uppercase HEX key used by the dark/light override registry.
+     *
+     * @param string|RGBAColor $color
+     * @return string 6-char uppercase HEX (e.g. "E20000")
+     */
+    private static function resolveOverrideKey(string|RGBAColor $color) : string
+    {
+        if($color instanceof RGBAColor) {
+            return strtoupper(substr(FormatsConverter::color2HEX($color), 0, 6));
+        }
+
+        return strtoupper(substr(ltrim($color, '#'), 0, 6));
+    }
+
+    /**
+     * Registers a color so that {@see self::isDark()} always returns `true`
+     * for it, regardless of its computed luma value.
+     *
+     * @param string|RGBAColor $color A 6- or 8-digit HEX string (with or without `#`) or an RGBAColor instance.
+     * @return void
+     * @throws ColorException {@see self::ERROR_DARK_OVERRIDE_CONFLICT} if the color is already registered as force-light.
+     */
+    public static function setForceDark(string|RGBAColor $color) : void
+    {
+        $key = self::resolveOverrideKey($color);
+
+        if(isset(self::$lumaOverrides[$key]) && self::$lumaOverrides[$key] === false) {
+            throw new ColorException(
+                sprintf('Color [%s] is already registered as force-light and cannot also be force-dark.', $key),
+                null,
+                self::ERROR_DARK_OVERRIDE_CONFLICT
+            );
+        }
+
+        self::$lumaOverrides[$key] = true;
+    }
+
+    /**
+     * Registers a color so that {@see self::isLight()} always returns `true`
+     * for it, regardless of its computed luma value.
+     *
+     * @param string|RGBAColor $color A 6- or 8-digit HEX string (with or without `#`) or an RGBAColor instance.
+     * @return void
+     * @throws ColorException {@see self::ERROR_DARK_OVERRIDE_CONFLICT} if the color is already registered as force-dark.
+     */
+    public static function setForceLight(string|RGBAColor $color) : void
+    {
+        $key = self::resolveOverrideKey($color);
+
+        if(isset(self::$lumaOverrides[$key]) && self::$lumaOverrides[$key] === true) {
+            throw new ColorException(
+                sprintf('Color [%s] is already registered as force-dark and cannot also be force-light.', $key),
+                null,
+                self::ERROR_DARK_OVERRIDE_CONFLICT
+            );
+        }
+
+        self::$lumaOverrides[$key] = false;
+    }
+
+    /**
+     * Removes a previously registered dark/light override for a color,
+     * restoring the default luma-based behavior.
+     *
+     * @param string|RGBAColor $color
+     * @return void
+     */
+    public static function removeLumaOverride(string|RGBAColor $color) : void
+    {
+        $key = self::resolveOverrideKey($color);
+        unset(self::$lumaOverrides[$key]);
+    }
+
+    /**
+     * Clears all registered dark/light overrides, restoring luma-based
+     * behavior for all colors.
+     *
+     * @return void
+     */
+    public static function resetLumaOverrides() : void
+    {
+        self::$lumaOverrides = [];
+    }
+
+    /**
      * Whether the color can be considered to be dark to human eyes,
      * according to the current threshold. See {@see self::setDarkLumaThreshold()}
      * to adjust this setting as needed.
@@ -585,6 +680,12 @@ class RGBAColor implements ArrayAccess, StringableInterface
      */
     public function isDark() : bool
     {
+        $key = strtoupper(substr($this->toHEX(), 0, 6));
+
+        if(array_key_exists($key, self::$lumaOverrides)) {
+            return self::$lumaOverrides[$key];
+        }
+
         return $this->getLumaPercent() <= self::getDarkLumaThreshold();
     }
 
@@ -599,7 +700,7 @@ class RGBAColor implements ArrayAccess, StringableInterface
      */
     public function isLight() : bool
     {
-        return $this->getLumaPercent() > self::getDarkLumaThreshold();
+        return !$this->isDark();
     }
 
     public function __toString()
